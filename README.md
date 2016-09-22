@@ -2,12 +2,12 @@
 
 ## Installation
 
-  ###### -- Install tools
+  ###### Install tools
   `sudo npm install -g bower`
   
   `npm install -g polymer-cli`
 
-  ###### -- Install Dependecies
+  ###### Install Dependecies
   ` npm install `
   
   `bower install`
