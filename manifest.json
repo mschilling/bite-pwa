@@ -1,0 +1,7 @@
+{
+  "name": "Bite",
+  "short_name": "Bite",
+  "description": "De Bite PWA",
+  "start_url": "/",
+  "display": "standalone"
+}
