@@ -1,3 +1,6 @@
+### CUSTOM ###
+#`Polymer build` output folder
+build/
 
 # Created by https://www.gitignore.io/api/polymer,bower,intellij,node,git
 
