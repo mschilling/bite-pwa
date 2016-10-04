@@ -1,3 +1,4 @@
+<script src="../../js/main.js"></script>
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
@@ -11,7 +12,7 @@
 
 <dom-module id="Bite-app">
   <template>
-    <style>
+    <style is="custom-style">
       :host {
         display: block;
         font-family: Arial;
@@ -37,8 +38,8 @@
       }
 
       .orderFab{
-        bottom: 30px;
-        right: 25px;
+        bottom: 20px;
+        right: 20px;
         position: fixed;
         background-color: #E98B2B;
         z-index: 1;
@@ -85,6 +86,11 @@
         color: grey;
       }
 
+      .navRanking{
+        float: left;
+        margin-left: 55px;
+        margin-top: 15px;
+      }
 
       /* Bite Card styling */
 
@@ -150,11 +156,7 @@
         float: right;
       }
 
-      .navRanking{
-        float: left;
-        margin-left: 55px;
-        margin-top: 15px;
-      }
+
 
       .biteLocation{
         font-weight: 100;
@@ -193,7 +195,7 @@
     </app-header>
 
     <img src="../../images/bite.png" alt="bite" class="logoImg">
-    <paper-fab class="orderFab" icon="add"></paper-fab>
+    <paper-fab class="orderFab" icon="add" onclick="addBite()"></paper-fab>
 
     <div class="container">
     <paper-card>
@@ -209,6 +211,7 @@
 
       <div class="bites">BITES(1)<hr></div>
       <p>Er staat momenteel x-aantal BITE(s) open. Je kunt aanhaken of zelf een nieuwe BITE openen.</p>
+      <div class="bite-cards">
       <paper-card>
         <div class="card-content">
             <div class="biteImg"></div>
@@ -222,13 +225,14 @@
           <div class="bitePeople"></div>
           <div class="bitePeople"></div>
           <div class="bitePeople"></div>
-          <div class="bitePeople">
-          </div>
             <div class="biteFabContainer">
-          <paper-fab mini class="biteFab" icon="add"></paper-fab>
+              <paper-fab mini class="biteFab" icon="add"></paper-fab>
             </div>
+          </div>
+
         </div>
       </paper-card>
+      </div>
 
 
     </div>
@@ -237,6 +241,8 @@
   </template>
 
   <script>
+
+
     Polymer({
 
       is: 'Bite-app',
@@ -249,5 +255,7 @@
       },
 
     });
+
+
   </script>
 </dom-module>
