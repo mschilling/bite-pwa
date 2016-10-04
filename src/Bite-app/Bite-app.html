@@ -1,13 +1,215 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
 
 <dom-module id="Bite-app">
   <template>
     <style>
       :host {
         display: block;
+        font-family: Arial;
+
+      }
+
+      app-toolbar{
+        margin: 0 auto;
+        color: #E98B2B;
+        font-style: italic;
+        font-weight: 800;
+        background-color: white;
+      }
+      app-header{
+        box-shadow:0px 3px 5px rgba(100, 100, 100, 0.49);
+      }
+      paper-fab{
+        bottom: 30px;
+        right: 25px;
+        position: fixed;
+        background-color: #E98B2B;
+      }
+
+      .logoImg{
+        width: 100px;
+        bottom: 35px;
+        left: 20px;
+        position: fixed;
+      }
+
+      paper-card{
+        margin: 0 auto;
+        width: 320px;
+        margin-top: 10px;
+      }
+
+      .container{
+        display:block;
+        margin: 0 auto;
+        padding: 10px;
+        width: 320px;
+        color: #E98B2B;
+      }
+
+      .cardTitle{
+        font-weight: 800;
+        font-style: italic;
+        font-size: 17px;
+      }
+
+      .biteTitle{
+        font-weight: 800;
+        font-style: italic;
+        font-size: 17px;
+
+      }
+
+      .cardDesc{
+        font-weight: 100;
+        margin-top: 10px;
+        font-size: 12px;
+        color: grey;
+      }
+
+      .biteDesc{
+        font-weight: 100;
+        margin-top: 5px;
+        font-size: 12px;
+        color: grey;
+      }
+
+
+      .cardTitleDesc{
+        float: left;
+      }
+
+      .cardImg{
+        float: left;
+        border-radius: 50%;
+        background: url(../../images/trophy.png);
+        width: 50px;
+        height: 50px;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        margin-bottom: 15px;
+        margin-right: 10px;
+      }
+
+      .navRanking{
+        float: left;
+        margin-left: 55px;
+        margin-top: 15px;
+      }
+
+
+      .bites{
+        margin-top: 50px;
+        font-style: italic;
+        font-weight: 800;
+      }
+
+      hr{
+        border-style: solid;
+        color: #E98B2B;
+        margin-top: 15px;
+        width: 100%;
+      }
+
+      p{
+        color: grey;
+        font-size: 12px;
       }
     </style>
-    <h2>Hello [[prop1]]</h2>
+
+  <app-header-layout>
+    <app-header fixed effects="waterfall">
+      <app-toolbar>
+        <div main-title>HEY, NAAM!</div>
+        <iron-icon icon="social:person"></iron-icon>
+      </app-toolbar>
+    </app-header>
+
+    <img src="../../images/bite.png" alt="bite" class="logoImg">
+    <paper-fab icon="add"></paper-fab>
+
+    <div class="container">
+    <paper-card>
+      <div class="card-content">
+        <div class="cardImg"></div>
+        <div class="cardTitleDesc">
+          <div class="cardTitle">RANGLIJSTEN</div>
+          <div class="cardDesc">Je staat op de 10e plaats!</div>
+        </div>
+        <div class="navRanking"><iron-icon icon="arrow-forward" style="color: #E98B2B;"></iron-icon></div>
+      </div>
+    </paper-card>
+
+      <div class="bites">BITES(1)<hr></div>
+      <p>Er staat momenteel x-aantal BITE(s) open. Je kunt aanhaken of zelf een nieuwe BITE openen.</p>
+      <paper-card>
+        <div class="card-content">
+            <div class="cardImg"></div>
+            <div class="biteTitle">PRIMATARIA</div>
+            <div class="biteDesc">🌯🌯🌯🌯🌯</div>
+          </div>
+        <div class="card-actions">
+            <p>hoi</p>
+        </div>
+      </paper-card>
+
+
+      <paper-card>
+        <div class="card-content">
+          <div class="cardImg"></div>
+          <div class="biteTitle">PRIMATARIA</div>
+          <div class="biteDesc">🌯🌯🌯🌯🌯</div>
+        </div>
+        <div class="card-actions">
+          <p>hoi</p>
+        </div>
+      </paper-card>
+
+
+      <paper-card>
+        <div class="card-content">
+          <div class="cardImg"></div>
+          <div class="biteTitle">PRIMATARIA</div>
+          <div class="biteDesc">🌯🌯🌯🌯🌯</div>
+        </div>
+        <div class="card-actions">
+          <p>hoi</p>
+        </div>
+      </paper-card>
+
+      <paper-card>
+        <div class="card-content">
+          <div class="cardImg"></div>
+          <div class="biteTitle">PRIMATARIA</div>
+          <div class="biteDesc">🌯🌯🌯🌯🌯</div>
+        </div>
+        <div class="card-actions">
+          <p>hoi</p>
+        </div>
+      </paper-card>
+
+      <paper-card>
+        <div class="card-content">
+          <div class="cardImg"></div>
+          <div class="biteTitle">PRIMATARIA</div>
+          <div class="biteDesc">🌯🌯🌯🌯🌯</div>
+        </div>
+        <div class="card-actions">
+          <p>hoi</p>
+        </div>
+      </paper-card>
+    </div>
+
+  </app-header-layout>
   </template>
 
   <script>
