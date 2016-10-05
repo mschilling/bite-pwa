@@ -1,0 +1,137 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/communication-icons.html">
+<link rel="import" href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+
+<dom-module id="Bite-restaurant">
+    <template>
+        <style is="custom-style">
+            :host {
+                display: block;
+                font-family: Arial;
+
+            }
+
+            app-toolbar{
+                margin: 0 auto;
+                color: white;
+                font-style: italic;
+                font-weight: 800;
+                background-color: #E98B2B;
+            }
+
+            app-header{
+                box-shadow:0px 3px 5px rgba(100, 100, 100, 0.49);
+            }
+
+            .container{
+                display:block;
+                margin: 0 auto;
+                padding: 10px;
+                width: 320px;
+                color: #E98B2B;
+            }
+
+            paper-card{
+                margin: 0 auto;
+                width: 320px;
+            }
+
+            .biteImg{
+                float: left;
+                border-radius: 50%;
+                background: url(../../images/harambe.jpg);
+                width: 50px;
+                height: 50px;
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: cover;
+                margin-bottom: 15px;
+                margin-right: 10px;
+            }
+
+            .biteStats{
+                float: left;
+                border-radius: 50%;
+                background: url(../../images/harambe.jpg);
+                width: 50px;
+                height: 50px;
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: cover;
+                margin-bottom: 15px;
+                margin-right: 10px;
+            }
+
+            .biteTitle{
+                font-weight: 800;
+                font-style: italic;
+                font-size: 17px;
+
+            }
+
+            .biteDesc {
+                font-weight: 100;
+                margin-top: 5px;
+                font-size: 12px;
+                color: grey;
+            }
+
+            .biteEmoji{
+                margin: 0 auto;
+            }
+        </style>
+
+        <app-header-layout>
+            <app-header fixed effects="waterfall">
+                <app-toolbar>
+                    <iron-icon icon="arrow-back"></iron-icon>
+                </app-toolbar>
+            </app-header>
+            <div class="container">
+            <paper-card>
+                <div class="card-content">
+                    <div class="biteImg"></div>
+                    <div class="biteTitle">GESTART DOOR HARAMBE</div>
+                    <div class="biteDesc">Gestart op 12:00, sluit om 13:37</div>
+                </div>
+                <div class="card-actions">
+                    <div class="biteEmoji">🌯🌯🌯🌯🌯</div>
+                </div>
+
+                <div class="card-actions">
+                    <div class="biteStats"></div>
+                    <div class="biteStats"></div>
+                    <div class="biteStats"></div>
+                </div>
+            </paper-card>
+            </div>
+
+        </app-header-layout>
+    </template>
+
+    <script>
+
+
+        Polymer({
+
+            is: 'Bite-restaurant',
+
+            properties: {
+                prop1: {
+                    type: String,
+                    value: 'Bite-app',
+                },
+            },
+
+        });
+
+
+    </script>
+</dom-module>
