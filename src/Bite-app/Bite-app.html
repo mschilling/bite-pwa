@@ -8,6 +8,7 @@
 <link rel="import" href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="/bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 
 <dom-module id="Bite-app">
   <template>
@@ -97,7 +98,7 @@
       .navRanking{
         float: right;
         margin-left: 55px;
-        margin-top: 15px;
+        margin-top: 8px;
       }
 
       /* Bite Card styling */
@@ -130,6 +131,9 @@
       p{
         color: grey;
         font-size: 12px;
+        font-style: normal;
+        text-align: left;
+        font-weight: 100;
       }
 
       .cardRank{
@@ -157,14 +161,15 @@
               <div class="cardTitle">RANGLIJSTEN</div>
               <div class="cardDesc">Je staat op de 10e plaats!</div>
             </div>
-            <div class="navRanking"><iron-icon icon="arrow-forward" style="color: #E98B2B;"></iron-icon></div>
+            <div class="navRanking"><paper-icon-button icon="arrow-forward" style="color: #E98B2B;" onclick="navRanking()"></paper-icon-button></div>
           </div>
         </paper-card>
 
-          <div class="bites">BITES(1)<hr></div>
+          <div class="bites">BITES(1)<hr>
           <p>Er staat momenteel x-aantal BITE(s) open. Je kunt aanhaken of zelf een nieuwe BITE openen.</p>
+          </div>
           <div class="bite-cards">
-            <bite-card name="PRIMATARIA" background="url(../../images/harambe.jpg)" desc="🌯🌯🌯🌯🌯" location="Gramsbergen" people=""></bite-card>
+            <bite-card name="PRIMATARIA" background="url(../../images/harambe.jpg)" desc="🌯🌯🌯🌯🌯" location="Gramsbergen"></bite-card>
           </div>
       </div>
     </div>
@@ -173,7 +178,9 @@
   </template>
 
   <script>
+    function navRanking(){
 
+    }
 
     Polymer({
 

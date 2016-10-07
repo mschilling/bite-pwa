@@ -1,6 +1,6 @@
 {
-  "name": "Bite",
-  "description": "De Bite PWA",
+  "name": "bite",
+  "description": "de bite pwa",
   "main": "index.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",

@@ -1,7 +1,7 @@
 {
-  "name": "Bite",
-  "short_name": "Bite",
-  "description": "De Bite PWA",
+  "name": "bite",
+  "short_name": "bite",
+  "description": "de bite pwa",
   "start_url": "/",
   "display": "standalone"
 }
