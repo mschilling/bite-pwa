@@ -1,6 +1,6 @@
 {
   "name": "bite",
-  "description": "de bite pwa",
+  "description": "Bite Progressive Web App",
   "main": "index.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
