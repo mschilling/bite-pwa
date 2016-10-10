@@ -1,7 +1,7 @@
 {
-  "name": "bite",
-  "short_name": "Bite",
-  "description": "Bite Progressive Web App",
+  "name": "bite-pwa",
+  "short_name": "bite-pwa",
+  "description": "bite progressive web app",
   "start_url": "/",
   "display": "standalone"
 }

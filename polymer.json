@@ -1,14 +1,17 @@
 {
   "entrypoint": "index.html",
+  "shell": "src/bite-pwa/bite-pwa.html",
   "fragments": [
-  ],
-  "sources": [
-    "src/**/*",
-    "images/**/*",
-    "js/**/*",
-    "bower.json"
+  ]
+  ,
+  "sourceGlobs": [
+   "src/**/*",
+   "data/**/*",
+   "images/**/*",
+   "bower.json"
   ],
   "includeDependencies": [
+    "manifest.json",
     "bower_components/webcomponentsjs/webcomponents-lite.min.js"
   ]
 }

@@ -1,0 +1,64 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+
+
+<dom-module id="bite-pwa">
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: relative;
+        --app-primary-color: #EC9630;
+        --app-secondary-color: #FAFAFA;
+        --app-header-color: #F5F5F5;
+        --app-accent-color: #EC9630;
+      }
+
+      app-header {
+        @apply(--layout-fixed-top);
+        z-index: 1;
+        background-color: var(--app-header-color);
+        box-shadow:0px 3px 5px rgba(100, 100, 100, 0.49);
+        font-style: italic;
+      }
+
+      iron-icon {
+        color: var(--app-primary-color);
+      }
+
+      app-toolbar{
+        color: var(--app-primary-color);
+      }
+
+    </style>
+
+    <app-header>
+      <app-toolbar>
+        <div main-title>HEY, NAAM</div>
+        <iron-icon icon="social:person"></iron-icon>
+      </app-toolbar>
+    </app-header>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'bite-pwa',
+
+      properties: {
+      },
+
+
+      created: function(){
+        window.performance && performance.mark && performance.mark('bite-pwa.created');
+        //Upgrade element, remove unresolved
+        console.log("unresolved removed");
+        this.removeAttribute('unresolved');
+      }
+    });
+  </script>
+</dom-module>

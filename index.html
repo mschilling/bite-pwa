@@ -2,18 +2,66 @@
 
 <html>
   <head>
-    <script src="js/main.js"></script>
-    <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <title>Bite</title>
+    <title>bite-pwa</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <link rel="manifest" href="/manifest.json">
-    <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="src/Bite-app/Bite-app.html">
-    <link rel="import" href="src/Bite-app/Bite-restaurant.html">
-    <link rel="import" href="bower_components/iron-pages/iron-pages.html">
+    <link rel="import" href="/src/bite-pwa/bite-pwa.html" async>
+
+    <style>
+
+      body{
+        margin: 0;
+        font-family: 'Roboto', 'Noto', sans-serif;
+        font-size: 13px;
+        width:100%;
+        height: 100%;
+      }
+
+      bite-pwa[unresolved]{
+        display: block;
+      }
+
+      #background{
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        z-index: -1;
+        text-align: center;
+      }
+
+      .bgImage{
+        height: 100%;
+      }
+
+    </style>
   </head>
-  <body style="margin: 0;">
-    <Bite-app></Bite-app>
+  <body>
+    <bite-pwa unresolved>
+      <div id="background">
+        <img class="bgImage" src="images/Splashscreen.png"/>
+      </div>
+    </bite-pwa>
+
+    <script>
+      window.performance && performance.mark && performance.mark('index.html');
+
+      Polymer = {lazyRegister: true, dom: 'shadow'};
+
+      (function() {
+        if ('registerElement' in document
+                && 'import' in document.createElement('link')
+                && 'content' in document.createElement('template')) {
+          // platform is good!
+        } else {
+          // polyfill the platform!
+          var e = document.createElement('script');
+          e.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
+          document.body.appendChild(e);
+        }
+      })();
+    </script>
   </body>
 </html>
