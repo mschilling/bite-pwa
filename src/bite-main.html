@@ -1,0 +1,48 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="bite-card.html" async>
+
+<dom-module id="bite-main">
+    <style>
+        :host{
+            margin: 0 auto;
+        }
+
+        .logoImg{
+            width: 100px;
+            bottom: 35px;
+            left: 20px;
+            position: fixed;
+        }
+
+        .orderFab{
+            bottom: 20px;
+            right: 20px;
+            position: fixed;
+            background-color: #E98B2B;
+            z-index: 1;
+        }
+    </style>
+
+    <template>
+
+        <img src="../images/bite.png" alt="bite" class="logoImg" style="z-index: -1;">
+        <paper-fab class="orderFab" icon="add" on-tap="_openBite"></paper-fab>
+
+        <div class="content">
+            <bite-card></bite-card>
+        </div>
+    </template>
+
+
+    <script>
+        Polymer({
+            is: 'bite-main',
+
+
+            _openBite: function(){
+
+            }
+
+        });
+    </script>
+</dom-module>

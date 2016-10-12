@@ -1,8 +1,7 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/bite-pwa/bite-pwa.html",
-  "fragments": [
-  ]
+  "shell": "src/bite-pwa.html",
+  "fragments": []
   ,
   "sourceGlobs": [
    "src/**/*",

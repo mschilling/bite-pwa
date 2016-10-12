@@ -1,0 +1,118 @@
+<!-- webcomponents -->
+
+
+
+<!-- elements -->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="bite-main.html" async>
+
+
+<dom-module id="bite-pwa">
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: relative;
+        --app-primary-color: #EC9630;
+        --app-secondary-color: #FAFAFA;
+        --app-header-color: #F5F5F5;
+        --app-accent-color: #EC9630;
+      }
+
+      app-header {
+        @apply(--layout-fixed-top);
+        z-index: 1;
+        background-color: var(--app-header-color);
+        box-shadow:0px 3px 5px rgba(100, 100, 100, 0.49);
+        font-style: italic;
+        font-weight: 600;
+      }
+
+      iron-icon {
+        color: var(--app-primary-color);
+      }
+
+      app-toolbar{
+        color: var(--app-primary-color);
+      }
+
+      .walletText {
+        margin-right: 5px;
+      }
+
+      .content{
+        display: block;
+        margin: 0 auto;
+        padding: 10px;
+        max-width: 320px;
+      }
+
+
+    </style>
+
+    <app-header-layout>
+    <app-header fixed effects="waterfall">
+      <app-toolbar>
+        <div main-title>HEY, NAAM</div>
+        <iron-icon icon="social:person"></iron-icon>
+      </app-toolbar>
+    </app-header>
+
+    <div class="content">
+
+      <iron-pages id="pages" selected="{{selected}}">
+        <div><bite-main></bite-main></div>
+        <div><bite-open></bite-open></div>
+        <div style="margin-top: 250px;">three</div>
+      </iron-pages>
+    </div>
+
+
+    <!--
+    <button type="button" id="button" on-tap="_changePage">Click</button>
+    -->
+    </app-header-layout>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'bite-pwa',
+
+      properties: {
+        selected: {
+          type: Number,
+          value: 0
+        }
+      },
+
+
+      created: function(){
+        window.performance && performance.mark && performance.mark('bite-pwa.created');
+        //Upgrade element, remove unresolved
+        console.log("unresolved removed");
+        this.removeAttribute('unresolved');
+      },
+
+
+      _changePage: function(){
+        this.$.pages.selectNext();
+      }
+
+    });
+
+
+
+
+
+  </script>
+</dom-module>
