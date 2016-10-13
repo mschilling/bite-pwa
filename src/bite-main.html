@@ -21,14 +21,14 @@
             bottom: 20px;
             right: 20px;
             position: fixed;
-            background-color: #E98B2B;
+            background-color: #EC9630;
             z-index: 1;
         }
 
         .container{
             max-width: 800px;
             margin: 0 auto;
-            color: #E98B2B;
+            color: #EC9630;
         }
 
         /* Ranking card styling */
@@ -54,7 +54,7 @@
 
         .cardTitle{
             display: block;
-            font-weight: 800;
+            font-weight: 700;
             font-style: italic;
             margin-right: 10px;
             margin-top: 8px;
@@ -64,13 +64,12 @@
             display: block;
             font-weight: 100;
             margin-top: 8px;
-            font-size: 12px;
-            color: grey;
+            font-size: 14px;
+            color: #9B9B9B;
         }
 
         .navRanking{
             float: right;
-            margin-left: 55px;
             margin-top: 8px;
         }
 
@@ -93,27 +92,33 @@
             }
         }
 
-        hr{
-            border-style: solid;
-            color: #E98B2B;
-            margin-top: 15px;
-            width: 90%;
-        }
 
         .bites{
-            font-family: Roboto, Noto, sans-serif;
-            font-style: italic;
-            font-weight: 800;
-            margin-top: 20px;
-            font-size: 16px;
+            margin: 0 auto;
+            display: block;
+            width:100%;
+        }
+
+        .biteLine{
+            margin: 0 auto;
+            height: 2px;
+            background-color: #EC9630;
+            margin-top: 8px;
+            width: 90%;
 
         }
 
-        #biteTitle{
-            float: left;
-            margin-left: 20px;
-            font-size: 16px;
-            margin-bottom: 5px;
+        .biteTitle{
+            font-family: Roboto, Noto, sans-serif;
+            font-style: italic;
+            font-weight: 700;
+            font-size: 20px;
+            text-align: left;
+            width: 90%;
+            margin: 0 auto;
+            margin-top: 24px;
+
+
         }
 
     </style>
@@ -135,12 +140,17 @@
                     <div class="navRanking"><paper-icon-button icon="arrow-forward" style="color: #E98B2B;" onclick="navRanking()"></paper-icon-button></div>
                 </div>
             </paper-card>
-           <div class="bites"><div id="biteTitle">BITES</div><hr></div>
+
+
+           <div class="bites">
+               <div class="biteTitle">BITES(1)</div>
+               <div class="biteLine"></div>
+           </div>
                <div class="bite-cards">
                     <bite-card name="PRIMATARIA" background= "url(../images/harambe.jpg)" desc="🌯🌯🌯🌯🌯" location="Gramsbergen" ></bite-card>
                </div>
-           </div>
-        </div>
+               </div>
+            </div>
     </template>
 
 
