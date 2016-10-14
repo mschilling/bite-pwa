@@ -127,7 +127,7 @@
 
 
         <img src="../images/bite.png" alt="bite" class="logoImg" style="z-index: -1;">
-        <paper-fab class="orderFab" icon="add" onclick="addBite()"></paper-fab>
+        <paper-fab class="orderFab" icon="add" on-tap="_addBite"></paper-fab>
 
         <div class="container">
            <div class="cardContainer">
@@ -147,7 +147,7 @@
                <div class="biteTitle">BITES(1)</div>
                <div class="biteLine"></div>
            </div>
-               <div class="bite-cards">
+               <div id="cards" class="bite-cards">
                     <bite-card name="PRIMATARIA" background= "url(../images/harambe.jpg)" desc="🌯🌯🌯🌯🌯" location="Gramsbergen" ></bite-card>
                </div>
                </div>
@@ -159,10 +159,14 @@
         Polymer({
             is: 'bite-main',
 
+            _addBite: function () {
+                var cards = Polymer.dom(this.root).querySelector('.bite-cards');
+                $(cards).append("<bite-card name='PRIMATARIA' background= 'url(../images/harambe.jpg)' desc='🌯🌯🌯🌯🌯' location='Gramsbergen'></bite-card>");
+            },
 
             _openBite: function(){
 
-            },
+            }
 
 
 
