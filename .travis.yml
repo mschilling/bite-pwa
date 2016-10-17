@@ -19,5 +19,5 @@ script:
   - xvfb-run polymer test
 cache:
   directories:
-    - $HOME/node_modules/
-    - $HOME/bower_components/
+    - node_modules
+    - bower_components
