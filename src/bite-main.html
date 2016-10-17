@@ -65,7 +65,7 @@
             display: block;
             font-weight: 100;
             margin-top: 8px;
-            font-size: 14px;
+            font-size: 12px;
             color: #9B9B9B;
         }
 
@@ -127,7 +127,7 @@
 
 
         <img src="../images/bite.png" alt="bite" class="logoImg" style="z-index: -1;">
-        <paper-fab class="orderFab" icon="add" onclick="addBite()"></paper-fab>
+        <paper-fab class="orderFab" icon="add" on-tap="_openBite"></paper-fab>
 
         <div class="container">
            <div class="cardContainer">
@@ -159,12 +159,9 @@
         Polymer({
             is: 'bite-main',
 
-
             _openBite: function(){
-
-            },
-
-
+                this.host.parentNode;
+            }
 
         });
     </script>

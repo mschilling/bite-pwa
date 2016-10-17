@@ -9,20 +9,23 @@
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="bite-main.html" async>
+<link rel="import" href="bite-open.html" async>
 
 
 <dom-module id="bite-pwa">
-  <template>
-    <style>
+  <template id="bite-pwa">
+    <style is="custom-style">
       :host {
         display: block;
         position: relative;
         --app-primary-color: #EC9630;
+        --app-text-color: #EC9630;
         --app-secondary-color: #FAFAFA;
         --app-header-color: #F5F5F5;
         --app-accent-color: #EC9630;
@@ -42,7 +45,7 @@
       }
 
       app-toolbar{
-        color: var(--app-primary-color);
+        color: var(--app-text-color);
       }
 
       .walletText {
@@ -60,17 +63,17 @@
 
     <app-header-layout>
     <app-header fixed effects="waterfall">
-      <app-toolbar>
-        <div main-title>HEY, NAAM</div>
-        <iron-icon icon="social:person"></iron-icon>
+      <app-toolbar id="toolbar">
+        <div main-title id="mainTitle">HEY, NAAM</div>
+        <paper-icon-button id="personButton" icon="social:person" on-tap="_changePage"></paper-icon-button>
       </app-toolbar>
     </app-header>
 
     <div class="content">
 
       <iron-pages id="pages" selected="{{selected}}">
-        <div><bite-main></bite-main></div>
-        <div><bite-open></bite-open></div>
+        <div><bite-main id="main"></bite-main></div>
+        <div><bite-open id="open"></bite-open></div>
         <div style="margin-top: 250px;">three</div>
       </iron-pages>
     </div>
@@ -104,7 +107,40 @@
 
 
       _changePage: function(){
-        this.$.pages.selectNext();
+
+        if(this.$.pages.selected == 0){
+
+          this.$.pages.selected = 1;
+          console.log("hoi");
+          this.customStyle['--app-header-color'] = '#EC9630';
+          this.customStyle['--app-text-color'] = 'white';
+          this.updateStyles();
+
+
+          //Remove old attributes from toolbar
+          var oldPersonButton = Polymer.dom(this.root).querySelector('#personButton');
+          Polymer.dom(this.$.toolbar).removeChild(oldPersonButton);
+
+          var oldTitle = Polymer.dom(this.root).querySelector('#mainTitle');
+          Polymer.dom(this.$.toolbar).removeChild(oldTitle);
+
+
+          //Add new attributes
+          var newBackButton = document.createElement('paper-icon-button');
+          newBackButton.className = "backButton";
+          newBackButton.icon = "arrow-back";
+          newBackButton.id = "backButton";
+          var backButton = Polymer.dom(this.root).querySelector('#backButton')
+          this.$.backButton.setAttribute('on-tap', '_changePage');
+          Polymer.dom(this.$.toolbar).appendChild(newBackButton);
+
+          var newTitle = document.createElement('div');
+          newTitle.textContent = "TITEL";
+          Polymer.dom(this.$.toolbar).appendChild(newTitle);
+        }
+        else{
+          this.$.pages.selected = 0;
+        }
       }
 
     });
