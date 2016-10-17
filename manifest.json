@@ -1,7 +1,7 @@
 {
   "name": "Bite",
-  "short_name": "Bite-pwa",
-  "description": "Bite progressive web app",
+  "short_name": "Bite",
+  "description": "Eten bestellen in Zwolle en Gramsbergen",
   "start_url": "/",
   "display": "standalone"
 }
