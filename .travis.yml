@@ -17,3 +17,7 @@ before_script:
   - bower install
 script:
   - xvfb-run polymer test
+cache:
+  directories:
+    - $HOME/node_modules/
+    - $HOME/bower_components/
