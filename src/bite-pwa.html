@@ -19,7 +19,7 @@
 
 
 <dom-module id="bite-pwa">
-  <template id="bite-pwa">
+  <template>
     <style is="custom-style">
       :host {
         display: block;
@@ -127,9 +127,7 @@
       },
 
       _pageChanged: function(page){
-        //load page import on demand
-        var resolvedPageUrl = this.resolveUrl('bite-' + page + '.html');
-        this.importHref(resolvedPageUrl, null, this._showPage404, true);
+        //things to do on page change
       },
 
       _showPage404: function(){
