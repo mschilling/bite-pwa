@@ -4,7 +4,6 @@
 
 <!-- elements -->
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
@@ -13,6 +12,7 @@
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="bite-main.html" async>
 <link rel="import" href="bite-open.html" async>
@@ -60,9 +60,22 @@
 
 
     </style>
+    <!-- app-location binds to the app's URL -->
+    <app-location route="{{route}}"></app-location>
+
+    <!-- this app-route manages the top-level routes -->
+    <app-route
+            route="{{route}}"
+            pattern="/:page"
+            data="{{routeData}}"
+            tail="{{subroute}}"
+            ></app-route>
+
+
 
     <app-header-layout>
     <app-header fixed effects="waterfall">
+      <!-- Toolbar goes here -->
       <app-toolbar id="toolbar">
         <div main-title id="mainTitle">HEY, NAAM</div>
         <paper-icon-button id="personButton" icon="social:person" on-tap="_changePage"></paper-icon-button>
@@ -71,10 +84,9 @@
 
     <div class="content">
 
-      <iron-pages id="pages" selected="{{selected}}">
-        <div><bite-main id="main"></bite-main></div>
-        <div><bite-open id="open"></bite-open></div>
-        <div style="margin-top: 250px;">three</div>
+      <iron-pages id="pages" selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
+        <bite-main name="main"></bite-main>
+        <bite-open name="open"></bite-open>
       </iron-pages>
     </div>
 
@@ -91,12 +103,38 @@
       is: 'bite-pwa',
 
       properties: {
-        selected: {
-          type: Number,
-          value: 0
-        }
+          selected: {
+              type: Number,
+              value: 0
+          },
+
+          page: {
+              type: String,
+              reflectToAttribute: true,
+              observer: '_pageChanged'
+          }
       },
 
+      observers: [
+              '_routePageChanged(routeData.page)'
+      ],
+        
+
+      _routePageChanged: function(page){
+        this.page = page || 'main';
+        console.log(page);
+
+      },
+
+      _pageChanged: function(page){
+        //load page import on demand
+        var resolvedPageUrl = this.resolveUrl('bite-' + page + '.html');
+        this.importHref(resolvedPageUrl, null, this._showPage404, true);
+      },
+
+      _showPage404: function(){
+        this.page = '404';
+      },
 
       created: function(){
         window.performance && performance.mark && performance.mark('bite-pwa.created');
@@ -105,49 +143,15 @@
         this.removeAttribute('unresolved');
       },
 
-
-      _changePage: function(){
-
-        if(this.$.pages.selected == 0){
-
-          this.$.pages.selected = 1;
-          console.log("hoi");
-          this.customStyle['--app-header-color'] = '#EC9630';
-          this.customStyle['--app-text-color'] = 'white';
-          this.updateStyles();
-
-
-          //Remove old attributes from toolbar
-          var oldPersonButton = Polymer.dom(this.root).querySelector('#personButton');
-          Polymer.dom(this.$.toolbar).removeChild(oldPersonButton);
-
-          var oldTitle = Polymer.dom(this.root).querySelector('#mainTitle');
-          Polymer.dom(this.$.toolbar).removeChild(oldTitle);
-
-
-          //Add new attributes
-          var newBackButton = document.createElement('paper-icon-button');
-          newBackButton.className = "backButton";
-          newBackButton.icon = "arrow-back";
-          newBackButton.id = "backButton";
-          var backButton = Polymer.dom(this.root).querySelector('#backButton')
-          this.$.backButton.setAttribute('on-tap', '_changePage');
-          Polymer.dom(this.$.toolbar).appendChild(newBackButton);
-
-          var newTitle = document.createElement('div');
-          newTitle.textContent = "TITEL";
-          Polymer.dom(this.$.toolbar).appendChild(newTitle);
-        }
-        else{
-          this.$.pages.selected = 0;
-        }
+      ready: function(){
+        Polymer.RenderStatus.afterNextRender(this, function(){
+            this.listen(window, 'online', '_notifyNetworkStatus');
+            this.listen(window, 'offline', '_notifyNetworkStatus');
+        });
       }
 
+
     });
-
-
-
-
 
   </script>
 </dom-module>
