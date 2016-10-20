@@ -18,7 +18,7 @@ before_script:
   - bower install
 script:
   - xvfb-run polymer test
-  - xvfb-run wct
+#  - xvfb-run wct
   - wct -s default
 cache:
   directories:
