@@ -14,7 +14,7 @@ node_js:
   - '5'
   - '4'
 before_script:
-  - npm install -g bower polymer-cli web-component-tester
+  - npm install -g bower polymer-cli web-component-tester selenium-webdriver
   - bower install
 script:
   - xvfb-run polymer test
