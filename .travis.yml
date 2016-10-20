@@ -21,9 +21,11 @@ script:
 #  - xvfb-run wct
   - wct -s default
   #Lighthouse
+  - npm run chrome --no-sandbox
+  - npm run chromium-browser --no-sandbox
   - polymer build
   - polymer serve build/bundled &
-  - lighthouse localhost:8080
+  - lighthouse --verbose localhost:8080
 cache:
   directories:
   - node_modules
