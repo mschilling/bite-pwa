@@ -15,7 +15,7 @@
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="bite-main.html" async>
-<link rel="import" href="bite-open.html" async>
+<link rel="import" href="bite-join.html" async>
 
 
 <dom-module id="bite-pwa">
@@ -74,19 +74,20 @@
 
 
     <app-header-layout>
-    <app-header fixed effects="waterfall">
-      <!-- Toolbar goes here -->
-      <app-toolbar id="toolbar">
-        <div main-title id="mainTitle">HEY, NAAM</div>
-        <paper-icon-button id="personButton" icon="social:person" on-tap="_changePage"></paper-icon-button>
-      </app-toolbar>
-    </app-header>
+      <app-header fixed effects="waterfall">
+        <!-- Toolbar goes here -->
+        <app-toolbar id="toolbar">
+          <div main-title id="mainTitle">HEY, NAAM</div>
+          <paper-icon-button id="personButton" icon="social:person" on-tap="_changePage"></paper-icon-button>
+        </app-toolbar>
+      </app-header>
 
     <div class="content">
 
       <iron-pages id="pages" selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
         <bite-main name="main"></bite-main>
         <bite-open name="open"></bite-open>
+        <bite-join name="join"></bite-join>
       </iron-pages>
     </div>
 
@@ -121,13 +122,14 @@
         
 
       _routePageChanged: function(page){
-        this.page = page || 'main';
+        this.page = page || 'join';
         console.log(page);
 
       },
 
       _pageChanged: function(page){
-        //things to do on page change
+        //load page import on demand
+
       },
 
       _showPage404: function(){
@@ -146,8 +148,17 @@
             this.listen(window, 'online', '_notifyNetworkStatus');
             this.listen(window, 'offline', '_notifyNetworkStatus');
         });
-      }
+      },
 
+      _changePage: function(){
+          console.log("hi");
+          if(this.page == 'main'){
+              this.page = 'join';
+          } else{
+              this.page = 'main';
+
+          }
+      }
 
     });
 

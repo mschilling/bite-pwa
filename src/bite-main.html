@@ -118,18 +118,36 @@
                 width: 90%;
                 margin: 0 auto;
                 margin-top: 24px;
+            }
 
+            app-header {
+                @apply(--layout-fixed-top);
+                z-index: 1;
+                background-color: var(--app-header-color);
+                box-shadow:0px 3px 5px rgba(100, 100, 100, 0.49);
+                font-style: italic;
+                font-weight: 600;
+            }
 
+            iron-icon {
+                color: var(--app-primary-color);
+            }
+
+            app-toolbar{
+                color: var(--app-text-color);
+            }
+
+            .bite-cards{
+                margin-bottom: 10px;
             }
 
         </style>
 
 
-
         <img src="../images/bite.png" alt="bite" class="logoImg" style="z-index: -1;">
         <paper-fab class="orderFab" icon="add" on-tap="_addBite"></paper-fab>
 
-        
+
         <div class="container">
             <div class="cardContainer">
                 <paper-card class="cardRank">

@@ -7,14 +7,61 @@
             }
 
             .container{
+                margin: 0 auto;
                 border-radius: 50%;
-                width: 50px;
-                height: 50px;
+                border-color: #D93335;
+                border-style: solid;
+                border-size: 1px;
+                width: 52px;
+                height: 52px;
+            }
+            .number{
+                text-align: center;
+                margin-top: 18px;
+                font-size: 14px;
+                color: #D93335;
+                height: 24px;
+            }
+            .desc{
+                text-align: center;
+                font-size: 10px;
+                margin-top: 10px;
+                color: grey;
+                font-weight: 100;
+            }
+
+            .element{
+                width: 80px;
+                height: 100px;
+            }
+            .items{
+                position: absolute;
+                bottom: 41px;
+                margin-left: 21px;
+                background-color: #D93335;
+                color: white;
+                font-weight: 300;
+                font-size:10px;
+                text-align: center;
+                border-radius: 15px;
+                height: 16px;
+                width: 38px;
+                line-height: 16px;
             }
         </style>
 
-    <div class="container">
+    <div class="element">
+    <div class="container" style$="background:[[background]]; background-repeat: no-repeat; background-position: center center; background-size: cover; border-color: [[color]];">
+        <div class="number" style$="color: [[color]];"> <p>[[number]]</p> </div>
+        <div class="bg"></div>
 
+    </div>
+        <div class="desc">
+            [[desc]]
+        </div>
+        <div class="items" style$="visibility:[[hidden]]; background-color: [[color]];">
+            [[items]]
+        </div>
     </div>
 
     </template>
@@ -28,6 +75,14 @@
 
             is: 'bite-stats',
             properties: {
+                desc: String,
+                items: String,
+                hidden: String,
+                background: String,
+                number: String,
+                color: String
+
+
             }
 
         });

@@ -1,10 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="bite-tallcard.html">
+<dom-module id="bite-join">
+    <style>
+        :host{
+            margin: 0 auto;
+            display: block;
+        }
+
+        .container{
+            max-width: 800px;
+            margin: 0 auto;
+            color: #EC9630;
+        }
+        .cardContainer {
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+            width: 100%;
+        }
+        .tallCard{
+            margin: 0 auto;
+            display: block;
+            width:100%;
+        }
+
+
+
+
+    </style>
+
+    <template>
+        <div class="container">
+            <div class="cardContainer">
+                <div class="tallCard">
+                    <bite-tallcard name="GESTART DOOR HARAMBE" background= "url(../images/harambe.jpg)" desc="Gestart om 09:11, sluit om 13:37" location="Gramsbergen" ></bite-tallcard>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+    <script>
+        Polymer({
+            is: 'bite-join'
+
+
+
+        });
+    </script>
+</dom-module>

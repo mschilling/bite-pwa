@@ -1,10 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/iron-icons/communication-icons.html">
+<link rel="import" href="bite-stats.html">
+
+<dom-module id="bite-tallcard">
+    <template>
+        <style>
+            :host {
+                display: block;
+
+            }
+            paper-card{
+                margin: 0 auto;
+                width: 90%;
+                margin-top: 16px;
+                text-align: left;
+                font-family: Roboto, Noto, sans-serif;
+
+                --paper-card-actions:{
+                    padding: 0;
+                }
+            }
+            .img{
+                float: left;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                margin-left: 8px;
+                margin-bottom: 16px;
+            }
+            .title{
+                font-family: Roboto, Noto, sans-serif;
+                font-style: italic;
+                font-weight: 700;
+                height: 24px;
+                font-size: 16px;
+            }
+            .info{
+                display: inline-block;
+                margin-left: 16px;
+                margin-top: 5px;
+            }
+
+            .desc{
+                font-weight: 100;
+                color: #9B9B9B;
+                height: 24px;
+                font-size: 14px;
+            }
+
+            .emoji{
+                text-align: center;
+                vertical-align: middle;
+                margin-top: 8px;
+                margin-bottom: 8px;
+                font-size: 24px;
+            }
+            .stats{
+                display:                 flex;
+                display:                 -webkit-flex;
+                flex-wrap:               wrap;
+                -webkit-flex-wrap:       wrap;
+                justify-content:         center;
+                -webkit-justify-content: center;
+            }
+
+            .stat{
+                margin-top: 8px;
+                font-size: 9px;
+            }
+
+
+
+        </style>
+        <paper-card>
+            <div class="card-content">
+                <div class="img" style$="background: [[background]]; background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+                <div class="info">
+                    <div class="title">[[name]]</div>
+                    <div class="desc">[[desc]]</div>
+                </div>
+            </div>
+            <div class="card-actions" style="width: 85%; margin: 0 auto;">
+                <div class="emoji">🌯🌯🌯🌯🌯</div>
+            </div>
+            <div class="card-actions" style="width: 85%; margin: 0 auto;">
+                <div class="stats">
+                    <bite-stats class="stat" hidden="visible" desc="Door jou besteld" items="ITEMS" number="911"></bite-stats>
+                    <bite-stats class="stat" hidden="visible" desc="Totaal besteld" items="ITEMS" number="1337" color="#EC9630"></bite-stats>
+                    <bite-stats class="stat" hidden="hidden" desc="No. 1 besteller" items="" background= "url(../images/harambe.jpg)" number="" color="#D93335"></bite-stats>
+                </div>
+            </div>
+        </paper-card>
+
+
+    </template>
+
+
+
+    <script>
+
+
+        Polymer({
+
+            is: 'bite-tallcard',
+            properties: {
+                name: String,
+                background: String,
+                desc: String,
+                location: String
+            }
+
+        });
+
+
+    </script>
+</dom-module>
