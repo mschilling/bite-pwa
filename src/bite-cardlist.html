@@ -1,0 +1,142 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+
+<dom-module id="bite-cardlist">
+    <template>
+        <style>
+            /* TODO proper styling */
+            :host{
+                margin: 0;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            paper-card{
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            iron-list{
+                flex: 1 1 auto;
+                color: black;
+            }
+            .item {
+                display: block;
+                padding: 10px;
+
+            }
+            .price{
+                margin-left: 17px;
+                color: #9B9B9B;
+                font-weight: 200;
+
+            }
+            .img{
+                float: left;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                margin-left: 8px;
+                margin-right: 17px;
+            }
+            .info{
+
+            }
+            .name{
+                height: 24px;
+
+            }
+            .image {
+                display: block;
+            }
+            .functions{
+                display: inline-block;
+                float: right;
+            }
+            .total{
+                float: left;
+                margin-top: 10px;
+                font-size: 20px;
+                font-weight: 800;
+                font-family: Roboto, Noto, sans-serif;
+                color: #E98B2B;
+                margin-right: 8px;
+                margin-left: 8px;
+
+
+            }
+            .add{
+                float: left;
+                height: 32px;
+                width: 32px;
+                font-weight: 800;
+                color: #9B9B9B;
+
+
+            }
+            .remove{
+                float: left;
+                height: 32px;
+                width: 32px;
+                color: #9B9B9B;
+            }
+
+        </style>
+
+
+        <paper-card>
+            <iron-ajax url="data.json" last-response="{{data}}" auto></iron-ajax>
+            <iron-list id="list" items="[[data]]" as="item">
+                <template>
+                    <div class="item">
+                        <div class="image">
+                            <img class="img" src="[[item.image]]" alt="Img">
+                        </div>
+                        <div class="info">
+                            <div class="name">
+                                [[item.name]]
+                            </div>
+                            <div class="price">
+                                €[[item.price]]
+                            </div>
+                        </div>
+
+                        <div class="functions">
+                            <div class="remove">
+                                <paper-icon-button icon="remove"></paper-icon-button>
+                            </div>
+                            <div class="total">
+                                1
+                            </div>
+                            <div class="add">
+                                <paper-icon-button icon="add"></paper-icon-button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </iron-list>
+        </paper-card>
+
+    </template>
+
+    <script>
+
+            Polymer({
+                is: 'bite-cardlist',
+
+                properties: {},
+
+                attached: function () {
+                    //top level docu as scrolltarget
+                    var list = document.querySelector("iron-list");
+                    this.$.list.scrollTarget = this.ownerDocument.documentElement;
+                }
+            });
+    </script>
+</dom-module>

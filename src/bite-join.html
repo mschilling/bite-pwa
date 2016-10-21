@@ -1,5 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="bite-tallcard.html">
+<link rel="import" href="bite-categories.html">
+<link rel="import" href="bite-cardlist.html">
 <dom-module id="bite-join">
     <style>
         :host{
@@ -24,6 +26,18 @@
             width:100%;
         }
 
+        .categories, .menuList{
+            display:                 flex;
+            display:                 -webkit-flex;
+            flex-wrap:               wrap;
+            -webkit-flex-wrap:       wrap;
+            justify-content:         center;
+            -webkit-justify-content: center;
+            margin-top: 16px;
+            width: 100%
+        }
+
+
 
 
 
@@ -36,7 +50,21 @@
                     <bite-tallcard name="GESTART DOOR HARAMBE" background= "url(../images/harambe.jpg)" desc="Gestart om 09:11, sluit om 13:37" location="Gramsbergen" ></bite-tallcard>
                 </div>
             </div>
-        </div>
+                <div class="categories">
+                    <bite-categories name="PATAT"></bite-categories>
+                    <bite-categories name="SNACKS"></bite-categories>
+                    <bite-categories name="MILKSHAKES"></bite-categories>
+                    <bite-categories name="SAUZEN"></bite-categories>
+                    <bite-categories name="POPULAIR"></bite-categories>
+                    <bite-categories name="ALLE ITEMS"></bite-categories>
+                    <bite-categories name="PATAT"></bite-categories>
+
+                </div>
+
+                <div class="menuList">
+                    <bite-cardlist style="width: 90%;"></bite-cardlist>
+                </div>
+            </div>
     </template>
 
 
