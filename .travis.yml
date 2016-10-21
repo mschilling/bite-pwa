@@ -72,8 +72,8 @@ script:
 #  - wct -s default
   
   #HTTPS
-  - mkdir ssl
-  - echo ENV_SSL_PEM_PASS | openssl req -x509 -newkey rsa:2048 -keyout ssl/key.pem -out ssl/cert.pem -days 365
+  #- mkdir ssl
+  #- echo ENV_SSL_PEM_PASS | openssl req -x509 -newkey rsa:2048 -keyout ssl/key.pem -out ssl/cert.pem -days 365
   - py test-https.py
 
 notifications:
