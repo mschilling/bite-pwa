@@ -7,12 +7,12 @@ matrix:
 #    - node_js: "node"
 sudo: required
 dist: trusty
-cache:
-   directories:
-     - node_modules
-     - chrome-linux
-#     - lighthouse-extension/node_modules
-     - bower_components
+#cache:
+#   directories:
+#     - node_modules
+#     - chrome-linux
+##     - lighthouse-extension/node_modules
+#     - bower_components
 #addons:
 #  firefox: '46.0'
 #  apt:
