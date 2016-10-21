@@ -52,9 +52,9 @@ script:
 #  - xvfb-run wct
 #  - wct -s default
   #Lighthouse
-  - npm explore -g lighthouse -- ./lighthouse-core/scripts/download-chrome.sh
-  - mv $(npm root -g)/lighthouse/chrome-linux .
-  - $LIGHTHOUSE_CHROMIUM_PATH --version
+#  - npm explore -g lighthouse -- ./lighthouse-core/scripts/download-chrome.sh
+#  - mv $(npm root -g)/lighthouse/chrome-linux .
+#  - $LIGHTHOUSE_CHROMIUM_PATH --version
   - polymer build
   - polymer serve build/bundled &
   - lighthouse https://bite.move4mobile.io
