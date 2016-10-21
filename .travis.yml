@@ -21,15 +21,13 @@ before_script:
   - npm install -g bower polymer-cli web-component-tester selenium-webdriver lighthouse
   - bower install
 script:
-  - xvfb-run polymer test
+  - polymer test
 #  - xvfb-run wct
   - wct -s default
   #Lighthouse
-  - google-chrome --version
-  - google-chrome-stable --version
   - polymer build
   - polymer serve build/bundled &
-  - lighthouse --verbose localhost:8080
+  - lighthouse localhost:8080
 cache:
   directories:
   - node_modules
