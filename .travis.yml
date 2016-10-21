@@ -42,14 +42,14 @@ before_script:
   - mv $(npm root -g)/lighthouse/chrome-linux .
   - $LIGHTHOUSE_CHROMIUM_PATH --version
 #  - npm run build
-#  - npm install -g bower polymer-cli
+  - npm install -g bower polymer-cli
 #  npm install -g web-component-tester lighthouse selenium-webdriver
-#  - bower install
+  - bower install
 #  - ls $(npm root -g)
 #  - ls $(npm root -g)/lighthouse/
 #- unzip $(npm root -g)/lighthouse/chrome.zip $(npm root -g)/lighthouse/
 script:
-#  - polymer test
+  - polymer test
 #  - xvfb-run wct
 #  - wct -s default
   #Lighthouse
