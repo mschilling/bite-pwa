@@ -30,17 +30,20 @@ dist: trusty
 #  - export DISPLAY=:99.0
 #  - sh -e /etc/init.d/xvfb start
 before_script:
-  - mkdir -p vendors
-  - wget https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.40.zip -nv
-  - unzip -qd vendors google_appengine_1.9.40.zip
-  - ./vendors/google_appengine/dev_appserver.py --skip_sdk_update_check --port=8090 . &
+#  - mkdir -p vendors
+#  - wget https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.40.zip -nv
+#  - unzip -qd vendors google_appengine_1.9.40.zip
+#  - ./vendors/google_appengine/dev_appserver.py --skip_sdk_update_check --port=8090 . &
   - npm install -g GoogleChrome/lighthouse
   - export DISPLAY=:99.0
   - export LIGHTHOUSE_CHROMIUM_PATH="$(pwd)/chrome-linux/chrome"
   - sh -e /etc/init.d/xvfb start
-  - npm explore -g lighthouse -- ./lighthouse-core/scripts/download-chrome.sh
-  - mv $(npm root -g)/lighthouse/chrome-linux .
-  - $LIGHTHOUSE_CHROMIUM_PATH --version
+#  - npm explore -g lighthouse -- ./lighthouse-core/scripts/download-chrome.sh
+#  - mv $(npm root -g)/lighthouse/chrome-linux .
+#  - $LIGHTHOUSE_CHROMIUM_PATH --version
+
+
+
 #  - npm run build
   - npm install -g bower polymer-cli
 #  npm install -g web-component-tester lighthouse selenium-webdriver
