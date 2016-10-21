@@ -40,9 +40,9 @@ before_script:
 #  - ls $(npm root -g)/lighthouse/
 #- unzip $(npm root -g)/lighthouse/chrome.zip $(npm root -g)/lighthouse/
 script:
-  - polymer test
+#  - polymer test
 #  - xvfb-run wct
-  - wct -s default
+#  - wct -s default
   #Lighthouse
   - npm explore -g lighthouse -- ./lighthouse-core/scripts/download-chrome.sh
   - mv $(npm root -g)/lighthouse/chrome-linux .
