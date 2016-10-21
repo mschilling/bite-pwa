@@ -13,14 +13,14 @@ dist: trusty
 #     - chrome-linux
 ##     - lighthouse-extension/node_modules
 #     - bower_components
-#addons:
+addons:
 #  firefox: '46.0'
 #  apt:
 #    sources:
 #    - google-chrome
 #    packages:
 #    - google-chrome-stable
-#  sauce_connect: true
+  sauce_connect: true
 #node_js:
 #  - '6'
 #  - '5'
@@ -30,10 +30,14 @@ dist: trusty
 #  - export DISPLAY=:99.0
 #  - sh -e /etc/init.d/xvfb start
 before_script:
+
+  #Setup appengine appserver?
 #  - mkdir -p vendors
 #  - wget https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.40.zip -nv
 #  - unzip -qd vendors google_appengine_1.9.40.zip
 #  - ./vendors/google_appengine/dev_appserver.py --skip_sdk_update_check --port=8090 . &
+
+  #Setup Lighthouse
   - npm install -g GoogleChrome/lighthouse
   - export DISPLAY=:99.0
   - export LIGHTHOUSE_CHROMIUM_PATH="$(pwd)/chrome-linux/chrome"
@@ -42,19 +46,20 @@ before_script:
   - mv $(npm root -g)/lighthouse/chrome-linux .
   - $LIGHTHOUSE_CHROMIUM_PATH --version
 
-
-
-#  - npm run build
+  #Install dependencies
   - npm install -g bower polymer-cli
-#  npm install -g web-component-tester lighthouse selenium-webdriver
   - bower install
-#  - ls $(npm root -g)
-#  - ls $(npm root -g)/lighthouse/
-#- unzip $(npm root -g)/lighthouse/chrome.zip $(npm root -g)/lighthouse/
+
+  #Install WCT
+  npm install -g web-component-tester
+#  npm install -g selenium-webdriver
+
 script:
   - polymer test
+
 #  - xvfb-run wct
-#  - wct -s default
+  - wct -s default
+
   #Lighthouse
 #  - npm explore -g lighthouse -- ./lighthouse-core/scripts/download-chrome.sh
 #  - mv $(npm root -g)/lighthouse/chrome-linux .
@@ -64,9 +69,6 @@ script:
   - polymer serve build/bundled &
 
   - lighthouse http://localhost:8080
-
-
-#  - lighthouse https://bite.move4mobile.io
 notifications:
   slack:
     secure: ADt7xlh8E7bnq0PdCobSo5SRuYM56SxET+rlKZXcyGDExKCo9NSdgjAomuiJBm/ZpjnhrASO6msGjgKgmmGhmzF+H/PpgPQ/IifNIHYrJvdbflYvaj7165y7FYiLMSHAqdFFe33JKGZHpNkLKHUr3mtlIyqKhrvXpG8bhny5ObL0Aoo21OcWsNbsDWwGRu6yWVdX5sehbvskOWPALTXmL0d56LtujlprnmvI4Ae7QfDcAlVkTt+VliRtLtcH+f5VtSiHAnlrlhy1Idpjmq5AmDeEau9kovp2sxQ+RUmAw8P9QwkVclpEv5997t6zFzVJV+IraTgbFagJNEMWK+NFkZRsEHgk0P8yyNVadzGZtE8czfb/tUg5tuRUhJEDxmHJM83Pqr++QCaSR5B1Wk5fY+IhJ5Hlwzc+CurpNreiwOP+DffaKosCh9cmuMP9PJxKfmpvTnlzp9zGbp+BupJYakGRNMSZQD9UvRm350367gtOTm+d+rMfBWO4QCD1kcZLAwMd7OhEyVYNbma7euURzOjKO2iNCmdUh+hZvlVdItkjdP3Qa2PgAO6id3sZJkq45tlgEDrlgL5mr+LreHy54WMMCXohhp/NatFC7HO8bpX1WNrVRoz82c9FAklhsk1qoYL20KkW+CQIrPclagALD3NNog1K8D4Kajq/IvwvPdM=
