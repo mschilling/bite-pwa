@@ -33,7 +33,7 @@ script:
   - $LIGHTHOUSE_CHROMIUM_PATH --version
   - polymer build
   - polymer serve build/bundled &
-  - lighthouse --output=json localhost:8080
+  - lighthouse --output=json localhost:8080 --output-path=log.json
 cache:
   directories:
   - node_modules
