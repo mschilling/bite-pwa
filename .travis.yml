@@ -6,6 +6,8 @@ matrix:
 #    - node_js: "5.0"
     - node_js: "6.0"
 #    - node_js: "node"
+python:
+  - "3.5"
 sudo: required
 dist: trusty
 #cache:
