@@ -18,8 +18,9 @@ before_install:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 before_script:
+  - apt-get install sudo -y
   - npm install -g bower polymer-cli web-component-tester selenium-webdriver lighthouse
-  - bower install
+  #- bower install
   #- ls $(npm root -g)
   #- ls $(npm root -g)/lighthouse/
   #- unzip $(npm root -g)/lighthouse/chrome.zip $(npm root -g)/lighthouse/
@@ -31,9 +32,9 @@ script:
   - npm explore -g lighthouse -- ./lighthouse-core/scripts/download-chrome.sh
   - mv $(npm root -g)/lighthouse/chrome-linux .
   - $LIGHTHOUSE_CHROMIUM_PATH --version
-  - polymer build
-  - polymer serve build/bundled &
-  - sudo lighthouse --output=json localhost:8080 --output-path=log.json
+  #- polymer build
+  #- polymer serve build/bundled &
+  - sudo $(which lighthouse) --output=json https://bite.move4mobile.io --output-path=log.json
 cache:
   directories:
   - node_modules
