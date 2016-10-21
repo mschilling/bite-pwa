@@ -51,8 +51,8 @@ before_script:
   - bower install
 
   #Install WCT
-  npm install -g web-component-tester
-#  npm install -g selenium-webdriver
+  - npm install -g web-component-tester
+#  - npm install -g selenium-webdriver
 
 script:
   - polymer test
