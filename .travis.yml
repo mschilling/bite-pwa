@@ -1,4 +1,7 @@
 language: node_js
+matrix:
+  include:
+    - node_js: "node"
 sudo: required
 dist: trusty
 addons:
@@ -9,20 +12,33 @@ addons:
     packages:
     - google-chrome-stable
   sauce_connect: true
-node_js:
-  - '6'
-  - '5'
-  - '4'
-before_install:
-  - export CHROME_BIN=chromium-browser
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+#node_js:
+#  - '6'
+#  - '5'
+#  - '4'
+#before_install:
+#  - export CHROME_BIN=chromium-browser
+#  - export DISPLAY=:99.0
+#  - sh -e /etc/init.d/xvfb start
 before_script:
-  - npm install -g bower polymer-cli web-component-tester selenium-webdriver lighthouse
-  - bower install
-  - ls $(npm root -g)
-  - ls $(npm root -g)/lighthouse/
-  #- unzip $(npm root -g)/lighthouse/chrome.zip $(npm root -g)/lighthouse/
+  - mkdir -p vendors
+  - wget https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.40.zip -nv
+  - unzip -qd vendors google_appengine_1.9.40.zip
+  - ./vendors/google_appengine/dev_appserver.py --skip_sdk_update_check --port=8090 . &
+  - npm install -g GoogleChrome/lighthouse
+  - export DISPLAY=:99.0
+  - export LIGHTHOUSE_CHROMIUM_PATH="$(pwd)/chrome-linux/chrome"
+  - sh -e /etc/init.d/xvfb start
+  - npm explore -g lighthouse -- ./lighthouse-core/scripts/download-chrome.sh
+  - mv $(npm root -g)/lighthouse/chrome-linux .
+  - $LIGHTHOUSE_CHROMIUM_PATH --version
+#  - npm run build
+  - npm install -g bower polymer-cli web-component-tester
+#  npm install -g lighthouse selenium-webdriver
+#  - bower install
+#  - ls $(npm root -g)
+#  - ls $(npm root -g)/lighthouse/
+#- unzip $(npm root -g)/lighthouse/chrome.zip $(npm root -g)/lighthouse/
 script:
   - polymer test
 #  - xvfb-run wct
