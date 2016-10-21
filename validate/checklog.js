@@ -25,6 +25,10 @@ if (process.argv.length < 3) {
 }
 
 try {
+  //Get ENV passing score in Travis CI
+  const _SCORE = process.env.ENV_LIGHTHOUSE_PASSING_SCORE;
+  console.log(`Passing Score: ${_SCORE}`);
+
   const path = process.argv[2];
   const data = fs.readFileSync(path);
   const aggregations = JSON.parse(data).aggregations;
@@ -38,7 +42,7 @@ try {
   // means those tests will fail.
   console.log(`Score: ${avg}`);
 
-  if (avg < 0.4) {
+  if (avg < _SCORE) {
     console.log(JSON.stringify(pwa, null, 2));
     process.exit(1);
   }
