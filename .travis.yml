@@ -30,7 +30,9 @@ script:
   #Lighthouse
   - polymer build
   - polymer serve build/bundled &
-  - lighthouse --output=json http://localhost:8080 --output-path=./validate/log.json
+  - touch validate/log.json
+  - lighthouse --output=json http://localhost:8080 --output-path=validate/log.json\
+  - ./validate/checklog.js ./validate/log.json
 cache:
   directories:
   - node_modules
