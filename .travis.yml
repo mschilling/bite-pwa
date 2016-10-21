@@ -1,44 +1,76 @@
 language: node_js
+matrix:
+  include:
+  #Specify/enable node versions
+#    - node_js: "4.3.2"
+#    - node_js: "5.0"
+    - node_js: "6.0"
+#    - node_js: "node"
 sudo: required
 dist: trusty
+#cache:
+#   directories:
+#     - node_modules
+#     - chrome-linux
+##     - lighthouse-extension/node_modules
+#     - bower_components
 addons:
-  firefox: '46.0'
-  apt:
-    sources:
-    - google-chrome
-    packages:
-    - google-chrome-stable
-  #sauce_connect: true
-node_js:
-  - '6'
-  #- '5'
-  #- '4'
-before_install:
-  #- export CHROME_BIN=chromium-browser
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+#  firefox: '46.0'
+#  apt:
+#    sources:
+#    - google-chrome
+#    packages:
+#    - google-chrome-stable
+  sauce_connect: true
+#node_js:
+#  - '6'
+#  - '5'
+#  - '4'
+#before_install:
+#  - export CHROME_BIN=chromium-browser
+#  - export DISPLAY=:99.0
+#  - sh -e /etc/init.d/xvfb start
 before_script:
-  #- npm install -g bower polymer-cli web-component-tester selenium-webdriver
-  - npm install -g bower polymer-cli GoogleChrome/lighthouse
+
+  #Setup appengine appserver?
+#  - mkdir -p vendors
+#  - wget https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.40.zip -nv
+#  - unzip -qd vendors google_appengine_1.9.40.zip
+#  - ./vendors/google_appengine/dev_appserver.py --skip_sdk_update_check --port=8090 . &
+
+  #Setup Lighthouse
+  - npm install -g GoogleChrome/lighthouse
+  - export DISPLAY=:99.0
+#  - export LIGHTHOUSE_CHROMIUM_PATH="$(pwd)/chrome-linux/chrome"
+  - sh -e /etc/init.d/xvfb start
   - npm explore -g lighthouse -- ./lighthouse-core/scripts/download-chrome.sh
   - mv $(npm root -g)/lighthouse/chrome-linux .
   - $LIGHTHOUSE_CHROMIUM_PATH --version
+
+  #Install dependencies
+  - npm install -g bower polymer-cli
+  - bower install
+
+  #Install WCT
+  - npm install -g web-component-tester
+#  - npm install -g selenium-webdriver #nodig wanneer je: run wct wilt draaien
+
 script:
-  #- polymer test
-  #- xvfb-run wct
-  #- wct -s default
-  #Lighthouse
+  #Run 'stock' polymer tests
+  - polymer test
+
+  #Build polymer project + run lighthouse test + validate lighthouse score
   - polymer build
   - polymer serve build/bundled &
   - touch validate/log.json
-  - lighthouse --output=json http://localhost:8080 --output-path=validate/log.json
+  - lighthouse --output=json http://localhost:8080/ --output-path=validate/log.json
   - chmod a+x validate/checklog.js
   - ./validate/checklog.js ./validate/log.json
-cache:
-  directories:
-  - node_modules
-  - bower_components
+
+  #Webcomponent test via Sauce lab
+#  - xvfb-run wct
+  - wct -s default
+
 notifications:
-  email: false
   slack:
     secure: ADt7xlh8E7bnq0PdCobSo5SRuYM56SxET+rlKZXcyGDExKCo9NSdgjAomuiJBm/ZpjnhrASO6msGjgKgmmGhmzF+H/PpgPQ/IifNIHYrJvdbflYvaj7165y7FYiLMSHAqdFFe33JKGZHpNkLKHUr3mtlIyqKhrvXpG8bhny5ObL0Aoo21OcWsNbsDWwGRu6yWVdX5sehbvskOWPALTXmL0d56LtujlprnmvI4Ae7QfDcAlVkTt+VliRtLtcH+f5VtSiHAnlrlhy1Idpjmq5AmDeEau9kovp2sxQ+RUmAw8P9QwkVclpEv5997t6zFzVJV+IraTgbFagJNEMWK+NFkZRsEHgk0P8yyNVadzGZtE8czfb/tUg5tuRUhJEDxmHJM83Pqr++QCaSR5B1Wk5fY+IhJ5Hlwzc+CurpNreiwOP+DffaKosCh9cmuMP9PJxKfmpvTnlzp9zGbp+BupJYakGRNMSZQD9UvRm350367gtOTm+d+rMfBWO4QCD1kcZLAwMd7OhEyVYNbma7euURzOjKO2iNCmdUh+hZvlVdItkjdP3Qa2PgAO6id3sZJkq45tlgEDrlgL5mr+LreHy54WMMCXohhp/NatFC7HO8bpX1WNrVRoz82c9FAklhsk1qoYL20KkW+CQIrPclagALD3NNog1K8D4Kajq/IvwvPdM=
