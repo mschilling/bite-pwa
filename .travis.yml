@@ -20,7 +20,9 @@ before_install:
 before_script:
   - npm install -g bower polymer-cli web-component-tester selenium-webdriver lighthouse
   - bower install
-  - unzip $(npm root -g)/lighthouse/chrome.zip $(npm root -g)/lighthouse/
+  - ls $(npm root -g)
+  - ls $(npm root -g)/lighthouse/
+  #- unzip $(npm root -g)/lighthouse/chrome.zip $(npm root -g)/lighthouse/
 script:
   - polymer test
 #  - xvfb-run wct
