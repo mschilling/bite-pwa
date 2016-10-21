@@ -1,4 +1,4 @@
-# Bite PWA
+# Bite PWA [![Build Status](https://travis-ci.org/mschilling/bite-pwa.svg?branch=master)](https://travis-ci.org/mschilling/bite-pwa)
 
 ## Installation
 
