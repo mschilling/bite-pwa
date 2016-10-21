@@ -1,6 +1,7 @@
 language: node_js
 matrix:
   include:
+  #Specify/enable node versions
 #    - node_js: "4.3.2"
 #    - node_js: "5.0"
     - node_js: "6.0"
