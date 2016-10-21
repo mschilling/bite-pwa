@@ -32,9 +32,9 @@ script:
   #- xvfb-run wct
   #- wct -s default
   #Lighthouse
-  #- polymer build
-  #- polymer serve build/bundled &
-  - lighthouse --output=json https://bite.move4mobile.io --output-path=log.json
+  - polymer build
+  - polymer serve build/bundled &
+  - lighthouse --output=json http://localhost:8080 --output-path=log.json
 cache:
   directories:
   - node_modules
