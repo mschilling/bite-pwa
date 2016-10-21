@@ -20,10 +20,6 @@ before_install:
 before_script:
   #- npm install -g bower polymer-cli web-component-tester selenium-webdriver
   - npm install -g bower polymer-cli GoogleChrome/lighthouse
-  #- bower install
-  #- ls $(npm root -g)
-  #- ls $(npm root -g)/lighthouse/
-  #- unzip $(npm root -g)/lighthouse/chrome.zip $(npm root -g)/lighthouse/
   - npm explore -g lighthouse -- ./lighthouse-core/scripts/download-chrome.sh
   - mv $(npm root -g)/lighthouse/chrome-linux .
   - $LIGHTHOUSE_CHROMIUM_PATH --version
@@ -34,7 +30,7 @@ script:
   #Lighthouse
   - polymer build
   - polymer serve build/bundled &
-  - lighthouse --output=json http://localhost:8080 --output-path=log.json
+  - lighthouse --output=json http://localhost:8080 --output-path=./validate/log.json
 cache:
   directories:
   - node_modules
