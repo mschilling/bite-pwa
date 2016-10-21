@@ -20,11 +20,15 @@ before_install:
 before_script:
   - npm install -g bower polymer-cli web-component-tester selenium-webdriver lighthouse
   - bower install
+  - unzip $(npm root -g)/lighthouse/chrome.zip $(npm root -g)/lighthouse/
 script:
   - polymer test
 #  - xvfb-run wct
   - wct -s default
   #Lighthouse
+  - npm explore -g lighthouse -- ./lighthouse-core/scripts/download-chrome.sh
+  - mv $(npm root -g)/lighthouse/chrome-linux .
+  - $LIGHTHOUSE_CHROMIUM_PATH --version
   - polymer build
   - polymer serve build/bundled &
   - lighthouse localhost:8080
