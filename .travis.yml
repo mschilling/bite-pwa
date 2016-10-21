@@ -60,6 +60,7 @@ script:
   - polymer build
   - polymer serve build/bundled &
 
+  - lighthouse http://localhost:8080
 
 
 #  - lighthouse https://bite.move4mobile.io
