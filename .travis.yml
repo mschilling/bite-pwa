@@ -83,7 +83,7 @@ script:
   # HTTPS
   - touch validate/log-ssl.json
   - http-server build/bundled -p 4443 -S -C ssl/server.crt -K ssl/key.pem &
-
+  - certutil -d sql:$HOME/.pki/nssdb -A -t P -n 'localhost-cert' -i ssl/server.crt
   - curl https://localhost:4443/ --ipv4 -k
   - curl https://localhost:4443/ --ipv4
 
