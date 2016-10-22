@@ -76,9 +76,9 @@ script:
   
   # #HTTPS
   - openssl version -d
-  - chown root /  && chown root /etc/ && chown root /etc/ssl/ && chown root /etc/ssl/certs/ && chown root /etc/ssl/certs/ca-certificates.crt
-  - cp ssl/cert.pem /usr/local/share/ca-certificates/certificate.crt
-  - update-ca-certificates
+  - sudo chown root /  && chown root /etc/ && chown root /etc/ssl/ && chown root /etc/ssl/certs/ && chown root /etc/ssl/certs/ca-certificates.crt
+  - sudo cp ssl/cert.pem /usr/local/share/ca-certificates/certificate.crt
+  - sudo update-ca-certificates
 
   # - touch validate/log-ssl.json
   # - http-server build/bundled -p 4443 -S -C ssl/cert.pem -K ssl/key.pem &
