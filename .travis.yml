@@ -81,22 +81,23 @@ script:
   # - sudo update-ca-certificates
 
   # HTTPS
-  - touch validate/log-ssl.json
+  #- touch validate/log-ssl.json
   - http-server build/bundled -p 4443 -S -C ssl/server.crt -K ssl/key.pem &
 
   - mkdir -p $HOME/.pki/nssdb
   #- echo "" | certutil -d $HOME/.pki/nssdb -N
   - netstat -lnt
   - nmap localhost
+  - certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "webmail" -i ssl/server.crt
   - echo QUIT | openssl s_client -connect localhost:4443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/server.crt
-  - curl https://localhost:4443/
-  #- certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "webmail" -i ssl/cert.pem
+  - curl https://localhost:4443/ --ipv4
+  
   #- certutil -L -d $HOME/.pki/nssdb
   #- certutil -L -d $HOME/.pki/nssdb -n "webmail"
 
-  - lighthouse --output=json https://localhost:4443/ --output-path=validate/log-ssl.json
-  - chmod a+x validate/checklog.js
-  - ./validate/checklog.js ./validate/log-ssl.json
+  - lighthouse https://localhost:4443/
+  #- chmod a+x validate/checklog.js
+  #- ./validate/checklog.js ./validate/log-ssl.json
 
 notifications:
   email: false
