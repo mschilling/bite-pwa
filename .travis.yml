@@ -85,7 +85,7 @@ script:
   - http-server build/bundled -p 443 -S -C ssl/cert.pem -K ssl/key.pem &
 
   - mkdir -p $HOME/.pki/nssdb
-  - certutil -d $HOME/.pki/nssdb -N
+  - echo "" | certutil -d $HOME/.pki/nssdb -N
   - echo QUIT | openssl s_client -connect localhost:443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/cert.pem
   - certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "webmail" -i ssl/cert.pem
   - certutil -L -d $HOME/.pki/nssdb
