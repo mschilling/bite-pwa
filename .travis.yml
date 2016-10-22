@@ -82,14 +82,15 @@ script:
 
   # HTTPS
   - touch validate/log-ssl.json
-  - http-server build/bundled -p 4443 -S -C ssl/cert.pem -K ssl/key.pem &
+  - http-server build/bundled -p 443 -S -C ssl/cert.pem -K ssl/key.pem &
 
-  - echo QUIT | openssl s_client -connect localhost:4443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/cert.pem
+  - mkdir -p $HOME/.pki/nssdb
+  - echo QUIT | openssl s_client -connect localhost:443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/cert.pem
   - certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "webmail" -i ssl/cert.pem
   - certutil -L -d $HOME/.pki/nssdb
   - certutil -L -d $HOME/.pki/nssdb -n "webmail"
 
-  - lighthouse --output=json https://localhost:4443/ --output-path=validate/log-ssl.json
+  - lighthouse --output=json https://localhost:443/ --output-path=validate/log-ssl.json
   - chmod a+x validate/checklog.js
   - ./validate/checklog.js ./validate/log-ssl.json
 
