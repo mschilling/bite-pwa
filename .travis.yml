@@ -56,6 +56,7 @@ before_script:
 #  - npm install -g selenium-webdriver #nodig wanneer je: run wct wilt draaien
 
   #Install http-server
+  - apt-get install libnss3-tools -y
   - npm install -g http-server
 
 script:
@@ -83,7 +84,7 @@ script:
   - touch validate/log-ssl.json
   - http-server build/bundled -p 4443 -S -C ssl/cert.pem -K ssl/key.pem &
 
-  - echo QUIT | openssl s_client -connect https://localhost:4443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/cert.pem
+  - echo QUIT | openssl s_client -connect localhost:4443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/cert.pem
   - certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "webmail" -i ssl/cert.pem
   - certutil -L -d $HOME/.pki/nssdb
   - certutil -L -d $HOME/.pki/nssdb -n "webmail"
