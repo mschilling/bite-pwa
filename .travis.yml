@@ -86,10 +86,12 @@ script:
 
   - mkdir -p $HOME/.pki/nssdb
   #- echo "" | certutil -d $HOME/.pki/nssdb -N
+  - netstat -lnt
+  - nmap localhost
   - echo QUIT | openssl s_client -connect localhost:443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/cert.pem
-  - certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "webmail" -i ssl/cert.pem
-  - certutil -L -d $HOME/.pki/nssdb
-  - certutil -L -d $HOME/.pki/nssdb -n "webmail"
+  #- certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "webmail" -i ssl/cert.pem
+  #- certutil -L -d $HOME/.pki/nssdb
+  #- certutil -L -d $HOME/.pki/nssdb -n "webmail"
 
   - lighthouse --output=json https://localhost:443/ --output-path=validate/log-ssl.json
   - chmod a+x validate/checklog.js
