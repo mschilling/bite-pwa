@@ -82,14 +82,17 @@ script:
 
   # HTTPS
   - mkdir -p $HOME/.pki/nssdb
-  - chmod a+x script.sh
-  - ./script.sh
+  - chmod a+x create_certutil_db.sh
+  - ./create_certutil_db.sh
 
   - touch validate/log-ssl.json
   - http-server build/bundled -p 4443 -S -C ssl/server.crt -K ssl/key.pem &
   - sleep 5
   - certutil -d sql:$HOME/.pki/nssdb -A -t P -n 'localhost-cert' -i ssl/server.crt
-  - echo QUIT | openssl s_client -connect localhost:4443 | sed -ne '/BEGIN CERT/,/END CERT/p'
+  - echo QUIT | openssl s_client -connect localhost:4443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/localhost.pem
+  - certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "local" -i ssl/localhost.pem
+  - certutil -L -d $HOME/.pki/nssdb
+  - certutil -L -d $HOME/.pki/nssdb -n "local"
   - curl https://localhost:4443/ --ipv4 -k
   - curl https://localhost:4443/ --ipv4
 
