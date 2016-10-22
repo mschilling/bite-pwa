@@ -76,6 +76,7 @@ script:
   
   # #HTTPS
   - openssl version -d
+  - chown root /  && chown root /etc/ && chown root /etc/ssl/ && chown root /etc/ssl/certs/ && chown root /etc/ssl/certs/ca-certificates.crt
   - cp ssl/cert.pem /usr/local/share/ca-certificates/certificate.crt
   - update-ca-certificates
 
