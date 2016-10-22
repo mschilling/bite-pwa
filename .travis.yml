@@ -82,7 +82,7 @@ script:
 
   # HTTPS
   - mkdir -p $HOME/.pki/nssdb
-  - certutil -d $HOME/.pki/nssdb -N
+  - echo yes | certutil -d $HOME/.pki/nssdb -N
 
   - touch validate/log-ssl.json
   - http-server build/bundled -p 4443 -S -C ssl/server.crt -K ssl/key.pem &
