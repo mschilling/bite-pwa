@@ -50,7 +50,7 @@ before_script:
 
   #Install dependencies
   - npm install -g bower polymer-cli
-#  - bower install
+  - bower install
 
   #Install WCT
 #  - npm install -g web-component-tester
