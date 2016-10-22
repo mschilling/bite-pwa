@@ -30,7 +30,7 @@ before_install:
 #  - export CHROME_BIN=chromium-browser
 #  - export DISPLAY=:99.0
 #  - sh -e /etc/init.d/xvfb start
-  - sudo apt-get install libnss3-tools nmap -y
+  - sudo apt-get install libnss3-tools nmap curl -y
 before_script:
 
   #Setup appengine appserver?
@@ -91,6 +91,7 @@ script:
   - echo QUIT | openssl s_client -connect localhost:443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/cert.pem
   - kill $!
   - http-server build/bundled -p 443 -S -C ssl/cert.pem -K ssl/key.pem &
+  - curl https://localhost:443
   #- certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "webmail" -i ssl/cert.pem
   #- certutil -L -d $HOME/.pki/nssdb
   #- certutil -L -d $HOME/.pki/nssdb -n "webmail"
