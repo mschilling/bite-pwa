@@ -86,25 +86,24 @@ script:
   - ./create_certutil_db.sh
 
   - touch validate/log-ssl.json
-  - http-server build/bundled -p 4443 -S -C ssl/server.crt -K ssl/key.pem &
+  - http-server build/bundled -p 443 -S -C ssl/server.crt -K ssl/key.pem &
   - sleep 5
   - certutil -d sql:$HOME/.pki/nssdb -A -t P -n 'localhost-cert' -i ssl/server.crt
-  - echo QUIT | openssl s_client -connect localhost:4443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/localhost.pem
+  - echo QUIT | openssl s_client -connect localhost:443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/localhost.pem
   - ls ssl/
+  - sudo cp ssl/localhost.pem /usr/local/share/ca-certificates/certificate.crt
+  - sudo update-ca-certificates
   #- certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "local" -i ssl/localhost.pem
-  - certutil -d sql:$HOME/.pki/nssdb -A -t TC -n "local-fetch" -i ssl/localhost.pem
-  - certutil -d sql:$HOME/.pki/nssdb -A -t TC -n "crt" -i ssl/server.crt
-  - certutil -d sql:$HOME/.pki/nssdb -A -t TC -n "cert" -i ssl/csr.pem
-  - certutil -L -d sql:$HOME/.pki/nssdb
+  - certutil -d sql:$HOME/.pki/nssdb -A -t TC -n "local-fetch-sql" -i ssl/localhost.pem
   - certutil -d $HOME/.pki/nssdb -A -t TC -n "local-fetch" -i ssl/localhost.pem
-  - certutil -d $HOME/.pki/nssdb -A -t TC -n "crt" -i ssl/server.crt
-  - certutil -d $HOME/.pki/nssdb -A -t TC -n "cert" -i ssl/csr.pem
+  - certutil -L -d sql:$HOME/.pki/nssdb
   - certutil -L -d $HOME/.pki/nssdb
   #- certutil -L -d $HOME/.pki/nssdb -n "local"
-  - curl https://localhost:4443/ --ipv4 -k
-  - curl https://localhost:4443/ --ipv4
+  - curl https://localhost:443/ --ipv4 -k
+  - curl https://localhost:443/ --ipv4 --cacert ssl/localhost.pem
+  - curl https://localhost:443/ --ipv4
 
-  - lighthouse --putput=json https://localhost:4443/ --output-path=validate/log-ssl.json
+  - lighthouse --putput=json https://localhost:443/ --output-path=validate/log-ssl.json
   - chmod a+x validate/checklog.js
   - ./validate/checklog.js ./validate/log-ssl.json
 
