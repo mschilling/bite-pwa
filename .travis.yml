@@ -6,8 +6,6 @@ matrix:
 #    - node_js: "5.0"
     - node_js: "6.0"
 #    - node_js: "node"
-python:
-  - "3.5"
 sudo: required
 dist: trusty
 #cache:
@@ -57,6 +55,9 @@ before_script:
 #  - npm install -g web-component-tester
 #  - npm install -g selenium-webdriver #nodig wanneer je: run wct wilt draaien
 
+  #Install http-server
+  - npm install -g http-server
+
 script:
   #Run 'stock' polymer tests
 #  - polymer test
@@ -74,11 +75,7 @@ script:
 #  - wct -s default
   
   #HTTPS
-  #- mkdir ssl
-  #- echo ENV_SSL_PEM_PASS | openssl req -x509 -newkey rsa:2048 -keyout ssl/key.pem -out ssl/cert.pem -days 365
-  - python --version
-  - if [ $(python --version) > 3]; then python test-https.py else python test-https2.py fi
-  #- python test-https.py
+  - http-server build/bundled -p 4443 -S -C ssl/cert.pem -K ssl/key.pem
 
 notifications:
   email: false
