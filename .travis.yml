@@ -89,7 +89,7 @@ script:
   - netstat -lnt
   - nmap localhost
   - chmod a+x import-cert.sh
-  - import-cert.sh localhost 4443
+  - ./import-cert.sh localhost 4443
   #- certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "webmail" -i ssl/server.crt
   #- echo QUIT | openssl s_client -connect localhost:4443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/server.crt
   - curl https://localhost:4443/ --ipv4 -k
