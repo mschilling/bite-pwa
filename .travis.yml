@@ -38,18 +38,18 @@ before_script:
 #  - unzip -qd vendors google_appengine_1.9.40.zip
 #  - ./vendors/google_appengine/dev_appserver.py --skip_sdk_update_check --port=8090 . &
 
-  Setup Lighthouse
- - npm install -g GoogleChrome/lighthouse
- - export DISPLAY=:99.0
- - export LIGHTHOUSE_CHROMIUM_PATH="$(pwd)/chrome-linux/chrome"
- - sh -e /etc/init.d/xvfb start
- - npm explore -g lighthouse -- ./lighthouse-core/scripts/download-chrome.sh
- - mv $(npm root -g)/lighthouse/chrome-linux .
- - $LIGHTHOUSE_CHROMIUM_PATH --version
+  #Setup Lighthouse
+  - npm install -g GoogleChrome/lighthouse
+  - export DISPLAY=:99.0
+  - export LIGHTHOUSE_CHROMIUM_PATH="$(pwd)/chrome-linux/chrome"
+  - sh -e /etc/init.d/xvfb start
+  - npm explore -g lighthouse -- ./lighthouse-core/scripts/download-chrome.sh
+  - mv $(npm root -g)/lighthouse/chrome-linux .
+  - $LIGHTHOUSE_CHROMIUM_PATH --version
 
-  Install dependencies
- - npm install -g bower polymer-cli
- - bower install
+  #Install dependencies
+  - npm install -g bower polymer-cli
+  - bower install
 
   #Install WCT
 #  - npm install -g web-component-tester
@@ -63,21 +63,22 @@ script:
 #  - polymer test
 
   #Build polymer project + run lighthouse test + validate lighthouse score
- - polymer build
- - polymer serve build/bundled &
- - touch validate/log.json
- - lighthouse --output=json http://localhost:8080/ --output-path=validate/log.json
- - chmod a+x validate/checklog.js
- - ./validate/checklog.js ./validate/log.json
+  - polymer build
+#  - polymer serve build/bundled &
+#  - touch validate/log.json
+#  - lighthouse --output=json http://localhost:8080/ --output-path=validate/log.json
+#  - chmod a+x validate/checklog.js
+#  - ./validate/checklog.js ./validate/log.json
 
   #Webcomponent test via Sauce lab
 #  - xvfb-run wct
 #  - wct -s default
   
   #HTTPS
-  - http-server build/bundled -p 4443 -S -C ssl/cert.pem -K ssl/key.pem &
   - touch validate/log-ssl.json
+  - http-server build/bundled -p 4443 -S -C ssl/cert.pem -K ssl/key.pem &
   - lighthouse --output=json https://localhost:4443/ --output-path=validate/log-ssl.json
+  - chmod a+x validate/checklog.js
   - ./validate/checklog.js ./validate/log-ssl.json
 
 notifications:
