@@ -64,7 +64,7 @@ script:
 #  - polymer test
 
   #Build polymer project + run lighthouse test + validate lighthouse score
- # - polymer build
+  - polymer build
  # - polymer serve build/bundled &
  # - touch validate/log.json
  # - lighthouse --output=json http://localhost:8080/ --output-path=validate/log.json
