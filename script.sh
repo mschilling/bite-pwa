@@ -1,5 +1,5 @@
 #!/usr/bin/expect -f
-spawn certutil -d $HOME/.pki/nssdb -N
+spawn certutil -d $env(HOME)/.pki/nssdb -N
 expect "Enter new password:"
 send "\r"
 expect eof
