@@ -91,9 +91,15 @@ script:
   - certutil -d sql:$HOME/.pki/nssdb -A -t P -n 'localhost-cert' -i ssl/server.crt
   - echo QUIT | openssl s_client -connect localhost:4443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/localhost.pem
   - ls ssl/
-  - certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "local" -i ssl/localhost.pem
-  - certutil -d sql:$HOME/.pki/nssdb -A -t TC -n "local1" -i ssl/localhost.pem
+  #- certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "local" -i ssl/localhost.pem
+  - certutil -d sql:$HOME/.pki/nssdb -A -t TC -n "local-fetch" -i ssl/localhost.pem
+  - certutil -d sql:$HOME/.pki/nssdb -A -t TC -n "crt" -i ssl/server.crt
+  - certutil -d sql:$HOME/.pki/nssdb -A -t TC -n "cert" -i ssl/csr.pem
   - certutil -L -d sql:$HOME/.pki/nssdb
+  - certutil -d $HOME/.pki/nssdb -A -t TC -n "local-fetch" -i ssl/localhost.pem
+  - certutil -d $HOME/.pki/nssdb -A -t TC -n "crt" -i ssl/server.crt
+  - certutil -d $HOME/.pki/nssdb -A -t TC -n "cert" -i ssl/csr.pem
+  - certutil -L -d $HOME/.pki/nssdb
   #- certutil -L -d $HOME/.pki/nssdb -n "local"
   - curl https://localhost:4443/ --ipv4 -k
   - curl https://localhost:4443/ --ipv4
