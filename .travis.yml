@@ -82,7 +82,7 @@ script:
   # HTTPS
   - touch validate/log-ssl.json
   - http-server build/bundled -p 4443 -S -C ssl/cert.pem -K ssl/key.pem &
-  - lighthouse --output=json https://localhost:4443/ --output-path=validate/log-ssl.json &
+  - lighthouse --output=json https://localhost:4443/ --output-path=validate/log-ssl.json
   - chmod a+x validate/checklog.js
   - ./validate/checklog.js ./validate/log-ssl.json
 
