@@ -49,7 +49,7 @@ before_script:
   - $LIGHTHOUSE_CHROMIUM_PATH --version
 
   #Install dependencies
-  - npm install -g bower polymer-cli
+  - npm install -g bower polymer-cli pwmetrics
   - bower install
 
   #Install WCT
@@ -105,6 +105,7 @@ script:
 
   #- lighthouse --putput=json https://localhost:4443/ --output-path=validate/log-ssl.json
   - lighthouse https://localhost:4443/ 
+  - pwmetrics https://localhost:4443
   #- chmod a+x validate/checklog.js
   #- ./validate/checklog.js ./validate/log-ssl.json
 
