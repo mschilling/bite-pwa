@@ -21,7 +21,7 @@ addons:
 #    - google-chrome
 #    packages:
 #    - google-chrome-stable
-  sauce_connect: true
+  sauce_connect: false
 #node_js:
 #  - '6'
 #  - '5'
@@ -88,7 +88,7 @@ script:
   - touch validate/log-ssl.json
   - http-server build/bundled -p 4443 -S -C ssl/server.crt -K ssl/key.pem &
   - sleep 5
-  #- certutil -d sql:$HOME/.pki/nssdb -A -t P -n 'localhost-cert' -i ssl/server.crt
+  - certutil -d sql:$HOME/.pki/nssdb -A -t P -n 'localhost-cert' -i ssl/server.crt
   - echo QUIT | openssl s_client -connect localhost:4443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/localhost.pem
   #- ls ssl/
   - sudo cp ssl/localhost.pem /usr/local/share/ca-certificates/certificate.crt
