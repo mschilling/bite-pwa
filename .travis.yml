@@ -40,7 +40,7 @@ before_script:
 #  - ./vendors/google_appengine/dev_appserver.py --skip_sdk_update_check --port=8090 . &
 
   #Setup Lighthouse
-  - npm install -g GoogleChrome/lighthouse
+  - npm install -g lighthouse
   - export DISPLAY=:99.0
   - export LIGHTHOUSE_CHROMIUM_PATH="$(pwd)/chrome-linux/chrome"
   - sh -e /etc/init.d/xvfb start
