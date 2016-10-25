@@ -105,7 +105,7 @@ script:
 
   - lighthouse https://localhost:4443/ 
   - lighthouse --output=json https://localhost:4443/ --output-path=validate/log-ssl.json
-  - cat /validate/log-ssl.json
+  #- cat /validate/log-ssl.json
   - chmod a+x validate/checklog.js
   - ./validate/checklog.js ./validate/log-ssl.json
   - pwmetrics https://localhost:4443/
