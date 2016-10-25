@@ -89,10 +89,10 @@ script:
   - http-server build/bundled -p 4443 -S -C ssl/server.crt -K ssl/key.pem &
   - sleep 5
   - certutil -d sql:$HOME/.pki/nssdb -A -t P -n 'localhost-cert' -i ssl/server.crt
-  - echo QUIT | openssl s_client -connect localhost:4443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/localhost.pem
+  #- echo QUIT | openssl s_client -connect localhost:4443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/localhost.pem
   #- ls ssl/
-  - sudo cp ssl/localhost.pem /usr/local/share/ca-certificates/certificate.crt
-  - sudo update-ca-certificates
+  #- sudo cp ssl/localhost.pem /usr/local/share/ca-certificates/certificate.crt
+  #- sudo update-ca-certificates
   #- certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "local" -i ssl/localhost.pem
   #- certutil -d sql:$HOME/.pki/nssdb -A -t TC -n "local-fetch-sql" -i ssl/localhost.pem
   #- certutil -d $HOME/.pki/nssdb -A -t TC -n "local-fetch" -i ssl/localhost.pem
