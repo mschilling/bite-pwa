@@ -3,5 +3,18 @@
   "short_name": "Bite",
   "description": "Eten bestellen in Zwolle en Gramsbergen",
   "start_url": "/",
-  "display": "standalone"
+  "background_color": "#fff",
+  "theme_color": "#fff",
+  "display": "standalone",
+  "icons": [{
+    "src": "images/android-chrome-144x144.png",
+    "sizes": "144x144",
+    "type": "image/png"
+  },
+    {
+      "src": "images/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
 }
