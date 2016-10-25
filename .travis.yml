@@ -1,36 +1,11 @@
 language: node_js
 matrix:
   include:
-  #Specify/enable node versions
-#    - node_js: "4.3.2"
-#    - node_js: "5.0"
     - node_js: "6.0"
-#    - node_js: "node"
 sudo: required
 dist: trusty
-#cache:
-#   directories:
-#     - node_modules
-#     - chrome-linux
-##     - lighthouse-extension/node_modules
-#     - bower_components
-addons:
-#  firefox: '46.0'
-#  apt:
-#    sources:
-#    - google-chrome
-#    packages:
-#    - google-chrome-stable
-  sauce_connect: false
-#node_js:
-#  - '6'
-#  - '5'
-#  - '4'
 before_install:
-#  - export CHROME_BIN=chromium-browser
-#  - export DISPLAY=:99.0
-#  - sh -e /etc/init.d/xvfb start
-  - sudo apt-get install libnss3-tools expect curl -y
+  - sudo apt-get install libnss3-tools expect -y
 before_script:
 
   #Setup appengine appserver?
@@ -49,65 +24,34 @@ before_script:
   - $LIGHTHOUSE_CHROMIUM_PATH --version
 
   #Install dependencies
-  - npm install -g bower polymer-cli pwmetrics
+  - npm install -g bower polymer-cli http-server pwmetrics
   - bower install
 
-  #Install WCT
-#  - npm install -g web-component-tester
-#  - npm install -g selenium-webdriver #nodig wanneer je: run wct wilt draaien
-
-  #Install http-server
-  - npm install -g http-server
-
-script:
-  #Run 'stock' polymer tests
-#  - polymer test
-
-  #Build polymer project + run lighthouse test + validate lighthouse score
-  - polymer build
- # - polymer serve build/bundled &
- # - touch validate/log.json
- # - lighthouse --output=json http://localhost:8080/ --output-path=validate/log.json
- # - chmod a+x validate/checklog.js
- # - ./validate/checklog.js ./validate/log.json
-
-  #Webcomponent test via Sauce lab
-#  - xvfb-run wct
-#  - wct -s default
-  
-  # # Install self signed certificate
-  # - openssl version -d
-  # - sudo cp ssl/cert.pem /usr/local/share/ca-certificates/certificate.crt
-  # - sudo update-ca-certificates
-
-  # HTTPS
+  #Setup SSL db
   - mkdir -p $HOME/.pki/nssdb
   - chmod a+x create_certutil_db.sh
   - ./create_certutil_db.sh
 
-  - touch validate/log-ssl.json
+script:
+
+  #Build polymer project
+  - polymer build
+
+  #Run HTTPS server
   - http-server build/bundled -p 4443 -S -C ssl/server.crt -K ssl/key.pem &
   - sleep 5
+  
+  #Add SSL cert to trusted
   - certutil -d sql:$HOME/.pki/nssdb -A -t P -n 'localhost-cert' -i ssl/server.crt
-  #- echo QUIT | openssl s_client -connect localhost:4443 | sed -ne '/BEGIN CERT/,/END CERT/p' > ssl/localhost.pem
-  #- ls ssl/
-  #- sudo cp ssl/localhost.pem /usr/local/share/ca-certificates/certificate.crt
-  #- sudo update-ca-certificates
-  #- certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "local" -i ssl/localhost.pem
-  #- certutil -d sql:$HOME/.pki/nssdb -A -t TC -n "local-fetch-sql" -i ssl/localhost.pem
-  #- certutil -d $HOME/.pki/nssdb -A -t TC -n "local-fetch" -i ssl/localhost.pem
-  #- certutil -L -d sql:$HOME/.pki/nssdb
-  #- certutil -L -d $HOME/.pki/nssdb
-  #- certutil -L -d $HOME/.pki/nssdb -n "local"
-  #- curl https://localhost:4443/ --ipv4 -k
-  #- curl https://localhost:4443/ --ipv4 --cacert ssl/localhost.pem
-  #- curl https://localhost:4443/ --ipv4
-
+  
+  #Lighthouse
+  - touch validate/log-ssl.json
   - lighthouse https://localhost:4443/ 
   - lighthouse --output=json https://localhost:4443/ --output-path=validate/log-ssl.json
-  #- cat /validate/log-ssl.json
   - chmod a+x validate/checklog.js
   - ./validate/checklog.js ./validate/log-ssl.json
+  
+  #PWMetrics
   - pwmetrics https://localhost:4443/
 
 notifications:
