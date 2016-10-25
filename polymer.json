@@ -1,7 +1,11 @@
 {
   "entrypoint": "index.html",
   "shell": "src/bite-pwa.html",
-  "fragments": []
+  "fragments": [
+    "src/bite-main.html",
+    "src/bite-join.html",
+    "src/lazy-resources.html"
+  ]
   ,
   "sourceGlobs": [
    "src/**/*",

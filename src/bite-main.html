@@ -1,6 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="bite-card.html" async>
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="bite-card.html">
+
+
+
 
 <dom-module id="bite-main">
     <template>
@@ -178,9 +182,17 @@
         Polymer({
             is: 'bite-main',
 
+            properties:{},
+
             _addBite: function () {
                 var cards = Polymer.dom(this.root).querySelector('.bite-cards');
-                $(cards).append("<bite-card name='PRIMATARIA' background= 'url(../images/harambe.jpg)' desc='🌯🌯🌯🌯🌯' location='Gramsbergen'></bite-card>");
+
+                var newCards = document.createElement('bite-card');
+                newCards.name = "PRIMATARIA";
+                newCards.background = "url(../images/harambe.jpg)";
+                newCards.desc = "🌯🌯🌯🌯🌯";
+                newCards.location = "Gramsbergen";
+                Polymer.dom(this.$.cards).appendChild(newCards);
             },
 
             _openBite: function(){

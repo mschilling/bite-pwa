@@ -1,7 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="bite-tallcard.html">
 <link rel="import" href="bite-categories.html">
 <link rel="import" href="bite-cardlist.html">
+
 <dom-module id="bite-join">
     <style>
         :host{
@@ -41,6 +44,7 @@
 
 
 
+
     </style>
 
     <template>
@@ -58,22 +62,29 @@
                     <bite-categories name="POPULAIR"></bite-categories>
                     <bite-categories name="ALLE ITEMS"></bite-categories>
                     <bite-categories name="PATAT"></bite-categories>
-
                 </div>
 
-                <div class="menuList">
-                    <bite-cardlist style="width: 90%;"></bite-cardlist>
-                </div>
+                <app-header fixed>
+                        <div class="menuList">
+                            <bite-cardlist style="width: 90%;"></bite-cardlist>
+                        </div>
+                </app-header>
             </div>
     </template>
 
 
     <script>
         Polymer({
-            is: 'bite-join'
+            is: 'bite-join',
+            properties: {},
 
+            ready: function(){
 
+            }
 
         });
+
+
+
     </script>
 </dom-module>
