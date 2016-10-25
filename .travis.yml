@@ -53,7 +53,9 @@ script:
   
   #PWMetrics
   - pwmetrics https://localhost:4443/
-
+after_script:
+  #Kill last bg process (http-server)
+  - kill $!
 notifications:
   email: false
   slack:
