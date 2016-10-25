@@ -61,6 +61,8 @@ before_script:
   - mkdir -p $HOME/.pki/nssdb
   - chmod a+x create_certutil_db.sh
   - ./create_certutil_db.sh
+  #Add SSL cert to trusted
+  - certutil -d sql:$HOME/.pki/nssdb -A -t P -n 'localhost-cert' -i ssl/server.crt
 
 script:
   #Run 'stock' polymer tests
