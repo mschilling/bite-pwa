@@ -14,8 +14,10 @@
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+
 <!-- Eager load -->
 <link rel="import" href="bite-main.html" async>
+<link rel="import" href="bite-login.html" async>
 
 
 
@@ -57,6 +59,7 @@
 
 
     </style>
+
     <!-- app-location binds to the app's URL -->
     <app-location route="{{route}}"></app-location>
 
@@ -71,7 +74,7 @@
 
 
     <app-header-layout>
-      <app-header fixed effects="waterfall">
+      <app-header fixed waterfall>
         <!-- Toolbar goes here -->
         <app-toolbar id="toolbar">
           <div main-title id="mainTitle">HEY, NAAM</div>
@@ -88,6 +91,8 @@
         <bite-open name="open"></bite-open>
         <!-- Screen when joining a currently existing bite -->
         <bite-join name="join"></bite-join>
+        <!-- Login screen -->
+        <bite-login name="login"></bite-login>
       </iron-pages>
     </div>
 
@@ -121,7 +126,7 @@
         
 
       _routePageChanged: function(page){
-        this.page = page || 'main';
+        this.page = page || 'login';
       //Scroll to the top on every route change
       //Behavior silent disables the header scroll effects during the scroll.
       Polymer.AppLayout.scroll({top: 0, behavior: 'silent'});
@@ -132,7 +137,7 @@
         //load page import on demand
         if (page != null){
             //main route is eagerly loaded
-            if(page == 'main'){
+            if(page == 'login'){
                 this._pageLoaded(Boolean(oldPage));
                 //other routes are lazy loaded
             } else {

@@ -8,5 +8,15 @@
   {"name": "Frikandel speciaal", "image": "../images/harambe.jpg", "price": "3"},
   {"name": "Coca Cola Regular", "image": "../images/harambe.jpg", "price": "4"},
   {"name": "Coca Cola", "image": "../images/harambe.jpg", "price": "5"},
+  {"name": "Curry", "image": "../images/harambe.jpg", "price": "4"},
+  {"name": "Patat Normaal", "image": "../images/harambe.jpg", "price": "5"},
+  {"name": "Mayonaise", "image": "../images/harambe.jpg", "price": "5"},
+  {"name": "Broodje Hamburger Speciaal", "image": "../images/harambe.jpg", "price": "5"},
+  {"name": "Raspatat Normaal", "image": "../images/harambe.jpg", "price": "4"},
+  {"name": "Raspatat Groot", "image": "../images/harambe.jpg", "price": "3"},
+  {"name": "Kaassouflé", "image": "../images/harambe.jpg", "price": "2"},
+  {"name": "Frikandel speciaal", "image": "../images/harambe.jpg", "price": "3"},
+  {"name": "Coca Cola Regular", "image": "../images/harambe.jpg", "price": "4"},
+  {"name": "Coca Cola", "image": "../images/harambe.jpg", "price": "5"},
   {"name": "Curry", "image": "../images/harambe.jpg", "price": "4"}
 ]
