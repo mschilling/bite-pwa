@@ -14,6 +14,8 @@
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+
 
 <!-- Eager load -->
 <link rel="import" href="bite-login.html" async>
@@ -21,83 +23,87 @@
 
 
 <dom-module id="bite-pwa">
-  <template>
-    <style is="custom-style">
-      :host {
-        display: block;
-        position: relative;
-        --app-primary-color: #EC9630;
-        --app-text-color: #EC9630;
-        --app-secondary-color: #FAFAFA;
-        --app-header-color: #F5F5F5;
-        --app-accent-color: #EC9630;
-      }
+	<template>
+		<style is="custom-style">
+			:host {
+				display: block;
+				position: relative;
+				--app-primary-color: #EC9630;
+				--app-text-color: #EC9630;
+				--app-secondary-color: #FAFAFA;
+				--app-header-color: #F5F5F5;
+				--app-accent-color: #EC9630;
+			}
+			
+			app-header {
+				@apply(--layout-fixed-top);
+				z-index: 1;
+				background-color: var(--app-header-color);
+				font-style: italic;
+				font-weight: 600;
+        box-shadow:0px 3px 5px rgba(100, 100, 100, 0.49);
+			}
+			
+			iron-icon {
+				color: var(--app-primary-color);
+			}
+			
+			app-toolbar {
+				color: var(--app-text-color);
+			}
+			
+			.content {
+				max-width: 800px;
+				margin: 0 auto;
+				color: #E98B2B;
+			}
+		</style>
 
-      app-header {
-        @apply(--layout-fixed-top);
-        z-index: 1;
-        background-color: var(--app-header-color);
-        font-style: italic;
-        font-weight: 600;
-      }
+		<!-- Firebase init -->
+		<firebase-app name="bite" auth-domain="bite-4ce99.firebaseapp.com" database-url="https://bite-4ce99.firebaseio.com" api-key="AIzaSyB54Q19Q-8OxXpWIy9xQHO0qai6SnS3Vm8">
+		</firebase-app>
 
-      iron-icon {
-        color: var(--app-primary-color);
-      }
-
-      app-toolbar{
-        color: var(--app-text-color);
-      }
-
-      .content{
-        max-width: 800px;
-        margin: 0 auto;
-        color: #E98B2B;
-      }
-
-
-    </style>
-
-    <!-- app-location binds to the app's URL -->
-    <app-location route="{{route}}"></app-location>
-
-    <!-- this app-route manages the top-level routes -->
-    <app-route
-            route="{{route}}"
-            pattern="/:page"
-            data="{{routeData}}"
-            tail="{{subroute}}"
-            ></app-route>
+		<!-- Login auth -->
+		<firebase-auth id="auth" app-name="bite" provider="google" signed-in="{{signedIn}}" user="{{user}}" status-known="{{statusKnown}}">
+		</firebase-auth>
 
 
+		<!-- app-location binds to the app's URL -->
+		<app-location route="{{route}}"></app-location>
 
-    <app-header-layout>
-      <app-header fixed waterfall>
-        <!-- Toolbar goes here -->
-        <app-toolbar id="toolbar">
-          <div main-title id="mainTitle">HEY, NAAM</div>
-          <paper-icon-button id="personButton" icon="social:person" on-tap="_changePage"></paper-icon-button>
-        </app-toolbar>
-      </app-header>
+		<!-- this app-route manages the top-level routes -->
+		<app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}">
+		</app-route>
 
-    <div class="content">
 
-      <iron-pages id="pages" selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
-        <!-- Main screen -->
-        <bite-main name="main"></bite-main>
-        <!-- Screen when opening new Bite-->
-        <bite-open name="open"></bite-open>
-        <!-- Screen when joining a currently existing bite -->
-        <bite-join name="join"></bite-join>
-        <!-- Login screen -->
-        <bite-login name="login"></bite-login>
-      </iron-pages>
-    </div>
 
-    </app-header-layout>
-  </template>
+		<app-header-layout>
+			<app-header fixed waterfall>
+				<!-- Toolbar goes here -->
+				<app-toolbar id="toolbar">
+					<div main-title id="mainTitle">HEY, [[displayName]]</div>
+					<paper-icon-button id="personButton" icon="social:person" on-tap="_signOut"></paper-icon-button>
+				</app-toolbar>
+			</app-header>
 
-  <script>
+			<div class="content">
+
+				<iron-pages id="pages" selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
+					<!-- Main screen -->
+					<bite-main on-nav-join="_navJoin" name="main"></bite-main>
+					<!-- Screen when opening new Bite-->
+					<bite-open name="open"></bite-open>
+					<!-- Screen when joining a currently existing bite -->
+					<bite-join name="join"></bite-join>
+					<!-- Login screen -->
+					<bite-login on-sign-in="_signIn" signed-in="[[signedIn]]" name="login"></bite-login>
+				</iron-pages>
+			</div>
+
+		</app-header-layout>
+	</template>
+
+	<script>
 
       window.performance && performance.mark && performance.mark('bite-pwa - before register');
 
@@ -110,21 +116,39 @@
               type: Number,
               value: 0
           },
-
-          page: {
-              type: String,
-              reflectToAttribute: true,
-              observer: '_pageChanged'
+         page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged'
+          },
+          signedIn: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false,
+            observer: '_sessionChanged'
+          },
+          statusKnown: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false,
+            observer: '_sessionChanged'
+          },
+          user: {
+            type: Object,
+            reflectToAttribute: true,
+          },
+          displayName: {
+            type: String,
+            reflectToAttribute: true
           }
+
       },
 
       observers: [
               '_routePageChanged(routeData.page)'
       ],
         
-
       _routePageChanged: function(page){
-        this.page = page || 'login';
       //Scroll to the top on every route change
       //Behavior silent disables the header scroll effects during the scroll.
       Polymer.AppLayout.scroll({top: 0, behavior: 'silent'});
@@ -179,20 +203,37 @@
         Polymer.RenderStatus.afterNextRender(this, function(){
             this.listen(window, 'online', '_notifyNetworkStatus');
             this.listen(window, 'offline', '_notifyNetworkStatus');
-
         });
       },
 
-      _changePage: function(){
-          console.log("hi");
-          if(this.page == 'main'){
-              this.page = 'join';
-          } else{
-              this.page = 'main';
+      _signIn: function(){
+        this.$.auth.signInWithRedirect();
+      },
 
-          }
+      _sessionChanged: function(){
+        console.log("Log in: " + this.signedIn);
+        console.log("Status known:" + this.statusKnown);   
+          
+        if(this.statusKnown == true){
+        if(this.signedIn == true){
+          //Display name without last name 
+          this.displayName = this.user.displayName.toUpperCase().substr(0,this.user.displayName.indexOf(' '));
+          this.page = 'main';
+        } else if(this.signedIn == false){
+          this.displayName = "NAAM";
+          this.page = 'login';
+        } 
+        }   
+      },
+
+      _signOut: function(){
+        console.log("clicked");
+        this.$.auth.signOut();
+        console.log(this.signedIn);
+      },
+      _navJoin: function(){
+        this.page = 'join';
       }
-
     });
 
   </script>

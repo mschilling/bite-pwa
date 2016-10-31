@@ -2,10 +2,16 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 
+
+
 <dom-module id="bite-login">
+   <template>
     <style>
         :host{
             font-family: Roboto, Noto, sans-serif;
+        }
+        :host([signed-in]){
+            pointer-events: none;
         }
         h1{
             font-size: 70px;
@@ -62,8 +68,6 @@
             font-size: 14px;
         }
     </style>
-
-    <template>
         <div class="container">
             <h1>OH, HI!</h1>
             <p>Leuk dat je even komt kijken! <br/>
@@ -87,11 +91,18 @@
         Polymer({
             is: 'bite-login',
             properties: {
-
+                signedIn: {
+                    type: Boolean,
+                    reflectToAttribute: true,
+                    value: false
+                }
             },
 
             _signIn: function(){
-                    console.log("Inlog functie TODO")
+                this.fire('sign-in', null);
+            },
+
+            ready: function(){
             }
 
 

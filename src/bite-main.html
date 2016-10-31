@@ -169,7 +169,7 @@
                     <div class="biteLine"></div>
                 </div>
                 <div id="cards" class="bite-cards">
-                    <bite-card name="PRIMATARIA" background= "url(../images/harambe.jpg)" desc="🌯🌯🌯🌯🌯" location="Gramsbergen" ></bite-card>
+                    <bite-card on-nav-join="_navJoin" name="PRIMATARIA" background= "url(../images/harambe.jpg)" desc="🌯🌯🌯🌯🌯" location="Gramsbergen" ></bite-card>
                 </div>
             </div>
         </div>
@@ -190,11 +190,16 @@
                 newCards.background = "url(../images/harambe.jpg)";
                 newCards.desc = "🌯🌯🌯🌯🌯";
                 newCards.location = "Gramsbergen";
+                this.listen(newCards, 'on-tap', '_navJoin');
                 Polymer.dom(this.$.cards).appendChild(newCards);
             },
 
             _openBite: function(){
 
+            },
+
+            _navJoin: function(){
+                this.fire('nav-join', null);
             }
 
 

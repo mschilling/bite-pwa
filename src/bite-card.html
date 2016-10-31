@@ -89,7 +89,7 @@
             }
 
         </style>
-        <paper-card>
+        <paper-card on-tap="_navJoin">
             <div class="card-content">
                 <div class="img" style$="background: [[background]]; background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
                 <div class="cardInfo">
@@ -129,8 +129,11 @@
                 background: String,
                 desc: String,
                 location: String
-            }
+            },
 
+            _navJoin: function(){
+                this.fire('nav-join', null);
+            }
         });
 
 
