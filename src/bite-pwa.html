@@ -33,17 +33,16 @@
 				--app-secondary-color: #FAFAFA;
 				--app-header-color: #F5F5F5;
 				--app-accent-color: #EC9630;
+                --header-shadow: 0px 3px 5px rgba(100, 100, 100, 0.49);
 			}
-			
-			app-header {
-				@apply(--layout-fixed-top);
-				z-index: 1;
-				background-color: var(--app-header-color);
-				font-style: italic;
-				font-weight: 600;
-        box-shadow:0px 3px 5px rgba(100, 100, 100, 0.49);
-			}
-			
+           app-header {
+                @apply(--layout-fixed-top);
+                z-index: 1;
+                background-color: var(--app-header-color);
+                box-shadow: var(--header-shadow);
+                font-style: italic;
+                font-weight: 600;
+            }
 			iron-icon {
 				color: var(--app-primary-color);
 			}
@@ -57,6 +56,11 @@
 				margin: 0 auto;
 				color: #E98B2B;
 			}
+
+            #joinToolbar {
+                background-color: #EC9630;
+                color: white;
+            }
 		</style>
 
 		<!-- Firebase init -->
@@ -78,29 +82,33 @@
 
 
 		<app-header-layout>
-			<app-header fixed waterfall>
-				<!-- Toolbar goes here -->
-				<app-toolbar id="toolbar">
-					<div main-title id="mainTitle">HEY, [[displayName]]</div>
-					<paper-icon-button id="personButton" icon="social:person" on-tap="_signOut"></paper-icon-button>
-				</app-toolbar>
-			</app-header>
+				<!-- Content here -->
+        <app-header fixed waterfall>
+            <app-toolbar id="mainToolbar">
+                <div main-title id="mainTitle">HEY, [[displayName]]</div>
+                <paper-icon-button id="personButton" icon="social:person" on-tap="_signOut"></paper-icon-button>
+            </app-toolbar>
+            <app-toolbar id="joinToolbar" style="display: none;">
+                <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
+                <div main-title>PRIMATARIA</div>
+                <paper-icon-button icon="search"></paper-icon-button>
+            </app-toolbar>
+        </app-header>
 
-			<div class="content">
-
-				<iron-pages id="pages" selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
+        <div class="content">
+        <iron-pages id="pages" selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
 					<!-- Main screen -->
 					<bite-main on-nav-join="_navJoin" name="main"></bite-main>
 					<!-- Screen when opening new Bite-->
 					<bite-open name="open"></bite-open>
 					<!-- Screen when joining a currently existing bite -->
-					<bite-join name="join"></bite-join>
+					<bite-join on-page-change="_navBack" page="{{page}}" name="join"></bite-join>
 					<!-- Login screen -->
 					<bite-login on-sign-in="_signIn" signed-in="[[signedIn]]" name="login"></bite-login>
 				</iron-pages>
-			</div>
-
+        </div>
 		</app-header-layout>
+
 	</template>
 
 	<script>
@@ -119,27 +127,25 @@
          page: {
             type: String,
             reflectToAttribute: true,
-            observer: '_pageChanged'
+            observer: '_pageChanged',
+		    notify: true,
+            readOnly: false
           },
           signedIn: {
             type: Boolean,
-            reflectToAttribute: true,
             value: false,
             observer: '_sessionChanged'
           },
           statusKnown: {
             type: Boolean,
-            reflectToAttribute: true,
             value: false,
             observer: '_sessionChanged'
           },
           user: {
-            type: Object,
-            reflectToAttribute: true,
+            type: Object
           },
           displayName: {
-            type: String,
-            reflectToAttribute: true
+            type: String
           }
 
       },
@@ -169,6 +175,7 @@
                             this._pageLoaded(Boolean(oldPage));
                         }, null, true);
             }
+            this._dynHeader();
         }
       },
 
@@ -198,22 +205,16 @@
         //Upgrade element, remove unresolved
         this.removeAttribute('unresolved');
       },
-
       ready: function(){
         Polymer.RenderStatus.afterNextRender(this, function(){
             this.listen(window, 'online', '_notifyNetworkStatus');
             this.listen(window, 'offline', '_notifyNetworkStatus');
         });
       },
-
       _signIn: function(){
         this.$.auth.signInWithRedirect();
       },
-
       _sessionChanged: function(){
-        console.log("Log in: " + this.signedIn);
-        console.log("Status known:" + this.statusKnown);   
-          
         if(this.statusKnown == true){
         if(this.signedIn == true){
           //Display name without last name 
@@ -225,15 +226,33 @@
         } 
         }   
       },
-
       _signOut: function(){
-        console.log("clicked");
         this.$.auth.signOut();
-        console.log(this.signedIn);
+      },
+      _navBack: function(){
+      	console.log(this.page);
+        this.page = 'main';
       },
       _navJoin: function(){
+        console.log(this.page);
         this.page = 'join';
+      },
+      _dynHeader: function(){
+        //Get the headers
+        var mainToolbar = Polymer.dom(this.root).querySelector('#mainToolbar');
+        var joinToolbar = Polymer.dom(this.root).querySelector('#joinToolbar');
+        switch(this.page){
+            case 'main':
+                mainToolbar.setAttribute('style', 'display:visible;');
+                joinToolbar.setAttribute('style', 'display:none;');
+                break;
+            case 'join':
+                mainToolbar.setAttribute('style', 'display:none;');
+                joinToolbar.setAttribute('style', 'display:visible;');
+                break;
+        }
       }
+
     });
 
   </script>

@@ -11,7 +11,6 @@
                 margin: 0 auto;
                 display: block;
             }
-
             .logoImg{
                 width: 100px;
                 bottom: 35px;
@@ -121,16 +120,6 @@
                 margin: 0 auto;
                 margin-top: 24px;
             }
-
-            app-header {
-                @apply(--layout-fixed-top);
-                z-index: 1;
-                background-color: var(--app-header-color);
-                box-shadow:0px 3px 5px rgba(100, 100, 100, 0.49);
-                font-style: italic;
-                font-weight: 600;
-            }
-
             iron-icon {
                 color: var(--app-primary-color);
             }
@@ -190,7 +179,6 @@
                 newCards.background = "url(../images/harambe.jpg)";
                 newCards.desc = "🌯🌯🌯🌯🌯";
                 newCards.location = "Gramsbergen";
-                this.listen(newCards, 'on-tap', '_navJoin');
                 Polymer.dom(this.$.cards).appendChild(newCards);
             },
 
