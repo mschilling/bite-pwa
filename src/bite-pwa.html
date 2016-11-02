@@ -242,6 +242,9 @@
         var mainToolbar = Polymer.dom(this.root).querySelector('#mainToolbar');
         var joinToolbar = Polymer.dom(this.root).querySelector('#joinToolbar');
         switch(this.page){
+            case 'login':
+                mainToolbar.setAttribute('style', 'display:none;');
+                break;
             case 'main':
                 mainToolbar.setAttribute('style', 'display:visible;');
                 joinToolbar.setAttribute('style', 'display:none;');
