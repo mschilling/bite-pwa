@@ -31,7 +31,7 @@ addons:
 #  - export DISPLAY=:99.0
 #  - sh -e /etc/init.d/xvfb start
 before_install:
-  - sudo apt-get install libnss3-tools expect perl -y
+  - sudo apt-get install libnss3-tools expect -y
 before_script:
 
   #Setup appengine appserver?
@@ -54,7 +54,8 @@ before_script:
   - bower install
 
   # TEMP - FIX POLYMERFIRE
-  - perl -i -pe 's/\_bootstrapApp\(app\, customSw\) \{/\_bootstrapApp\: function\(app\, customSw\) \{/g' bower_components/polymerfire/firebase-messaging.html
+  #- perl -i -pe 's/\_bootstrapApp\(app\, customSw\) \{/\_bootstrapApp\: function\(app\, customSw\) \{/g' bower_components/polymerfire/firebase-messaging.html
+  - sed -i 's/_bootstrapApp/_bootstrapApp: function/g' bower_components/polymerfire/firebase-messaging.html
 
   #Install WCT
   - npm install -g web-component-tester
