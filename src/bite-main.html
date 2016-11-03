@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
 <link rel="import" href="bite-card.html">
 
 
@@ -13,7 +14,7 @@
             }
             .logoImg{
                 width: 100px;
-                bottom: 35px;
+                bottom: 20px;
                 left: 20px;
                 position: fixed;
             }
@@ -128,10 +129,35 @@
                 color: var(--app-text-color);
             }
 
-            .bite-cards{
+            .bite-cards {
                 margin-bottom: 10px;
             }
 
+            .emptyBites {
+                width: 90%;
+                margin: 0 auto;
+                z-index: 2;
+            }
+            .emptyImage{
+                margin-top: 32px;
+            }
+            .emptyTitle, .emptyText {
+                color: #000000;
+                opacity: 0.4;
+            }
+            .emptyTitle{
+                margin-top: 32px;
+                font-style: italic;
+                font-weight: 800;
+                font-size: 16px;
+            }
+            .emptyText {
+                margin-top: 16px;
+                margin-bottom: 100px;
+            }
+            paper-ripple{
+                color: lightgrey;
+            }
         </style>
 
 
@@ -142,6 +168,7 @@
         <div class="container">
             <div class="cardContainer">
                 <paper-card class="cardRank">
+                    <paper-ripple centers fit recenters></paper-ripple>
                     <div class="card-content">
                         <div class="cardImg"></div>
                         <div class="cardTitleDesc">
@@ -154,11 +181,19 @@
 
 
                 <div class="bites">
-                    <div class="biteTitle">BITES(1)</div>
+                    <div class="biteTitle">BITES([[biteTotal]])</div>
                     <div class="biteLine"></div>
                 </div>
                 <div id="cards" class="bite-cards">
-                    <bite-card on-nav-join="_navJoin" name="PRIMATARIA" background= "url(../images/harambe.jpg)" desc="🌯🌯🌯🌯🌯" location="Gramsbergen" ></bite-card>
+                    <!-- Bites are added here dynamically -->
+                    <div class="emptyBites">
+                    <!-- Only show when Bites is empty -->
+                        <div class="emptyImage"><img src="../images/Bitegrey.png"/></div>
+                        <div class="emptyTitle">HONGER!</div>
+                        <div class="emptyText">Er staan momenteel geen BITES open.<br/>
+                            Je kunt zelf een nieuwe BITE openen
+                            door op de plus te tikken!</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -169,11 +204,21 @@
         Polymer({
             is: 'bite-main',
 
-            properties:{},
+            properties:{
+                biteTotal: {
+                    type: Number,
+                    value: 0
+                }
+            },
 
             _addBite: function () {
+                var empty = Polymer.dom(this.root).querySelector('.emptyBites');
                 var cards = Polymer.dom(this.root).querySelector('.bite-cards');
 
+                empty.setAttribute('style', 'display:none;');
+
+                this.biteTotal++;
+                this.biteTotal = this.biteTotal.toString();
                 var newCards = document.createElement('bite-card');
                 newCards.name = "PRIMATARIA";
                 newCards.background = "url(../images/harambe.jpg)";
