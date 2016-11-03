@@ -47,14 +47,21 @@
             margin: 0 auto;
 			left: 0px;
 			right: 0px;
+			width: 100%;
 			margin-top: 16px;
-            width: 100%;
-          
 		}
 		
 		.menuList {
         }
-		
+		.categorieList{
+			white-space: nowrap;
+			overflow: hidden;
+			overflow-x: scroll;
+		}
+		::-webkit-scrollbar {
+			width: 0px;  /* remove scrollbar space */
+			background: transparent;  /* optional: just make scrollbar invisible */
+		}
         .sticky{
            
         }
@@ -70,6 +77,7 @@
 				</div>
 			</div>
 			<div id="categories" class="categories">
+				<div class="categorieList">
                     <bite-categories name="PATAT"></bite-categories>
                     <bite-categories name="SNACKS"></bite-categories>
                     <bite-categories name="MILKSHAKES"></bite-categories>
@@ -77,6 +85,7 @@
                     <bite-categories name="POPULAIR"></bite-categories>
                     <bite-categories name="ALLE ITEMS"></bite-categories>
                     <bite-categories name="PATAT"></bite-categories>
+				</div>
 			</div>
 
 			
