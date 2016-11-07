@@ -13,29 +13,31 @@
 
             }
 
-            paper-card{
+            paper-card {
                 margin: 0 auto;
                 width: 90%;
                 margin-top: 16px;
                 text-align: left;
                 font-family: Roboto, Noto, sans-serif;
 
-                --paper-card-actions:{
+                --paper-card-actions: {
                     padding: 0;
                 }
             }
 
-            .title{
+            .title {
                 font-weight: 700;
                 font-style: italic;
                 font-size: 16px;
                 color: #EC9630;
 
             }
-            .desc{
+
+            .desc {
                 margin-top: 6px;
             }
-            .img{
+
+            .img {
                 float: left;
                 border-radius: 50%;
                 width: 50px;
@@ -44,14 +46,14 @@
                 margin-bottom: 16px;
             }
 
-            .location{
+            .location {
                 color: #9B9B9B;
                 font-weight: 100;
                 margin-top: 6px;
 
             }
 
-            .person{
+            .person {
                 float: left;
                 border-radius: 50%;
                 background: url(../../images/logo.jpg);
@@ -65,7 +67,7 @@
                 margin-top: 12px;
             }
 
-            .fab{
+            .fab {
                 float: left;
                 width: 24px;
                 height: 24px;
@@ -74,49 +76,54 @@
                 font-size: 8px;
             }
 
-            .personContainer{
+            .personContainer {
                 float: left;
 
             }
 
-            .fabContainer{
+            .fabContainer {
                 float: right;
             }
 
-            .cardInfo{
+            .cardInfo {
                 display: inline-block;
                 margin-left: 16px;
             }
 
         </style>
-        <paper-card on-tap="_navJoin">
-            <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
-            <div class="card-content">
-                <div class="img" style$="background: [[background]]; background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
-                <div class="cardInfo">
-                    <div class="title">[[name]]</div>
-                    <div class="desc">[[desc]]</div>
-                    <div class="location"><iron-icon style="height: 15px; width: 15px;" icon="communication:location-on"></iron-icon>[[location]]</div>
-                </div>
-            </div>
-            <div class="card-actions" style="margin-left: 48px;">
-                <div class="personContainer">
-                    <div class="person"></div>
-                    <div class="person"></div>
-                    <div class="person"></div>
-                    <div class="person"></div>
-                    <div class="person"></div>
-                    <div class="fabContainer">
-                        <paper-fab mini class="fab" label="5"></paper-fab>
+        <a href="/join">
+            <paper-card>
+                <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
+                <div class="card-content">
+                    <div class="img"
+                         style$="background: [[background]]; background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+                    <div class="cardInfo">
+                        <div class="title">[[name]]</div>
+                        <div class="desc">[[desc]]</div>
+                        <div class="location">
+                            <iron-icon style="height: 15px; width: 15px;" icon="communication:location-on"></iron-icon>
+                            [[location]]
+                        </div>
                     </div>
                 </div>
+                <div class="card-actions" style="margin-left: 48px;">
+                    <div class="personContainer">
+                        <div class="person"></div>
+                        <div class="person"></div>
+                        <div class="person"></div>
+                        <div class="person"></div>
+                        <div class="person"></div>
+                        <div class="fabContainer">
+                            <paper-fab mini class="fab" label="5"></paper-fab>
+                        </div>
+                    </div>
 
-            </div>
-        </paper-card>
+                </div>
+            </paper-card>
+        </a>
 
 
     </template>
-
 
 
     <script>
@@ -132,7 +139,7 @@
                 location: String
             },
 
-            _navJoin: function(){
+            _navJoin: function () {
                 this.fire('nav-join', null);
             }
         });

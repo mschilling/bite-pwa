@@ -1,7 +1,6 @@
 <!-- webcomponents -->
 
 
-
 <!-- elements -->
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
@@ -15,35 +14,36 @@
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
 
 <!-- Eager load -->
 <link rel="import" href="bite-login.html" async>
 
 
-
 <dom-module id="bite-pwa">
-	<template>
-		<style is="custom-style">
-			:host {
-				display: block;
-				position: relative;
-				--app-primary-color: #EC9630;
-				--app-text-color: #EC9630;
-				--app-secondary-color: #FAFAFA;
-				--app-header-color: #F5F5F5;
-				--app-accent-color: #EC9630;
+    <template>
+        <style is="custom-style">
+            :host {
+                display: block;
+                position: relative;
+                --app-primary-color: #EC9630;
+                --app-text-color: #EC9630;
+                --app-secondary-color: #FAFAFA;
+                --app-header-color: #F5F5F5;
+                --app-accent-color: #EC9630;
                 --header-shadow: 0px 3px 5px rgba(100, 100, 100, 0.49);
 
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                cursor: default;
+            }
 
-				-webkit-touch-callout: none;
-				-webkit-user-select: none;
-				-khtml-user-select: none;
-				-moz-user-select: none;
-				-ms-user-select: none;
-				user-select: none;
-			}
-           app-header {
+            app-header {
                 @apply(--layout-fixed-top);
                 z-index: 1;
                 background-color: var(--app-header-color);
@@ -51,220 +51,250 @@
                 font-style: italic;
                 font-weight: 600;
             }
-			iron-icon {
-				color: var(--app-primary-color);
-			}
-			
-			app-toolbar {
-				color: var(--app-text-color);
-			}
-			
-			.content {
-				max-width: 800px;
-				margin: 0 auto;
-				color: #E98B2B;
-			}
+
+            iron-icon {
+                color: var(--app-primary-color);
+            }
+
+            app-toolbar {
+                color: var(--app-text-color);
+            }
+
+            .content {
+                max-width: 800px;
+                margin: 0 auto;
+                color: #E98B2B;
+            }
 
             #joinToolbar {
                 background-color: #EC9630;
                 color: white;
             }
-		</style>
 
-		<!-- Firebase init -->
-		<firebase-app name="bite" auth-domain="bite-4ce99.firebaseapp.com" database-url="https://bite-4ce99.firebaseio.com" api-key="AIzaSyB54Q19Q-8OxXpWIy9xQHO0qai6SnS3Vm8">
-		</firebase-app>
-
-		<!-- Login auth -->
-		<firebase-auth id="auth" app-name="bite" provider="google" signed-in="{{signedIn}}" user="{{user}}" status-known="{{statusKnown}}">
-		</firebase-auth>
-
-
-		<!-- app-location binds to the app's URL -->
-		<app-location route="{{route}}"></app-location>
-
-		<!-- this app-route manages the top-level routes -->
-		<app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}">
-		</app-route>
-
-
-
-		<app-header-layout>
-				<!-- Content here -->
-        <app-header fixed waterfall>
-            <app-toolbar id="mainToolbar">
-                <div main-title id="mainTitle">HEY, [[displayName]]</div>
-                <paper-icon-button id="personButton" icon="social:person" on-tap="_signOut"></paper-icon-button>
-            </app-toolbar>
-            <app-toolbar id="joinToolbar" style="display: none;">
-                <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
-                <div main-title>PRIMATARIA</div>
-                <paper-icon-button icon="search"></paper-icon-button>
-            </app-toolbar>
-        </app-header>
-
-        <div class="content">
-        <iron-pages id="pages" selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
-					<!-- Main screen -->
-					<bite-main on-nav-join="_navJoin" name="main"></bite-main>
-					<!-- Screen when opening new Bite-->
-					<bite-open name="open"></bite-open>
-					<!-- Screen when joining a currently existing bite -->
-					<bite-join on-page-change="_navBack" page="{{page}}" name="join"></bite-join>
-					<!-- Login screen -->
-					<bite-login on-sign-in="_signIn" signed-in="[[signedIn]]" name="login"></bite-login>
-				</iron-pages>
-        </div>
-		</app-header-layout>
-
-	</template>
-
-	<script>
-
-      window.performance && performance.mark && performance.mark('bite-pwa - before register');
-
-      Polymer({
-
-      is: 'bite-pwa',
-
-      properties: {
-          selected: {
-              type: Number,
-              value: 0
-          },
-         page: {
-            type: String,
-            reflectToAttribute: true,
-            observer: '_pageChanged',
-		    notify: true,
-            readOnly: false
-          },
-          signedIn: {
-            type: Boolean,
-            value: false,
-            observer: '_sessionChanged'
-          },
-          statusKnown: {
-            type: Boolean,
-            value: false,
-            observer: '_sessionChanged'
-          },
-          user: {
-            type: Object
-          },
-          displayName: {
-            type: String
-          }
-
-      },
-
-      observers: [
-              '_routePageChanged(routeData.page)'
-      ],
-        
-      _routePageChanged: function(page){
-      //Scroll to the top on every route change
-      //Behavior silent disables the header scroll effects during the scroll.
-      Polymer.AppLayout.scroll({top: 0, behavior: 'silent'});
-
-      },
-
-      _pageChanged: function(page, oldPage){
-        //load page import on demand
-        if (page != null){
-            //main route is eagerly loaded
-            if(page == 'login'){
-                this._pageLoaded(Boolean(oldPage));
-                //other routes are lazy loaded
-            } else {
-                this.importHref(
-                        this.resolveUrl('bite-' + page +'.html'),
-                        function(){
-                            this._pageLoaded(Boolean(oldPage));
-                        }, null, true);
+            paper-spinner.orange {
+                position: fixed;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                --paper-spinner-layer-1-color: var(--google-yellow-500);
             }
-            this._dynHeader();
-        }
-      },
 
-      _pageLoaded: function(){
-        this._ensureLazyLoaded();
+            .signoutBtn {
+                color: #EC9630;
+            }
 
-      },
+            /* Proper CSS */
 
-      _ensureLazyLoaded: function(){
-        //load lazy resources after render and set 'loadComplete' when done.
-        if(!this.loadComplete){
-            Polymer.RenderStatus.afterNextRender(this, function(){
-                this.importHref(this.resolveUrl('lazy-resources.html'), function(){
-                   //TODO include serviceworker and network status
-                    this.loadComplete = true;
+        </style>
+
+        <!-- Spinner on load -->
+
+
+        <!-- Firebase init -->
+        <firebase-app name="bite" auth-domain="bite-4ce99.firebaseapp.com"
+                      database-url="https://bite-4ce99.firebaseio.com"
+                      api-key="AIzaSyB54Q19Q-8OxXpWIy9xQHO0qai6SnS3Vm8">
+        </firebase-app>
+
+        <!-- Login auth -->
+        <firebase-auth id="auth" app-name="bite" provider="google" signed-in="{{signedIn}}" user="{{user}}"
+                       status-known="{{statusKnown}}">
+        </firebase-auth>
+
+        <!-- Firebase query -->
+        <firebase-query
+                id="query"
+                app-name="bite"
+                path="/info/[[name]]"
+                data="{{data}}">
+        </firebase-query>
+
+        <!-- app-location binds to the app's URL -->
+        <app-location route="{{route}}"></app-location>
+
+        <!-- this app-route manages the top-level routes -->
+        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subRoute}}">
+        </app-route>
+
+
+        <app-header-layout>
+            <app-header fixed waterfall>
+                <app-toolbar id="mainToolbar" style="display: none">
+                    <div main-title id="mainTitle">HEY, [[displayName]]</div>
+                    <a class="signoutBtn" href="/login">
+                        <paper-icon-button id="personButton" icon="social:person" on-tap="_signOut"></paper-icon-button>
+                    </a>
+                </app-toolbar>
+                <app-toolbar id="joinToolbar" style="display: none;">
+                    <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
+                    <div main-title>PRIMATARIA</div>
+                    <paper-icon-button icon="search"></paper-icon-button>
+                </app-toolbar>
+            </app-header>
+
+
+            <div class="content">
+                <paper-spinner class="orange" active></paper-spinner>
+                <!-- Login screen -->
+                <bite-login id="login" on-sign-in="_signIn" signed-in="[[signedIn]]" name="login"></bite-login>
+
+                <iron-pages id="pages" selected="[[routeData.page]]" attr-for-selected="name" role="main"
+                            selected-attribute="visible">
+                    <!-- Main screen -->
+                    <bite-main on-nav-join="_navJoin" route="{{subRoute}}" name="main"></bite-main>
+                    <!-- Screen when opening new Bite-->
+                    <bite-open name="open" route="{{subRoute}}"></bite-open>
+                    <!-- Screen when joining a currently existing bite -->
+                    <bite-join on-page-change="_navBack" page="{{page}}" route="{{subRoute}}" name="join"></bite-join>
+                </iron-pages>
+            </div>
+        </app-header-layout>
+
+    </template>
+
+    <script>
+
+        window.performance && performance.mark && performance.mark('bite-pwa - before register');
+
+        Polymer({
+
+            is: 'bite-pwa',
+
+            properties: {
+                selected: {
+                    type: Number,
+                    value: 0
+                },
+                page: {
+                    type: String,
+                    reflectToAttribute: true,
+                    observer: '_pageChanged',
+                    notify: true,
+                    readOnly: false
+                },
+                signedIn: {
+                    type: Boolean
+                },
+                statusKnown: {
+                    type: Boolean
+                },
+                user: {
+                    type: Object
+                },
+                displayName: {
+                    type: String
+                }
+
+            },
+
+            observers: [
+                '_routePageChanged(routeData.page)',
+                '_userStateKnown(user, statusKnown)'
+            ],
+
+            _routePageChanged: function (page) {
+                this.page = page || 'login';
+                //Scroll to the top on every route change
+                //Behavior silent disables the header scroll effects during the scroll.
+                Polymer.AppLayout.scroll({top: 0, behavior: 'silent'});
+
+            },
+
+            _pageChanged: function (page, oldPage) {
+                //load page import on demand
+                if (page != null) {
+                    //main route is eagerly loaded
+                    if (page == 'login') {
+                        this._pageLoaded(Boolean(oldPage));
+                        //other routes are lazy loaded
+                    } else {
+                        this.importHref(
+                                this.resolveUrl('bite-' + page + '.html'),
+                                function () {
+                                    this._pageLoaded(Boolean(oldPage));
+                                }, null, true);
+                    }
+                    this._dynHeader();
+                }
+            },
+
+            _pageLoaded: function () {
+                this._ensureLazyLoaded();
+
+            },
+
+            _ensureLazyLoaded: function () {
+                //load lazy resources after render and set 'loadComplete' when done.
+                if (!this.loadComplete) {
+                    Polymer.RenderStatus.afterNextRender(this, function () {
+                        this.importHref(this.resolveUrl('lazy-resources.html'), function () {
+                            //TODO include serviceworker and network status
+                            this.loadComplete = true;
+                        });
+                    });
+                }
+            },
+            _navBack: function () {
+                window.history.back();
+            },
+            created: function () {
+                window.performance && performance.mark && performance.mark('bite-pwa.created');
+                //Upgrade element, remove unresolved
+                this.removeAttribute('unresolved');
+            },
+            ready: function () {
+                Polymer.RenderStatus.afterNextRender(this, function () {
+                    this.listen(window, 'online', '_notifyNetworkStatus');
+                    this.listen(window, 'offline', '_notifyNetworkStatus');
+
+                    var spinner = Polymer.dom(this.root).querySelector('paper-spinner');
+                    spinner.removeAttribute('active');
+
                 });
-            });
-        }
-      },
+            },
 
-      _showPage404: function(){
-        this.page = '404';
-      },
+            _signIn: function () {
+                this.$.auth.signInWithRedirect();
+            },
 
-      created: function(){
-        window.performance && performance.mark && performance.mark('bite-pwa.created');
-        //Upgrade element, remove unresolved
-        this.removeAttribute('unresolved');
-      },
-      ready: function(){
-        Polymer.RenderStatus.afterNextRender(this, function(){
-            this.listen(window, 'online', '_notifyNetworkStatus');
-            this.listen(window, 'offline', '_notifyNetworkStatus');
-        });
-      },
-      _signIn: function(){
-        this.$.auth.signInWithRedirect();
-      },
-      _sessionChanged: function(){
-        if(this.statusKnown == true){
-        if(this.signedIn == true){
-          //Display name without last name 
-          this.displayName = this.user.displayName.toUpperCase().substr(0,this.user.displayName.indexOf(' '));
-          this.page = 'main';
-        } else if(this.signedIn == false){
-          this.displayName = "NAAM";
-          this.page = 'login';
-        } 
-        }   
-      },
-      _signOut: function(){
-        this.$.auth.signOut();
-      },
-      _navBack: function(){
-      	console.log(this.page);
-        this.page = 'main';
-      },
-      _navJoin: function(){
-        console.log(this.page);
-        this.page = 'join';
-      },
-      _dynHeader: function(){
-        //Get the headers
-        var mainToolbar = Polymer.dom(this.root).querySelector('#mainToolbar');
-        var joinToolbar = Polymer.dom(this.root).querySelector('#joinToolbar');
-        switch(this.page){
-            case 'login':
-                mainToolbar.setAttribute('style', 'display:none;');
-                break;
-            case 'main':
-                mainToolbar.setAttribute('style', 'display:visible;');
-                joinToolbar.setAttribute('style', 'display:none;');
-                break;
-            case 'join':
-                mainToolbar.setAttribute('style', 'display:none;');
-                joinToolbar.setAttribute('style', 'display:visible;');
-                break;
-        }
-      }
+            _userStateKnown: function(user, status) {
+                if (status && user) {
+                    //The status is known and the user is logged in
+                    this.displayName = this.user.displayName.toUpperCase().substr(0, this.user.displayName.indexOf(' '));
+                    if(this.page !== 'main') {
+                        window.location.href = 'main';
+                    }
+                }
+            },
 
-    });
+            _signOut: function () {
+                this.$.auth.signOut();
+            },
 
-  </script>
+            _dynHeader: function () {
+                //Get the headers
+                var mainToolbar = Polymer.dom(this.root).querySelector('#mainToolbar');
+                var joinToolbar = Polymer.dom(this.root).querySelector('#joinToolbar');
+                var loginPage = Polymer.dom(this.root).querySelector('#login');
+                switch (this.page) {
+                    case 'login':
+                        loginPage.setAttribute('style', 'display:visible;');
+
+                        break;
+                    case 'main':
+                        mainToolbar.setAttribute('style', 'display:visible;');
+                        joinToolbar.setAttribute('style', 'display:none;');
+                        loginPage.setAttribute('style', 'display:none;');
+                        break;
+                    case 'join':
+                        mainToolbar.setAttribute('style', 'display:none;');
+                        joinToolbar.setAttribute('style', 'display:visible;');
+                        break;
+                }
+            }
+
+        })
+        ;
+
+    </script>
 </dom-module>

@@ -6,78 +6,83 @@
 <link rel="import" href="bite-cardlist.html">
 
 <dom-module id="bite-join">
-	<style>
-		:host {
-			margin: 0 auto;
-			display: block;
-		}
-		
-		.container {
-			max-width: 800px;
-			margin: 0 auto;
-			color: #EC9630;
-		}
-		
-		.cardContainer {
-			display: block;
-			margin: 0 auto;
-			text-align: center;
-			width: 100%;
-		}
-		
-		.tallCard {
-			margin: 0 auto;
-			display: block;
-			width: 100%;
-		}
-		
-		.categories,
-		.menuList {
-			display: flex;
-			display: -webkit-flex;
-			flex-wrap: wrap;
-			-webkit-flex-wrap: wrap;
-			justify-content: center;
-			-webkit-justify-content: center;
-			margin-top: 16px;
-			width: 100%
-		}
-		
-		.categories {
+    <style>
+        :host {
             margin: 0 auto;
-			left: 0px;
-			right: 0px;
-			width: 100%;
-			margin-top: 16px;
-		}
-		
-		.menuList {
+            display: block;
         }
-		.categorieList{
-			white-space: nowrap;
-			overflow: hidden;
-			overflow-x: scroll;
-		}
-		::-webkit-scrollbar {
-			width: 0px;  /* remove scrollbar space */
-			background: transparent;  /* optional: just make scrollbar invisible */
-		}
-        .sticky{
-           
-        }
-    
-	</style>
 
-	<template>
-		<div class="container">
-			<div class="cardContainer">
-				<div class="tallCard">
-					<bite-tallcard name="GESTART DOOR HARAMBE" background="url(../images/harambe.jpg)" desc="Gestart om 09:11, sluit om 13:37"
-						location="Gramsbergen"></bite-tallcard>
-				</div>
-			</div>
-			<div id="categories" class="categories">
-				<div class="categorieList">
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            color: #EC9630;
+        }
+
+        .cardContainer {
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+            width: 100%;
+        }
+
+        .tallCard {
+            margin: 0 auto;
+            display: block;
+            width: 100%;
+        }
+
+        .categories,
+        .menuList {
+            display: flex;
+            display: -webkit-flex;
+            flex-wrap: wrap;
+            -webkit-flex-wrap: wrap;
+            justify-content: center;
+            -webkit-justify-content: center;
+            margin-top: 16px;
+            width: 100%
+        }
+
+        .categories {
+            margin: 0 auto;
+            left: 0px;
+            right: 0px;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .menuList {
+        }
+
+        .categorieList {
+            white-space: nowrap;
+            overflow: hidden;
+            overflow-x: scroll;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0px; /* remove scrollbar space */
+            background: transparent; /* optional: just make scrollbar invisible */
+        }
+
+        .sticky {
+
+        }
+
+    </style>
+
+    <template>
+
+        <div class="container">
+            <div class="cardContainer">
+                <div class="tallCard">
+                    <bite-tallcard name="GESTART DOOR HARAMBE" background="url(../images/harambe.jpg)"
+                                   desc="Gestart om 09:11, sluit om 13:37"
+                                   location="Gramsbergen"></bite-tallcard>
+                </div>
+            </div>
+            <div id="categories" class="categories">
+                <div class="categorieList">
                     <bite-categories name="PATAT"></bite-categories>
                     <bite-categories name="SNACKS"></bite-categories>
                     <bite-categories name="MILKSHAKES"></bite-categories>
@@ -85,77 +90,78 @@
                     <bite-categories name="POPULAIR"></bite-categories>
                     <bite-categories name="ALLE ITEMS"></bite-categories>
                     <bite-categories name="PATAT"></bite-categories>
-				</div>
-			</div>
-
-			
-			<div class="menuList">
-				<bite-cardlist style="width: 90%;"></bite-cardlist>
-			</div>
-			
-		</div>
-
-	</template>
+                </div>
+            </div>
 
 
-	<script>
+            <div class="menuList">
+                <bite-cardlist style="width: 90%;"></bite-cardlist>
+            </div>
+
+        </div>
+
+    </template>
+
+
+    <script>
         Polymer({
             is: 'bite-join',
             properties: {
-				page: {
-					type: String,
-					observers: '_pageChange',
-					notify: true,
-					readOnly: false
-				}
-			},
-            
-            domReady: function(){
+
+                page: {
+                    type: String,
+                    observers: '_pageChange',
+                    notify: true,
+                    readOnly: false
+                }
+            },
+
+            domReady: function () {
                 var header = Polymer.dom(this.root).querySelector('app-header');
                 console.log(header);
             },
 
-			_pageChange: function(){
+            _pageChange: function () {
 
-			},
+            },
 
-            ready: function(){
-              /* TODO stick categories as header when scrolling to top of the container. 
-                var categories = this.$$('#categories');
-                console.log(categories);
-                var initTopPosition= categories.offset().top;   
-                    $(window).scroll(function(){
-                    if($(window).scrollTop() > initTopPosition)
-                    $('#categories').css({'position':'fixed','top':'0px'});
-                    else
-                    $('#categories').css({'position':'absolute','top':initTopPosition+'px'});
-                });
-                */
+            ready: function () {
+                /* TODO stick categories as header when scrolling to top of the container.
+                 var categories = this.$$('#categories');
+                 console.log(categories);
+                 var initTopPosition= categories.offset().top;
+                 $(window).scroll(function(){
+                 if($(window).scrollTop() > initTopPosition)
+                 $('#categories').css({'position':'fixed','top':'0px'});
+                 else
+                 $('#categories').css({'position':'absolute','top':initTopPosition+'px'});
+                 });
+                 */
 
                 var categories = Polymer.dom(this.root).querySelector('.categories');
                 var menulist = Polymer.dom(this.root).querySelector('.menuList');
-                
+
                 var elementPositionTop = this.$.categories.getBoundingClientRect().top;
-                
 
-                $(window).scroll(function(){
-                    if($(window).scrollTop() > elementPositionTop - 64){
+
+                $(window).scroll(function () {
+                    if ($(window).scrollTop() > elementPositionTop - 64) {
                         categories.setAttribute("style", "position: fixed;top: 0;z-index: 99999;margin-top: 64px;background-color:#F5F5F5;text-align: center;left: 0px;right: 0px;box-shadow:0px 3px 5px rgba(100, 100, 100, 0.49);");
-						menulist.setAttribute("style", "margin-top: 80px;");
-						
+                        menulist.setAttribute("style", "margin-top: 80px;");
 
-                    }else{
+
+                    } else {
                         categories.removeAttribute("style");
-						menulist.removeAttribute("style");
-						
+                        menulist.removeAttribute("style");
+
                     }
                 });
 
-			
+
             }
 
         });
-    
+
 
     </script>
 </dom-module>
