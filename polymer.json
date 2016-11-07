@@ -11,7 +11,8 @@
    "src/**/*",
    "data/**/*",
    "images/**/*",
-   "bower.json"
+   "bower.json",
+   ".htaccess"
   ],
   "includeDependencies": [
     "manifest.json",
