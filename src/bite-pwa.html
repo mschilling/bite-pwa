@@ -136,7 +136,7 @@
             <div class="content">
                 <paper-spinner class="orange" active></paper-spinner>
                 <!-- Login screen -->
-                <bite-login id="login" on-sign-in="_signIn" signed-in="[[signedIn]]" name="login"></bite-login>
+                <bite-login id="login" on-sign-in="_signIn" signed-in="[[signedIn]]" page="login"></bite-login>
 
                 <iron-pages id="pages" selected="[[routeData.page]]" attr-for-selected="name" role="main"
                             selected-attribute="visible">
@@ -173,10 +173,13 @@
                     readOnly: false
                 },
                 signedIn: {
-                    type: Boolean
+                    type: Boolean,
+                    value: false,
+                    observer: '_signedInChanged'
                 },
                 statusKnown: {
-                    type: Boolean
+                    type: Boolean,
+                    value: false
                 },
                 user: {
                     type: Object
@@ -259,6 +262,7 @@
 
             _userStateKnown: function(user, status) {
                 if (status && user) {
+
                     //The status is known and the user is logged in
                     this.displayName = this.user.displayName.toUpperCase().substr(0, this.user.displayName.indexOf(' '));
                     if(this.page !== 'main') {
@@ -269,6 +273,16 @@
 
             _signOut: function () {
                 this.$.auth.signOut();
+                window.location.href = 'login';
+
+            },
+
+            _signedInChanged: function(){
+                console.log(this.statusKnown);
+
+                if(this.signedIn == false &&  document.location.href.indexOf('login') === -1){
+                    window.location.href = 'login';
+                }
             },
 
             _dynHeader: function () {
@@ -278,6 +292,8 @@
                 var loginPage = Polymer.dom(this.root).querySelector('#login');
                 switch (this.page) {
                     case 'login':
+                        mainToolbar.setAttribute('style', 'display:none');
+                        joinToolbar.setAttribute('style', 'display:none');
                         loginPage.setAttribute('style', 'display:visible;');
 
                         break;
@@ -289,6 +305,7 @@
                     case 'join':
                         mainToolbar.setAttribute('style', 'display:none;');
                         joinToolbar.setAttribute('style', 'display:visible;');
+                        loginPage.setAttribute('style', 'display:none;');
                         break;
                 }
             }
