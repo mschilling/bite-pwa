@@ -267,6 +267,8 @@
                     this.displayName = this.user.displayName.toUpperCase().substr(0, this.user.displayName.indexOf(' '));
                     if(this.page !== 'main') {
                         window.location.href = 'main';
+                    }else if(this.signedIn == false &&  document.location.href.indexOf('login') === -1){
+                        window.location.href = 'login';
                     }
                 }
             },
@@ -276,14 +278,7 @@
                 window.location.href = 'login';
 
             },
-
-            _signedInChanged: function(){
-                console.log(this.statusKnown);
-
-                if(this.signedIn == false &&  document.location.href.indexOf('login') === -1){
-                    window.location.href = 'login';
-                }
-            },
+                
 
             _dynHeader: function () {
                 //Get the headers
