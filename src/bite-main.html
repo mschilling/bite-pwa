@@ -159,7 +159,13 @@
                 color: lightgrey;
             }
         </style>
-
+        <!-- Firebase -->
+        <firebase-query
+                id="query"
+                app-name="bite"
+                path="/orders"
+                data="{{orders}}">
+        </firebase-query>
 
         <img src="../images/bite.png" alt="bite" class="logoImg" style="z-index: -1;">
         <paper-fab class="orderFab" icon="add" on-tap="_addBite"></paper-fab>
@@ -175,7 +181,7 @@
                             <div class="cardTitle">RANGLIJSTEN</div>
                             <div class="cardDesc">Je staat op de 10e plaats!</div>
                         </div>
-                        <div class="navRanking"><paper-icon-button icon="arrow-forward" style="color: #E98B2B;" onclick="navRanking()"></paper-icon-button></div>
+                        <div class="navRanking"><paper-icon-button icon="arrow-forward" style="color: #E98B2B;" ></paper-icon-button></div>
                     </div>
                 </paper-card>
 
@@ -186,6 +192,10 @@
                 </div>
                 <div id="cards" class="bite-cards">
                     <!-- Bites are added here dynamically -->
+                    <template is="dom-repeat" items="{{orders}}" as="order">
+                        <bite-card key="[[order.store]]"></bite-card>
+                    </template>
+
                     <div class="emptyBites">
                     <!-- Only show when Bites is empty -->
                         <div class="emptyImage"><img src="../images/Bitegrey.png"/></div>
@@ -208,32 +218,50 @@
                 biteTotal: {
                     type: Number,
                     value: 0
-                }
+                },
+                user: {
+                    type: Object
+                },
+                biteUserName: {
+                    type: String
+                },
+                orders: {
+                    type: Array
+                },
+                orderId: String
             },
 
             _addBite: function () {
-                var empty = Polymer.dom(this.root).querySelector('.emptyBites');
-                var cards = Polymer.dom(this.root).querySelector('.bite-cards');
-
-                empty.setAttribute('style', 'display:none;');
-
-                this.biteTotal++;
-                this.biteTotal = this.biteTotal.toString();
-                var newCards = document.createElement('bite-card');
-                newCards.name = "PRIMATARIA";
-                newCards.background = "url(../images/harambe.jpg)";
-                newCards.desc = "🌯🌯🌯🌯🌯";
-                newCards.location = "Gramsbergen";
-                Polymer.dom(this.$.cards).appendChild(newCards);
+                //TODO
+                console.log("TODO");
             },
 
             _openBite: function(){
 
             },
 
-            _navJoin: function(){
-                this.fire('nav-join', null);
+            ready: function(){
+
+                if(this.orders !== null){
+                var empty = Polymer.dom(this.root).querySelector('.emptyBites');
+                var cards = Polymer.dom(this.root).querySelector('.bite-cards');
+                empty.setAttribute('style', 'display:none;');
+                }
+
+
+
+                //TODO total count
+                //var total = count(this.orders);
+                //this.biteTotal = total.toString();
+            },
+
+            _cardClick: function(e){
+                var args = Polymer.dom(e).path[2].getAttribute('data-args').split(',');
+                console.log(args[0]);
             }
+
+
+
 
 
 

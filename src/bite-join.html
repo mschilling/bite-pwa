@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="bite-tallcard.html">
 <link rel="import" href="bite-categories.html">
 <link rel="import" href="bite-cardlist.html">
@@ -73,10 +74,13 @@
 
     <template>
 
+
+
         <div class="container">
+
             <div class="cardContainer">
                 <div class="tallCard">
-                    <bite-tallcard name="GESTART DOOR HARAMBE" background="url(../images/harambe.jpg)"
+                    <bite-tallcard name="GESTART DOOR JESPER" background="url(../images/harambe.jpg)"
                                    desc="Gestart om 09:11, sluit om 13:37"
                                    location="Gramsbergen"></bite-tallcard>
                 </div>
@@ -113,31 +117,15 @@
                     observers: '_pageChange',
                     notify: true,
                     readOnly: false
+                },
+                biteUserName: {
+                    type: String,
+                    readOnly: false,
+                    notify: true
                 }
             },
 
-            domReady: function () {
-                var header = Polymer.dom(this.root).querySelector('app-header');
-                console.log(header);
-            },
-
-            _pageChange: function () {
-
-            },
-
             ready: function () {
-                /* TODO stick categories as header when scrolling to top of the container.
-                 var categories = this.$$('#categories');
-                 console.log(categories);
-                 var initTopPosition= categories.offset().top;
-                 $(window).scroll(function(){
-                 if($(window).scrollTop() > initTopPosition)
-                 $('#categories').css({'position':'fixed','top':'0px'});
-                 else
-                 $('#categories').css({'position':'absolute','top':initTopPosition+'px'});
-                 });
-                 */
-
                 var categories = Polymer.dom(this.root).querySelector('.categories');
                 var menulist = Polymer.dom(this.root).querySelector('.menuList');
 

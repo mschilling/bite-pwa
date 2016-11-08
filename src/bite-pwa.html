@@ -1,7 +1,7 @@
-<!-- webcomponents -->
+<!-- Webcomponents -->
 
 
-<!-- elements -->
+<!-- Elements -->
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -96,18 +96,11 @@
                       api-key="AIzaSyB54Q19Q-8OxXpWIy9xQHO0qai6SnS3Vm8">
         </firebase-app>
 
+
         <!-- Login auth -->
         <firebase-auth id="auth" app-name="bite" provider="google" signed-in="{{signedIn}}" user="{{user}}"
                        status-known="{{statusKnown}}">
         </firebase-auth>
-
-        <!-- Firebase query -->
-        <firebase-query
-                id="query"
-                app-name="bite"
-                path="/info/[[name]]"
-                data="{{data}}">
-        </firebase-query>
 
         <!-- app-location binds to the app's URL -->
         <app-location route="{{route}}"></app-location>
@@ -141,11 +134,13 @@
                 <iron-pages id="pages" selected="[[routeData.page]]" attr-for-selected="name" role="main"
                             selected-attribute="visible">
                     <!-- Main screen -->
-                    <bite-main on-nav-join="_navJoin" route="{{subRoute}}" name="main"></bite-main>
+                    <bite-main on-nav-join="_navJoin" route="{{subRoute}}" name="main" user="{{user}}"
+                               biteUserName="{{biteUserName}}"></bite-main>
                     <!-- Screen when opening new Bite-->
                     <bite-open name="open" route="{{subRoute}}"></bite-open>
                     <!-- Screen when joining a currently existing bite -->
-                    <bite-join on-page-change="_navBack" page="{{page}}" route="{{subRoute}}" name="join"></bite-join>
+                    <bite-join on-page-change="_navBack" page="{{page}}" route="{{subRoute}}" name="join"
+                               biteUserName="{{biteUserName}}"></bite-join>
                 </iron-pages>
             </div>
         </app-header-layout>
@@ -174,8 +169,7 @@
                 },
                 signedIn: {
                     type: Boolean,
-                    value: false,
-                    observer: '_signedInChanged'
+                    value: false
                 },
                 statusKnown: {
                     type: Boolean,
@@ -186,8 +180,11 @@
                 },
                 displayName: {
                     type: String
+                },
+                biteUserName: {
+                    type: String,
+                    readOnly: false
                 }
-
             },
 
             observers: [
@@ -260,14 +257,15 @@
                 this.$.auth.signInWithRedirect();
             },
 
-            _userStateKnown: function(user, status) {
+            _userStateKnown: function (user, status) {
                 if (status && user) {
 
                     //The status is known and the user is logged in
                     this.displayName = this.user.displayName.toUpperCase().substr(0, this.user.displayName.indexOf(' '));
-                    if(this.page !== 'main') {
+                    if (this.page !== 'main') {
                         window.location.href = 'main';
-                    }else if(this.signedIn == false &&  document.location.href.indexOf('login') === -1){
+                    } //User is not signed in and the current page is not the login page. User gets redirected.
+                    else if (this.signedIn == false && document.location.href.indexOf('login') === -1) {
                         window.location.href = 'login';
                     }
                 }
@@ -276,9 +274,8 @@
             _signOut: function () {
                 this.$.auth.signOut();
                 window.location.href = 'login';
-
             },
-                
+
 
             _dynHeader: function () {
                 //Get the headers

@@ -1,104 +1,111 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/iron-icons/communication-icons.html">
 
 <dom-module id="bite-card">
+
     <template>
-        <style>
-            :host {
-                display: block;
+        <firebase-query
+                id="query"
+                app-name="bite"
+                path="/stores/[[key]]"
+                data="{{store}}">
+        </firebase-query>
+        <template is="dom-repeat" items="{{store}}" as="store">
+            <style>
+                :host {
+                    display: block;
 
-            }
-
-            paper-card {
-                margin: 0 auto;
-                width: 90%;
-                margin-top: 16px;
-                text-align: left;
-                font-family: Roboto, Noto, sans-serif;
-
-                --paper-card-actions: {
-                    padding: 0;
                 }
-            }
 
-            .title {
-                font-weight: 700;
-                font-style: italic;
-                font-size: 16px;
-                color: #EC9630;
+                paper-card {
+                    margin: 0 auto;
+                    width: 90%;
+                    margin-top: 16px;
+                    text-align: left;
+                    font-family: Roboto, Noto, sans-serif;
 
-            }
+                    --paper-card-actions: {
+                        padding: 0;
+                    }
+                }
 
-            .desc {
-                margin-top: 6px;
-            }
+                .title {
+                    font-weight: 700;
+                    font-style: italic;
+                    font-size: 16px;
+                    color: #EC9630;
 
-            .img {
-                float: left;
-                border-radius: 50%;
-                width: 50px;
-                height: 50px;
-                margin-left: 8px;
-                margin-bottom: 16px;
-            }
+                }
 
-            .location {
-                color: #9B9B9B;
-                font-weight: 100;
-                margin-top: 6px;
+                .desc {
+                    margin-top: 6px;
+                }
 
-            }
+                .img {
+                    float: left;
+                    border-radius: 50%;
+                    width: 50px;
+                    height: 50px;
+                    margin-left: 8px;
+                    margin-bottom: 16px;
+                }
 
-            .person {
-                float: left;
-                border-radius: 50%;
-                background: url(../../images/logo.jpg);
-                width: 25px;
-                height: 25px;
-                background-repeat: no-repeat;
-                background-position: center center;
-                background-size: cover;
-                margin-bottom: 15px;
-                margin-right: 12px;
-                margin-top: 12px;
-            }
+                .location {
+                    color: #9B9B9B;
+                    font-weight: 100;
+                    margin-top: 6px;
 
-            .fab {
-                float: left;
-                width: 24px;
-                height: 24px;
-                margin-top: 12px;
-                background-color: #9B9B9B;
-                font-size: 8px;
-            }
+                }
 
-            .personContainer {
-                float: left;
+                .person {
+                    float: left;
+                    border-radius: 50%;
+                    background: url(../../images/logo.jpg);
+                    width: 25px;
+                    height: 25px;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                    background-size: cover;
+                    margin-bottom: 15px;
+                    margin-right: 12px;
+                    margin-top: 12px;
+                }
 
-            }
+                .fab {
+                    float: left;
+                    width: 24px;
+                    height: 24px;
+                    margin-top: 12px;
+                    background-color: #9B9B9B;
+                    font-size: 8px;
+                }
 
-            .fabContainer {
-                float: right;
-            }
+                .personContainer {
+                    float: left;
 
-            .cardInfo {
-                display: inline-block;
-                margin-left: 16px;
-            }
+                }
 
-        </style>
-        <a href="/join">
+                .fabContainer {
+                    float: right;
+                }
+
+                .cardInfo {
+                    display: inline-block;
+                    margin-left: 16px;
+                }
+
+            </style>
+
             <paper-card>
                 <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
                 <div class="card-content">
                     <div class="img"
                          style$="background: [[background]]; background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
                     <div class="cardInfo">
-                        <div class="title">[[name]]</div>
+                        <div class="title">[[store.name]]</div>
                         <div class="desc">[[desc]]</div>
                         <div class="location">
                             <iron-icon style="height: 15px; width: 15px;" icon="communication:location-on"></iron-icon>
@@ -120,11 +127,10 @@
 
                 </div>
             </paper-card>
-        </a>
 
 
+        </template>
     </template>
-
 
     <script>
 
@@ -136,11 +142,19 @@
                 name: String,
                 background: String,
                 desc: String,
-                location: String
+                location: String,
+                key: String,
+                store: {
+                    type: Object
+                }
             },
 
             _navJoin: function () {
-                this.fire('nav-join', null);
+                //this.fire('nav-join', null);
+            },
+            ready: function () {
+                console.log(this.key);
+                console.log(this.store);
             }
         });
 
