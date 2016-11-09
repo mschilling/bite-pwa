@@ -96,7 +96,10 @@
                       api-key="AIzaSyB54Q19Q-8OxXpWIy9xQHO0qai6SnS3Vm8">
         </firebase-app>
 
-
+        <firebase-document id="doc"
+        app-name="bite"
+        data="{{users}}">
+        </firebase-document>
         <!-- Login auth -->
         <firebase-auth id="auth" app-name="bite" provider="google" signed-in="{{signedIn}}" user="{{user}}"
                        status-known="{{statusKnown}}">
@@ -259,11 +262,12 @@
 
             _userStateKnown: function (user, status) {
                 if (status && user) {
-
+                    this._saveUser();
                     //The status is known and the user is logged in
                     this.displayName = this.user.displayName.toUpperCase().substr(0, this.user.displayName.indexOf(' '));
                     if (this.page !== 'main') {
                         window.location.href = 'main';
+
                     } //User is not signed in and the current page is not the login page. User gets redirected.
                     else if (this.signedIn == false && document.location.href.indexOf('login') === -1) {
                         window.location.href = 'login';
@@ -300,10 +304,22 @@
                         loginPage.setAttribute('style', 'display:none;');
                         break;
                 }
+            },
+
+            _saveUser: function(){
+                this.$.doc.data = {
+                    data : {
+                        username: this.user.displayName,
+                        name: this.user.displayName,
+                        email: this.user.email,
+                        photo_url: this.user.photoURL
+                    }
+                };
+                this.$.doc.save('/users', this.user.uid);
+
             }
 
-        })
-        ;
+        });
 
     </script>
 </dom-module>
