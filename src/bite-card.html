@@ -13,12 +13,12 @@
                 path="/stores/[[key]]"
                 data="{{store}}">
         </firebase-query>
-        <firebase-query
+        <firebase-document
                 id="userquery"
                 app-name="bite"
                 path="/users/[[uid]]"
                 data="{{users}}">
-        </firebase-query>
+        </firebase-document>
 
         <template is="dom-repeat" items="{{store}}" as="store">
             <style>
@@ -111,7 +111,7 @@
                 <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
                 <div class="card-content">
                     <div class="img"
-                         style$="background: [[background]]; background-repeat: no-repeat; background-position: center center; background-size: cover;">
+                         style$="background: url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;">
                     </div>
                     <div class="cardInfo">
                         <div class="title">[[store.name]]</div>
@@ -160,13 +160,19 @@
                     type: String
                 },
                 users: {
-                    type: Object
+                    type: Object,
+                    observer: '_usersChanged'
                 }
             },
 
-            ready: function(){
-                console.log(this.users);
+            _usersChanged: function(){
+
+                if(this.users.data !== undefined){
+                this.background = this.users.data.photo_url;
+                }
             }
+
+
         });
 
 
