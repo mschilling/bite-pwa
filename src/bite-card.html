@@ -13,6 +13,13 @@
                 path="/stores/[[key]]"
                 data="{{store}}">
         </firebase-query>
+        <firebase-query
+                id="userquery"
+                app-name="bite"
+                path="/users/[[uid]]"
+                data="{{users}}">
+        </firebase-query>
+
         <template is="dom-repeat" items="{{store}}" as="store">
             <style>
                 :host {
@@ -104,7 +111,8 @@
                 <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
                 <div class="card-content">
                     <div class="img"
-                         style$="background: [[background]]; background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+                         style$="background: [[background]]; background-repeat: no-repeat; background-position: center center; background-size: cover;">
+                    </div>
                     <div class="cardInfo">
                         <div class="title">[[store.name]]</div>
                         <div class="desc">[[desc]]</div>
@@ -147,7 +155,17 @@
                 key: String,
                 store: {
                     type: Object
+                },
+                uid: {
+                    type: String
+                },
+                users: {
+                    type: Object
                 }
+            },
+
+            ready: function(){
+                console.log(this.users);
             }
         });
 

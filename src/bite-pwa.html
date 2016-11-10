@@ -15,6 +15,9 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 
 
 <!-- Eager load -->
@@ -52,6 +55,11 @@
                 font-weight: 600;
             }
 
+            paper-input {
+                --paper-input-container-focus-color: var(--app-primary-color);
+                --paper-input-container-color: var(--app-primary-color);
+                margin: 0;
+            }
             iron-icon {
                 color: var(--app-primary-color);
             }
@@ -83,6 +91,31 @@
                 color: #EC9630;
             }
 
+            h1{
+                font-family: Roboto, Noto, sans-serif;
+                color: #EC9630;
+                font-style: italic;
+                font-weight: 800;
+                font-size: 21px;
+                margin: 0;
+            }
+
+            paper-button {
+                font-style: italic;
+                color: #EC9630;
+                float: right;
+                font-family: Roboto, Noto, sans-serif;
+                font-weight: 800;
+                margin: 0;
+            }
+
+            paper-dialog {
+                width: 800px;
+            }
+
+            .mainTitle{
+
+            }
             /* Proper CSS */
 
         </style>
@@ -114,11 +147,10 @@
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subRoute}}">
         </app-route>
 
-
         <app-header-layout>
             <app-header fixed waterfall>
                 <app-toolbar id="mainToolbar" style="display: none">
-                    <div main-title id="mainTitle">HEY, [[displayName]]</div>
+                    <div main-title id="mainTitle" style="text-transform: uppercase;">HEY, [[users.data.display_name]]</div>
                     <a class="signoutBtn" href="/login">
                         <paper-icon-button id="personButton" icon="social:person" on-tap="_signOut"></paper-icon-button>
                     </a>
@@ -130,6 +162,12 @@
                 </app-toolbar>
             </app-header>
 
+
+            <paper-dialog no-cancel-on-outside-click no-cancel-on-esc-key id="actions">
+                <h1>USERNAME PLS?</h1>
+                <paper-input focus id="username" name="username" value="[[user.displayName]]"></paper-input>
+                <paper-button dialog-dismiss on-tap="_changeUsername">OK</paper-button>
+            </paper-dialog>
 
             <div class="content">
                 <paper-spinner class="orange" active></paper-spinner>
@@ -325,24 +363,34 @@
                     this.checkUser = false;
                     this._saveUser();
                 }
+
             },
 
             _saveUser: function(){
                 //console.log(this.users);
 
                 if(this.users.data == undefined) {
-                    this.$.doc.data = {
-                        data : {
-                            username: this.user.displayName,
-                            name: this.user.displayName,
-                            email: this.user.email,
-                            photo_url: this.user.photoURL
-                        }
-                    };
-                    this.$.doc.save('/users', this.user.uid);
-                    console.log("Added user");
+
+                    this.$.actions.open();
+
                 }
             },
+
+            _changeUsername: function(){
+
+                this.$.doc.data = {
+                    data : {
+                        display_name: this.$.username.value,
+                        name: this.user.displayName,
+                        email: this.user.email,
+                        photo_url: this.user.photoURL
+                    }
+                };
+                this.$.doc.save('/users', this.user.uid);
+                console.log("Added user");
+            }
+
+
 
         });
 

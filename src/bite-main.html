@@ -193,7 +193,7 @@
                 <div id="cards" class="bite-cards">
                     <!-- Bites are added here dynamically -->
                     <template is="dom-repeat" items="{{orders}}" as="order">
-                        <bite-card key="[[order.store]]"></bite-card>
+                        <bite-card key="[[order.store]]" uid="[[order.opened_by]]"></bite-card>
                     </template>
 
                     <div class="emptyBites">
