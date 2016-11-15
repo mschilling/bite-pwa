@@ -186,7 +186,7 @@
                 <div id="cards" class="bite-cards">
                     <!-- Bites are added here dynamically -->
                     <template is="dom-repeat" items="{{key}}" as="key">
-                        <bite-card key="[[key]]"></bite-card>
+                        <bite-card key="[[key]]" clickedStoreId="{{clickedStoreId}}" on-tap="_navJoin"></bite-card>
                     </template>
 
                     <div class="emptyBites">
@@ -270,7 +270,13 @@
                     });
                 });
 
-            }
+            },
+
+          _navJoin: function(e){
+            console.log("You pressed the card with order key: "+ e.model.key);
+
+            this.fire('click-order', e.model.key);
+          }
 
 
 

@@ -174,8 +174,7 @@
                 <iron-pages id="pages" selected="[[routeData.page]]" attr-for-selected="name" role="main"
                             selected-attribute="visible">
                     <!-- Main screen -->
-                    <bite-main on-nav-join="_navJoin" route="{{subRoute}}" name="main" user="{{user}}"
-                               joinBite="{{joinBite}}"></bite-main>
+                    <bite-main on-click-order="_navJoin" route="{{subRoute}}" name="main" user="{{user}}"></bite-main>
                     <!-- Screen when opening new Bite-->
                     <bite-open name="open" route="{{subRoute}}"></bite-open>
                     <!-- Screen when joining a currently existing bite -->
@@ -290,7 +289,7 @@
                             }
 
                             if(that.user !== null) {
-                                var userRef = firebase.database().ref('users/' + that.user.uid + '/data');
+                                var userRef = firebase.database().ref('users/' + that.user.uid);
                                 userRef.on('value', function (snapshot) {
                                     that.displayName = snapshot.val().display_name;
                                 });
@@ -386,13 +385,17 @@
 
             _changeUsername: function(){
                 var username = this.$.username.value;
-                firebase.database().ref('users/' +this.user.uid+'/data').set({
+                firebase.database().ref('users/' +this.user.uid+'/').set({
                     display_name: username,
                     email: this.user.email,
                     name: this.user.displayName,
                     photo_url: this.user.photoURL
                 });
             },
+
+            _navJoin: function(){
+              console.log("hoi");
+            }
 
 
 

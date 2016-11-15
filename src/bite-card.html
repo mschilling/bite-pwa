@@ -88,8 +88,8 @@
                 }
 
             </style>
-            <a href="/join">
-            <paper-card on-tap="_navJoin">
+            <!-- <a href="/join"> -->
+            <paper-card>
                 <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
                 <div class="card-content">
                     <div class="img"
@@ -118,7 +118,7 @@
 
                 </div>
             </paper-card>
-            </a>
+            <!-- </a> -->
     </template>
 
     <script>
@@ -162,7 +162,7 @@
 
             _getUser: function(){
                 var that = this;
-                var userRef = firebase.database().ref('users/'+that.uid+'/data');
+                var userRef = firebase.database().ref('users/'+that.uid);
                 userRef.on('value', function(snapshot){
                    that.background = snapshot.val().photo_url;
                 });
@@ -171,7 +171,7 @@
             _getStore: function(){
                 var that = this;
                 //TODO data has to be removed from database, data should be stored e.g stores/storeid instead of stores/storeid/data
-                var storeRef =  firebase.database().ref('stores/'+that.storeid+'/data');
+                var storeRef =  firebase.database().ref('stores/'+that.storeid);
                 storeRef.on('value', function(snapshot){
                     that.storeName = snapshot.val().name;
                     that.storeLocation = snapshot.val().location;
