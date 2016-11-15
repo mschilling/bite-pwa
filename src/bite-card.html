@@ -7,21 +7,7 @@
 <dom-module id="bite-card">
 
     <template>
-        <firebase-query
-                id="query"
-                app-name="bite"
-                path="/stores/[[key]]"
-                data="{{store}}">
-        </firebase-query>
-        <firebase-document
-                id="userquery"
-                app-name="bite"
-                path="/users/[[uid]]"
-                data="{{users}}">
-        </firebase-document>
-
-        <template is="dom-repeat" items="{{store}}" as="store">
-            <style>
+    <style>
                 :host {
                     display: block;
 
@@ -71,12 +57,8 @@
                 .person {
                     float: left;
                     border-radius: 50%;
-                    background: url(../../images/logo.jpg);
                     width: 25px;
                     height: 25px;
-                    background-repeat: no-repeat;
-                    background-position: center center;
-                    background-size: cover;
                     margin-bottom: 15px;
                     margin-right: 12px;
                     margin-top: 12px;
@@ -106,39 +88,37 @@
                 }
 
             </style>
-
-            <paper-card>
+            <a href="/join">
+            <paper-card on-tap="_navJoin">
                 <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
                 <div class="card-content">
                     <div class="img"
                          style$="background: url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;">
                     </div>
                     <div class="cardInfo">
-                        <div class="title">[[store.name]]</div>
-                        <div class="desc">[[desc]]</div>
+                        <div class="title">[[storeName]]</div>
+                        <div class="desc"></div>
                         <div class="location">
                             <iron-icon style="height: 15px; width: 15px;" icon="communication:location-on"></iron-icon>
-                            [[store.location]]
+                            [[storeLocation]]
                         </div>
                     </div>
                 </div>
                 <div class="card-actions" style="margin-left: 48px;">
                     <div class="personContainer">
-                        <div class="person"></div>
-                        <div class="person"></div>
-                        <div class="person"></div>
-                        <div class="person"></div>
-                        <div class="person"></div>
+                        <div class="person" style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+                        <div class="person" style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+                        <div class="person" style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+                        <div class="person" style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+                        <div class="person" style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
                         <div class="fabContainer">
-                            <paper-fab mini class="fab" label="5"></paper-fab>
+                            <!--<paper-fab mini class="fab" label="5"></paper-fab>-->
                         </div>
                     </div>
 
                 </div>
             </paper-card>
-
-
-        </template>
+            </a>
     </template>
 
     <script>
@@ -153,23 +133,49 @@
                 desc: String,
                 location: String,
                 key: String,
-                store: {
-                    type: Object
-                },
+                storeName: String,
+                storeLocation: String,
                 uid: {
                     type: String
                 },
-                users: {
-                    type: Object,
-                    observer: '_usersChanged'
+                storeid: {
+                    type: String
                 }
+
             },
 
-            _usersChanged: function(){
+            ready: function(){
+                this._getOrder();
+                this._getUser();
+                this._getStore();
+            },
 
-                if(this.users.data !== undefined){
-                this.background = this.users.data.photo_url;
-                }
+            _getOrder: function(){
+                var that = this;
+                var cardRef = firebase.database().ref('orders/'+that.key);
+                cardRef.on('value', function(snapshot){
+                   that.uid = snapshot.val().opened_by;
+                   that.storeid = snapshot.val().store;
+                });
+
+            },
+
+            _getUser: function(){
+                var that = this;
+                var userRef = firebase.database().ref('users/'+that.uid+'/data');
+                userRef.on('value', function(snapshot){
+                   that.background = snapshot.val().photo_url;
+                });
+            },
+
+            _getStore: function(){
+                var that = this;
+                //TODO data has to be removed from database, data should be stored e.g stores/storeid instead of stores/storeid/data
+                var storeRef =  firebase.database().ref('stores/'+that.storeid+'/data');
+                storeRef.on('value', function(snapshot){
+                    that.storeName = snapshot.val().name;
+                    that.storeLocation = snapshot.val().location;
+                });
             }
 
 

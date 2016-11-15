@@ -159,13 +159,6 @@
                 color: lightgrey;
             }
         </style>
-        <!-- Firebase -->
-        <firebase-query
-                id="query"
-                app-name="bite"
-                path="/orders"
-                data="{{orders}}">
-        </firebase-query>
 
         <img src="../images/bite.png" alt="bite" class="logoImg" style="z-index: -1;">
         <paper-fab class="orderFab" icon="add" on-tap="_addBite"></paper-fab>
@@ -192,8 +185,8 @@
                 </div>
                 <div id="cards" class="bite-cards">
                     <!-- Bites are added here dynamically -->
-                    <template is="dom-repeat" items="{{orders}}" as="order">
-                        <bite-card key="[[order.store]]" uid="[[order.opened_by]]"></bite-card>
+                    <template is="dom-repeat" items="{{key}}" as="key">
+                        <bite-card key="[[key]]"></bite-card>
                     </template>
 
                     <div class="emptyBites">
@@ -225,10 +218,13 @@
                 biteUserName: {
                     type: String
                 },
-                orders: {
-                    type: Array
+                joinBite: {
+                    type: Object,
+                    observer: '_changedJoinBite'
                 },
-                orderId: String
+                key: {
+                    type: Array
+                }
             },
 
             _addBite: function () {
@@ -241,23 +237,39 @@
             },
 
             ready: function(){
-
-                if(this.orders !== null){
+                this._getOrders();
                 var empty = Polymer.dom(this.root).querySelector('.emptyBites');
-                var cards = Polymer.dom(this.root).querySelector('.bite-cards');
-                empty.setAttribute('style', 'display:none;');
+
+
+                //Hide emptybites text when key Array is not empty
+                if(this.key !== null){
+                    empty.setAttribute('style', 'display:none;');
+                } else {
+                    empty.setAttribute('style', 'display:visible;');
                 }
 
-
-
-                //TODO total count
-                //var total = count(this.orders);
-                //this.biteTotal = total.toString();
             },
 
             _cardClick: function(e){
                 var args = Polymer.dom(e).path[2].getAttribute('data-args').split(',');
                 console.log(args[0]);
+            },
+
+            _changedJoinBite: function(){
+                console.log(this.joinBite);
+            },
+
+            _getOrders: function(){
+                var that = this;
+                var orderRef = firebase.database().ref('orders/');
+                orderRef.on('value', function(snapshot){
+                    that.key = [];
+                    snapshot.forEach(function (childSnapshot) {
+                        that.push('key', childSnapshot.key);
+                        that.biteTotal = that.key.length;
+                    });
+                });
+
             }
 
 

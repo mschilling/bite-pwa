@@ -13,7 +13,6 @@
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -25,7 +24,7 @@
 
 
 <dom-module id="bite-pwa">
-    <template>
+    <template id="bitePWA">
         <style is="custom-style">
             :host {
                 display: block;
@@ -122,23 +121,20 @@
 
         <!-- Spinner on load -->
 
-
         <!-- Firebase init -->
-        <firebase-app name="bite" auth-domain="bite-4ce99.firebaseapp.com"
-                      database-url="https://bite-4ce99.firebaseio.com"
-                      api-key="AIzaSyB54Q19Q-8OxXpWIy9xQHO0qai6SnS3Vm8">
-        </firebase-app>
-
-        <firebase-document
-                id="doc"
-                app-name="bite"
-                path="/users/[[user.uid]]"
-                data="{{users}}">
-        </firebase-document>
+        <script>
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyB54Q19Q-8OxXpWIy9xQHO0qai6SnS3Vm8",
+                authDomain: "bite-4ce99.firebaseapp.com",
+                databaseURL: "https://bite-4ce99.firebaseio.com",
+                storageBucket: "bite-4ce99.appspot.com",
+                messagingSenderId: "389337808613"
+            };
+            firebase.initializeApp(config);
+        </script>
         <!-- Login auth -->
-        <firebase-auth id="auth" app-name="bite" provider="google" signed-in="{{signedIn}}" user="{{user}}"
-                       status-known="{{statusKnown}}">
-        </firebase-auth>
+
 
         <!-- app-location binds to the app's URL -->
         <app-location route="{{route}}"></app-location>
@@ -150,7 +146,7 @@
         <app-header-layout>
             <app-header fixed waterfall>
                 <app-toolbar id="mainToolbar" style="display: none">
-                    <div main-title id="mainTitle" style="text-transform: uppercase;">HI, [[users.data.display_name]]!</div>
+                    <div main-title id="mainTitle" style="text-transform: uppercase;">HI, [[displayName]] !</div>
                     <a class="signoutBtn" href="/login">
                         <paper-icon-button id="personButton" icon="social:person" on-tap="_signOut"></paper-icon-button>
                     </a>
@@ -178,12 +174,11 @@
                             selected-attribute="visible">
                     <!-- Main screen -->
                     <bite-main on-nav-join="_navJoin" route="{{subRoute}}" name="main" user="{{user}}"
-                               biteUserName="{{biteUserName}}"></bite-main>
+                               joinBite="{{joinBite}}"></bite-main>
                     <!-- Screen when opening new Bite-->
                     <bite-open name="open" route="{{subRoute}}"></bite-open>
                     <!-- Screen when joining a currently existing bite -->
-                    <bite-join on-page-change="_navBack" page="{{page}}" route="{{subRoute}}" name="join"
-                               biteUserName="{{biteUserName}}"></bite-join>
+                    <bite-join on-page-change="_navBack" page="{{page}}" route="{{subRoute}}" name="join"></bite-join>
                 </iron-pages>
             </div>
         </app-header-layout>
@@ -210,37 +205,18 @@
                     notify: true,
                     readOnly: false
                 },
-                signedIn: {
-                    type: Boolean,
-                    value: false
-                },
-                statusKnown: {
-                    type: Boolean,
-                    value: false
-                },
                 user: {
                     type: Object
                 },
                 displayName: {
-                    type: String
-                },
-                biteUserName: {
                     type: String,
-                    readOnly: false
-                },
-                users: {
-                    type: Object,
-                    observer: '_onDataReceived'
-                },
-                checkUser: {
-                    type: Boolean,
-                    value: false
+                    notify: true
                 }
+
             },
 
             observers: [
-                '_routePageChanged(routeData.page)',
-                '_userStateKnown(user, statusKnown)'
+                '_routePageChanged(routeData.page)'
             ],
 
             _routePageChanged: function (page) {
@@ -298,36 +274,75 @@
                     this.listen(window, 'online', '_notifyNetworkStatus');
                     this.listen(window, 'offline', '_notifyNetworkStatus');
 
+
                     var spinner = Polymer.dom(this.root).querySelector('paper-spinner');
                     spinner.removeAttribute('active');
+                    var that = this;
+
+                    firebase.auth().onAuthStateChanged(function(user){
+                        if(user){
+                            var fireUser = firebase.auth().currentUser;
+                            that.user = fireUser;
+
+                            if(that.page == 'main'){
+                            that._doesUserExist(that.user.uid);
+                            }
+
+                            if(that.user !== null) {
+                                var userRef = firebase.database().ref('users/' + that.user.uid + '/');
+                                userRef.on('value', function (snapshot) {
+                                    that.displayName = snapshot.val().display_name;
+                                });
+                            }
+                            //user signed in
+                            if(document.location.href.indexOf('main') === -1 && document.location.href.indexOf('join') === -1){
+                                window.location.href = 'main';
+                            }
+                        } else {
+                            //no user is signed in
+                            if(document.location.href.indexOf('login') === -1){
+                                window.location.href = 'login';
+                                console.log("logged out");
+                            }
+                        }
+                    });
 
                 });
             },
 
-            _signIn: function () {
-                this.$.auth.signInWithRedirect();
+            _signIn: function(){
+                var provider = new firebase.auth.GoogleAuthProvider();
+
+                provider.setCustomParameters({
+                    'login_hint': 'user@emove4mobile.com'
+                });
+
+                firebase.auth().signInWithRedirect(provider);
+                firebase.auth().getRedirectResult().then(function(result){
+                   if(result.credential) {
+                       //Get Google Access Token
+                       var token = result.credential.accessToken;
+                   }
+                   //signed in user info
+                    this.user = result.user;
+                }).catch(function(error){
+                    //handle errors here
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+
+
+                    console.log("Error code: " + errorCode + " Error message: " + errorMessage);
+                });
             },
 
-            _userStateKnown: function (user, status) {
-                if (status && user) {
-                    this._doesUserExist();
-                    //The status is known and the user is logged in
-                    this.displayName = this.user.displayName.toUpperCase().substr(0, this.user.displayName.indexOf(' '));
-                    if (this.page !== 'main') {
-                        window.location.href = 'main';
-
-                    } //User is not signed in and the current page is not the login page. User gets redirected.
-                    else if (this.signedIn == false && document.location.href.indexOf('login') === -1) {
-                        window.location.href = 'login';
-                    }
-                }
+            _signOut: function(){
+                firebase.auth().signOut().then(function(){
+                   //sign out succesful
+                }, function(error){
+                    //something went wrong
+                    console.log("Something went wrong while signing out..")
+                });
             },
-
-            _signOut: function () {
-                this.$.auth.signOut();
-                window.location.href = 'login';
-            },
-
 
             _dynHeader: function () {
                 //Get the headers
@@ -354,41 +369,30 @@
                 }
             },
 
-            _doesUserExist: function () {
-                this.checkUser = true;
-            },
-
-            _onDataReceived: function () {
-                if(this.checkUser){
-                    this.checkUser = false;
-                    this._saveUser();
-                }
-
-            },
-
-            _saveUser: function(){
-                //console.log(this.users);
-
-                if(this.users.data == undefined) {
-
-                    this.$.actions.open();
-
-                }
+            _doesUserExist: function(uid){
+                var that = this;
+                var ref = firebase.database().ref('users/' +uid);
+                ref.once('value', function(snapshot){
+                   if(snapshot.exists())
+                       //exists do nothing
+                           ;
+                   else
+                       //does not exist
+                        that.$.actions.open();
+                });
             },
 
             _changeUsername: function(){
+                var username = this.$.username.value;
+                firebase.database().ref('users/' +this.user.uid).set({
+                    display_name: username,
+                    email: this.user.email,
+                    name: this.user.displayName,
+                    photo_url: this.user.photoURL
+                });
+            },
 
-                this.$.doc.data = {
-                    data : {
-                        display_name: this.$.username.value,
-                        name: this.user.displayName,
-                        email: this.user.email,
-                        photo_url: this.user.photoURL
-                    }
-                };
-                this.$.doc.save('/users', this.user.uid);
-                console.log("Added user");
-            }
+
 
 
 
