@@ -289,7 +289,7 @@
                             }
 
                             if(that.user !== null) {
-                                var userRef = firebase.database().ref('users/' + that.user.uid + '/');
+                                var userRef = firebase.database().ref('users/' + that.user.uid + '/data');
                                 userRef.on('value', function (snapshot) {
                                     that.displayName = snapshot.val().display_name;
                                 });
@@ -372,6 +372,7 @@
             _doesUserExist: function(uid){
                 var that = this;
                 var ref = firebase.database().ref('users/' +uid);
+                var ref = firebase.database().ref('users/' +uid);
                 ref.once('value', function(snapshot){
                    if(snapshot.exists())
                        //exists do nothing
@@ -384,7 +385,7 @@
 
             _changeUsername: function(){
                 var username = this.$.username.value;
-                firebase.database().ref('users/' +this.user.uid).set({
+                firebase.database().ref('users/' +this.user.uid+'/data').set({
                     display_name: username,
                     email: this.user.email,
                     name: this.user.displayName,
