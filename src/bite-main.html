@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="bite-card.html">
 
 
@@ -272,10 +273,9 @@
 
             },
 
-          _navJoin: function(e){
-            console.log("You pressed the card with order key: "+ e.model.key);
-
-            this.fire('click-order', e.model.key);
+          _navJoin: function(e, detail){
+            //this.fire('click-order', {orderKey: e.model.key});
+            this.fire('iron-signal', {name: 'mysignal', data: e.model.key});
           }
 
 

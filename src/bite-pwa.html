@@ -1,6 +1,4 @@
 <!-- Webcomponents -->
-<script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
-
 
 <!-- Elements -->
 <link rel="import" href="../bower_components/polymer/polymer.html">
@@ -122,18 +120,7 @@
 
         <!-- Spinner on load -->
 
-        <!-- Firebase init -->
-        <script>
-            // Initialize Firebase
-            var config = {
-                apiKey: "AIzaSyB54Q19Q-8OxXpWIy9xQHO0qai6SnS3Vm8",
-                authDomain: "bite-4ce99.firebaseapp.com",
-                databaseURL: "https://bite-4ce99.firebaseio.com",
-                storageBucket: "bite-4ce99.appspot.com",
-                messagingSenderId: "389337808613"
-            };
-            firebase.initializeApp(config);
-        </script>
+
         <!-- Login auth -->
 
 
@@ -174,11 +161,11 @@
                 <iron-pages id="pages" selected="[[routeData.page]]" attr-for-selected="name" role="main"
                             selected-attribute="visible">
                     <!-- Main screen -->
-                    <bite-main on-click-order="_navJoin" route="{{subRoute}}" name="main" user="{{user}}"></bite-main>
+                    <bite-main on-click-order="_navJoin" id="biteMain" route="{{subRoute}}" name="main" user="{{user}}"></bite-main>
                     <!-- Screen when opening new Bite-->
                     <bite-open name="open" route="{{subRoute}}"></bite-open>
                     <!-- Screen when joining a currently existing bite -->
-                    <bite-join on-page-change="_navBack" page="{{page}}" route="{{subRoute}}" name="join"></bite-join>
+                    <bite-join on-page-change="_navBack" page="{{page}}" route="{{subRoute}}" name="join" clickedKey="[[clickedKey]]"></bite-join>
                 </iron-pages>
             </div>
         </app-header-layout>
@@ -211,6 +198,10 @@
                 displayName: {
                     type: String,
                     notify: true
+                },
+                clickedKey: {
+                  type: String,
+                  observer: '_clickedKeyChanged'
                 }
 
             },
@@ -307,7 +298,8 @@
                         }
                     });
 
-                });
+                    });
+
             },
 
             _signIn: function(){
@@ -372,7 +364,6 @@
             _doesUserExist: function(uid){
                 var that = this;
                 var ref = firebase.database().ref('users/' +uid);
-                var ref = firebase.database().ref('users/' +uid);
                 ref.once('value', function(snapshot){
                    if(snapshot.exists())
                        //exists do nothing
@@ -393,9 +384,15 @@
                 });
             },
 
-            _navJoin: function(){
-              console.log("hoi");
+            _clickedKeyChanged: function(){
+
+            },
+
+            _navJoin: function(e){
+              this.clickedKey = e.detail.orderKey;
             }
+
+
 
 
 

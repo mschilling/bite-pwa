@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="bite-tallcard.html">
 <link rel="import" href="bite-categories.html">
 <link rel="import" href="bite-cardlist.html">
@@ -73,7 +74,7 @@
 
     <template>
 
-
+      <iron-signals on-iron-signal-mysignal="_getKey"></iron-signals>
 
         <div class="container">
 
@@ -121,6 +122,10 @@
                     type: String,
                     readOnly: false,
                     notify: true
+                },
+                clickedKey: {
+                    type: String,
+                    observer: '_clickedKeyChanged'
                 }
             },
 
@@ -144,7 +149,15 @@
                     }
                 });
 
+              console.log(this.clickedKey);
 
+            },
+
+            _clickedKeyChanged: function(){
+            },
+
+            _getKey: function(){
+              this.clickedKey = "hoi";
             }
 
         });

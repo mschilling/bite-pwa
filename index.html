@@ -4,6 +4,7 @@
   <head>
     <base href="/">
     <title>Bite</title>
+    <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
     <meta charset="utf-8" />
     <meta name="description" content="Eten bestellen in Zwolle en Gramsbergen">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -53,7 +54,18 @@
     </style>
   </head>
   <body>
-
+  <!-- Firebase init -->
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyB54Q19Q-8OxXpWIy9xQHO0qai6SnS3Vm8",
+      authDomain: "bite-4ce99.firebaseapp.com",
+      databaseURL: "https://bite-4ce99.firebaseio.com",
+      storageBucket: "bite-4ce99.appspot.com",
+      messagingSenderId: "389337808613"
+    };
+    firebase.initializeApp(config);
+  </script>
 
 
     <bite-pwa unresolved>
