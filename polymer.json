@@ -11,6 +11,7 @@
    "src/**/*",
    "data/**/*",
    "images/**/*",
+   "fonts/**/*",
    "bower.json",
    ".htaccess"
   ],
