@@ -1,7 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="bite-tallcard.html">
 <link rel="import" href="bite-categories.html">
 <link rel="import" href="bite-cardlist.html">
@@ -74,32 +74,36 @@
 
     <template>
 
-      <iron-signals on-iron-signal-mysignal="_getKey"></iron-signals>
+        <app-route
+        route="[[route]]"
+        pattern="/:key"
+        data="{{routeData}}"
+        ></app-route>
 
         <div class="container">
 
             <div class="cardContainer">
                 <div class="tallCard">
-                    <bite-tallcard name="GESTART DOOR JESPER" background="url(../images/harambe.jpg)"
+                    <bite-tallcard name="GESTART DOOR [[displayName]]" background="url([[photoURL]])"
                                    desc="Gestart om 09:11, sluit om 13:37"
                                    location="Gramsbergen"></bite-tallcard>
                 </div>
             </div>
             <div id="categories" class="categories">
                 <div class="categorieList">
-                    <bite-categories name="PATAT"></bite-categories>
-                    <bite-categories name="SNACKS"></bite-categories>
-                    <bite-categories name="MILKSHAKES"></bite-categories>
-                    <bite-categories name="SAUZEN"></bite-categories>
-                    <bite-categories name="POPULAIR"></bite-categories>
-                    <bite-categories name="ALLE ITEMS"></bite-categories>
-                    <bite-categories name="PATAT"></bite-categories>
+                    <bite-categories on-chip-active="_chipActive" name="PATAT"></bite-categories>
+                    <bite-categories on-chip-active="_chipActive" name="SNACKS"></bite-categories>
+                    <bite-categories on-chip-active="_chipActive" name="MILKSHAKES"></bite-categories>
+                    <bite-categories on-chip-active="_chipActive" name="SAUZEN"></bite-categories>
+                    <bite-categories on-chip-active="_chipActive" name="POPULAIR"></bite-categories>
+                    <bite-categories on-chip-active="_chipActive" name="ALLE ITEMS"></bite-categories>
+                    <bite-categories on-chip-active="_chipActive" name="PATAT"></bite-categories>
                 </div>
             </div>
 
 
             <div class="menuList">
-                <bite-cardlist style="width: 90%;"></bite-cardlist>
+                <bite-cardlist products=[[products]] style="width: 90%;"></bite-cardlist>
             </div>
 
         </div>
@@ -123,9 +127,25 @@
                     readOnly: false,
                     notify: true
                 },
-                clickedKey: {
-                    type: String,
-                    observer: '_clickedKeyChanged'
+                key: {
+                  type: String
+                },
+                route: {
+                  type: Object
+                },
+                routeData: {
+                  type: Object,
+                  observer: '_routeDataChanged'
+                },
+                uid: String,
+                displayName: String,
+                photoURL: String,
+                storeName: String,
+                categories: {
+                  type: Array
+                },
+                products: {
+                  type: Array
                 }
             },
 
@@ -149,17 +169,65 @@
                     }
                 });
 
-              console.log(this.clickedKey);
-
             },
 
-            _clickedKeyChanged: function(){
+            _routeDataChanged: function(){
+              this.key = this.routeData.key;
+              this._getOrder();
             },
 
-            _getKey: function(){
-              this.clickedKey = "hoi";
+            _getOrder: function(){
+              var that = this;
+              var joinRef = firebase.database().ref('orders/'+that.key);
+              joinRef.on('value', function(snapshot){
+                that.uid = snapshot.val().opened_by;
+                that.storeid = snapshot.val().store;
+              });
+
+
+              if(this.uid !== undefined){
+              this._getUser();
+              this._getStore();
+              this._getProducts();
+              }
+            },
+
+            _getUser: function(){
+              var that = this;
+              var userRef = firebase.database().ref('users/'+that.uid);
+              userRef.on('value', function(snapshot){
+                that.displayName = snapshot.val().display_name;
+                that.photoURL = snapshot.val().photo_url;
+              });
+            },
+
+            _getStore: function(e, detail){
+              var that = this;
+              var storeRef =  firebase.database().ref('stores/'+that.storeid);
+              storeRef.on('value', function(snapshot){
+                that.storeName = snapshot.val().name;
+              });
+
+              this.fire('store-name', {storeName: this.storeName} );
+            },
+
+            _getProducts: function(){
+              var that = this;
+              var productsRef = firebase.database().ref('products/'+that.storeid+'/products');
+              productsRef.on('value', function(snapshot){
+                  that.products = [];
+                  if(snapshot.val() !== null) {
+                    snapshot.forEach(function (childSnapshot) {
+                      that.push('products', childSnapshot.val());
+                    });
+                  }
+              });
+            },
+
+            _chipActive: function(e){
+              this.categories = [];
+              this.push('categories', e.detail.name);
             }
-
         });
 
 

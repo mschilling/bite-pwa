@@ -31,9 +31,10 @@
                 line-height: 22px;
 
             }
+
         </style>
 
-        <div class="chip">
+        <div class="chip" on-tap="_tapChip">
             <p>{{name}}</p>
         </div>
 
@@ -44,7 +45,23 @@
            is: 'bite-categories',
 
            properties:{
-               name: String
+               name: String,
+               tap: {
+                 type: Boolean,
+                 value: false
+               }
+            },
+
+            _tapChip: function(e, detail){
+              var chip = Polymer.dom(this.root).querySelector('.chip');
+              if(this.tap == false){
+                  this.tap = true;
+                  chip.setAttribute('style', 'background-color: #EC9630; color: white');
+                  this.fire('chip-active', {name: this.name});
+              } else if(this.tap == true){
+                  this.tap = false;
+                  chip.setAttribute('style', 'background-color: white;color: #EC9630;');
+              }
             }
         });
     </script>

@@ -111,17 +111,14 @@
                 width: 800px;
             }
 
-            .mainTitle{
-
+            #storeName{
+              text-transform: uppercase;
             }
             /* Proper CSS */
 
         </style>
 
-        <!-- Spinner on load -->
 
-
-        <!-- Login auth -->
 
 
         <!-- app-location binds to the app's URL -->
@@ -141,7 +138,7 @@
                 </app-toolbar>
                 <app-toolbar id="joinToolbar" style="display: none;">
                     <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
-                    <div main-title>PRIMATARIA</div>
+                    <div main-title id="storeName">[[storeName]]</div>
                     <paper-icon-button icon="search"></paper-icon-button>
                 </app-toolbar>
             </app-header>
@@ -165,7 +162,7 @@
                     <!-- Screen when opening new Bite-->
                     <bite-open name="open" route="{{subRoute}}"></bite-open>
                     <!-- Screen when joining a currently existing bite -->
-                    <bite-join on-page-change="_navBack" page="{{page}}" route="{{subRoute}}" name="join" clickedKey="[[clickedKey]]"></bite-join>
+                    <bite-join on-store-name="_changeStoreHeader" page="{{page}}" route="{{subRoute}}" name="join" clickedKey="[[clickedKey]]"></bite-join>
                 </iron-pages>
             </div>
         </app-header-layout>
@@ -199,11 +196,14 @@
                     type: String,
                     notify: true
                 },
-                clickedKey: {
+                storeName: {
+                    type: String
+                }
+                /*clickedKey: {
                   type: String,
                   observer: '_clickedKeyChanged'
                 }
-
+                */
             },
 
             observers: [
@@ -384,12 +384,13 @@
                 });
             },
 
+          /*
             _clickedKeyChanged: function(){
-
+              console.log(this.clickedKey);
             },
-
-            _navJoin: function(e){
-              this.clickedKey = e.detail.orderKey;
+          */
+            _changeStoreHeader: function(e){
+              this.storeName = e.detail.storeName;
             }
 
 

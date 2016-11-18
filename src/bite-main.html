@@ -2,7 +2,6 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
-<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="bite-card.html">
 
 
@@ -187,7 +186,7 @@
                 <div id="cards" class="bite-cards">
                     <!-- Bites are added here dynamically -->
                     <template is="dom-repeat" items="{{key}}" as="key">
-                        <bite-card key="[[key]]" clickedStoreId="{{clickedStoreId}}" on-tap="_navJoin"></bite-card>
+                        <bite-card key="[[key]]" clickedStoreId="{{clickedStoreId}}"></bite-card>
                     </template>
 
                     <div class="emptyBites">
@@ -271,12 +270,7 @@
                     });
                 });
 
-            },
-
-          _navJoin: function(e, detail){
-            //this.fire('click-order', {orderKey: e.model.key});
-            this.fire('iron-signal', {name: 'mysignal', data: e.model.key});
-          }
+            }
 
 
 
