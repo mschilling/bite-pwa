@@ -168,7 +168,6 @@
 
                     }
                 });
-
             },
 
             _routeDataChanged: function(){
@@ -182,13 +181,15 @@
               joinRef.on('value', function(snapshot){
                 that.uid = snapshot.val().opened_by;
                 that.storeid = snapshot.val().store;
+                that._getData();
               });
+            },
 
-
+            _getData: function () {
               if(this.uid !== undefined){
-              this._getUser();
-              this._getStore();
-              this._getProducts();
+                this._getUser();
+                this._getStore();
+                this._getProducts();
               }
             },
 
@@ -206,8 +207,13 @@
               var storeRef =  firebase.database().ref('stores/'+that.storeid);
               storeRef.on('value', function(snapshot){
                 that.storeName = snapshot.val().name;
+                that._setStoreName();
               });
 
+
+            },
+
+            _setStoreName: function () {
               this.fire('store-name', {storeName: this.storeName} );
             },
 
