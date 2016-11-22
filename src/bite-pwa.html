@@ -371,6 +371,7 @@
       _changeUsername: function () {
         var username = this.$.username.value;
         firebase.database().ref('users/' + this.user.uid + '/').set({
+          admin: false,
           display_name: username,
           email: this.user.email,
           name: this.user.displayName,
@@ -380,7 +381,8 @@
 
       _changeStoreHeader: function (e) {
         this.storeName = e.detail.storeName;
-      }
+      },
+
 
 
     });

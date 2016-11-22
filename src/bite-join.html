@@ -180,6 +180,7 @@
               var that = this;
               var joinRef = firebase.database().ref('orders/'+that.key);
               joinRef.on('value', function(snapshot){
+                if(snapshot.val() == null) return;
                 that.uid = snapshot.val().opened_by;
                 that.storeid = snapshot.val().store;
                 that._getData();

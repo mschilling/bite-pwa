@@ -2,6 +2,8 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/iron-icons/communication-icons.html">
 
 <dom-module id="bite-card">
@@ -12,7 +14,23 @@
         display: block;
 
       }
-
+      h1 {
+        font-family: CompasseBoldItalic;
+        color: #EC9630;
+      }
+      paper-button{
+        color: #EC9630;
+        font-family: CompasseBoldItalic;
+      }
+      .adminRemove {
+        position: absolute;
+        z-index: 2;
+      }
+      .adminFab {
+        background-color: red;
+        height: 32px;
+        width: 32px;
+      }
       paper-card {
         margin: 0 auto;
         width: 90%;
@@ -89,6 +107,17 @@
       }
 
     </style>
+
+    <paper-dialog no-cancel-on-outside-click no-cancel-on-esc-key id="actions">
+      <h1>Verwijderen?</h1>
+      <paper-button dialog-dismiss on-tap="_deleteBite">OK</paper-button>
+      <paper-button dialog-dismiss on-tap="_closeDialog">NEEEEE</paper-button>
+    </paper-dialog>
+
+    <div class="adminRemove" style="display: none;">
+      <paper-fab class="adminFab" mini on-tap="_removeBite" icon="delete"></paper-fab>
+    </div>
+
     <a href="/join/[[key]]">
       <paper-card>
         <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
@@ -138,9 +167,13 @@
         background: String,
         desc: String,
         location: String,
-        key: String,
+        key: {
+          type: String,
+          observer: '_keyChanged'
+        },
         storeName: String,
         storeLocation: String,
+        admin: Boolean,
         uid: {
           type: String
         },
@@ -154,12 +187,14 @@
         this._getOrder();
         this._getUser();
         this._getStore();
+        this._checkUser();
       },
 
       _getOrder: function () {
         var that = this;
         var cardRef = firebase.database().ref('orders/' + that.key);
         cardRef.on('value', function (snapshot) {
+          if(snapshot.val() == null) return;
           that.uid = snapshot.val().opened_by;
           that.storeid = snapshot.val().store;
         });
@@ -176,12 +211,39 @@
 
       _getStore: function () {
         var that = this;
-        //TODO data has to be removed from database, data should be stored e.g stores/storeid instead of stores/storeid/data
         var storeRef = firebase.database().ref('stores/' + that.storeid);
         storeRef.on('value', function (snapshot) {
           that.storeName = snapshot.val().name;
           that.storeLocation = snapshot.val().location;
         });
+      },
+
+      _removeBite: function(){
+        this.$.actions.open();
+      },
+
+      _closeDialog: function(){
+        this.$.actions.close();
+      },
+
+      _deleteBite: function(){
+        var that = this;
+        var deleteRef = firebase.database().ref('orders');
+        deleteRef.child(that.key).remove();
+      },
+
+      _checkUser: function(){
+        var adminFab = Polymer.dom(this.root).querySelector('.adminRemove');
+
+        if(this.admin == true){
+          adminFab.setAttribute('style', 'display: visible;');
+        } else if(this.admin == false){
+          adminFab.setAttribute('style', 'display: none;');
+        }
+      },
+
+      _keyChanged: function(){
+        this.ready();
       }
 
 

@@ -165,7 +165,7 @@
     </style>
 
     <img src="../images/bite.png" alt="bite" class="logoImg" style="z-index: -1;">
-    <paper-fab class="orderFab" icon="add" on-tap="_addBite"></paper-fab>
+    <paper-fab class="orderFab" icon="add" on-tap="_addBite" style="display: none;"></paper-fab>
 
 
     <div class="container">
@@ -192,7 +192,7 @@
         <div id="cards" class="bite-cards">
           <!-- Bites are added here dynamically -->
           <template is="dom-repeat" items="{{key}}" as="key">
-            <bite-card key="[[key]]" clickedStoreId="{{clickedStoreId}}"></bite-card>
+            <bite-card key="[[key]]" admin="[[admin]]"></bite-card>
           </template>
 
           <div class="emptyBites">
@@ -231,23 +231,18 @@
         },
         key: {
           type: Array
-        }
-      },
+        },
 
-      _addBite: function () {
-        //TODO
-        console.log("TODO");
-      },
-
-      _openBite: function () {
-
+        admin: Boolean,
+        uid: String
       },
 
       ready: function () {
         this._getOrders();
         var empty = Polymer.dom(this.root).querySelector('.emptyBites');
-
-
+        if(this.user !== null){
+          this._getUser();
+        }
         //Hide emptybites text when key Array is not empty
         if (this.key !== null) {
           empty.setAttribute('style', 'display:none;');
@@ -277,6 +272,34 @@
           });
         });
 
+      },
+
+      _getUser: function() {
+        var that = this;
+        var userRef = firebase.database().ref('users/' + that.user.uid);
+        userRef.on('value', function (snapshot) {
+          that.admin = snapshot.val().admin;
+          that.uid = snapshot.val().uid;
+          that._checkUser();
+        });
+
+      },
+
+      _checkUser: function(){
+        var orderFab = Polymer.dom(this.root).querySelector('.orderFab');
+        if(this.admin == true){
+          orderFab.setAttribute('style', 'display: visible');
+        } else if(this.admin == false){
+          orderFab.setAttribute('style', 'display: none')
+        }
+      },
+
+      _addBite: function(){
+        var that = this;
+        firebase.database().ref('orders').push().set({
+          opened_by: this.user.uid,
+          store: "-JhLeOlGIEjaIOFHR0xe"
+        });
       }
 
 
