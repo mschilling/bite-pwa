@@ -2,68 +2,68 @@
 
 
 <dom-module id="bite-categories">
-    <template>
-        <style>
-            :host{
+  <template>
+    <style>
+      :host {
 
-            }
+      }
 
-            .chip{
-                display: inline-block;
-                height: 32px;
-                width: auto;
-                border-radius: 20px;
-                background-color: #FFFFFF;
-                border-style: solid;
-                border-width: 1px;
-                color: #E98B2B;
-                margin-top: 14px;
-                margin-left: 8px;
-                margin-right: 8px;
-            }
+      .chip {
+        display: inline-block;
+        height: 32px;
+        width: auto;
+        border-radius: 20px;
+        background-color: #FFFFFF;
+        border-style: solid;
+        border-width: 1px;
+        color: #E98B2B;
+        margin-top: 14px;
+        margin-left: 8px;
+        margin-right: 8px;
+      }
 
-            p{
-                margin-left: 12px;
-                margin-right: 12px;
-                margin-bottom: 6px;
-                margin-top: 6px;
-                font-family: Compasse;
-                font-size: 14px;
-                line-height: 22px;
+      p {
+        margin-left: 12px;
+        margin-right: 12px;
+        margin-bottom: 6px;
+        margin-top: 6px;
+        font-family: Compasse;
+        font-size: 14px;
+        line-height: 22px;
 
-            }
+      }
 
-        </style>
+    </style>
 
-        <div class="chip" on-tap="_tapChip">
-            <p>{{name}}</p>
-        </div>
+    <div class="chip" on-tap="_tapChip">
+      <p>{{name}}</p>
+    </div>
 
-    </template>
+  </template>
 
-    <script>
-        Polymer({
-           is: 'bite-categories',
+  <script>
+    Polymer({
+      is: 'bite-categories',
 
-           properties:{
-               name: String,
-               tap: {
-                 type: Boolean,
-                 value: false
-               }
-            },
+      properties: {
+        name: String,
+        tap: {
+          type: Boolean,
+          value: false
+        }
+      },
 
-            _tapChip: function(e, detail){
-              var chip = Polymer.dom(this.root).querySelector('.chip');
-              if(this.tap == false){
-                  this.tap = true;
-                  chip.setAttribute('style', 'background-color: #EC9630; color: white');
-                  this.fire('chip-active', {name: this.name});
-              } else if(this.tap == true){
-                  this.tap = false;
-                  chip.setAttribute('style', 'background-color: white;color: #EC9630;');
-              }
-            }
-        });
-    </script>
+      _tapChip: function (e, detail) {
+        var chip = Polymer.dom(this.root).querySelector('.chip');
+        if (this.tap == false) {
+          this.tap = true;
+          chip.setAttribute('style', 'background-color: #EC9630; color: white');
+          this.fire('chip-active', {name: this.name});
+        } else if (this.tap == true) {
+          this.tap = false;
+          chip.setAttribute('style', 'background-color: white;color: #EC9630;');
+        }
+      }
+    });
+  </script>
 </dom-module>

@@ -2,115 +2,114 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <dom-module id="bite-login">
-    <template>
-        <style>
-            :host {
-                font-family: Roboto, Noto, sans-serif;
-            }
+  <template>
+    <style>
+      :host {
+        font-family: Roboto, Noto, sans-serif;
+      }
 
-            :host([signed-in]) {
+      :host([signed-in]) {
 
-            }
+      }
 
-            h1 {
-                font-size: 70px;
-                text-align: center;
-            }
+      h1 {
+        font-size: 70px;
+        text-align: center;
+      }
 
-            p {
-                margin: 0 auto;
-                text-align: center;
-                width: 90%;
-                color: black
-            }
+      p {
+        margin: 0 auto;
+        text-align: center;
+        width: 90%;
+        color: black
+      }
 
-            .poweredBy {
-                margin-bottom: 10px;
-            }
+      .poweredBy {
+        margin-bottom: 10px;
+      }
 
-            .bottomText {
-                position: fixed;
-                left: 50%;
-                transform: translate(-50%, 0);
-                bottom: 20px;
-            }
+      .bottomText {
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%, 0);
+        bottom: 20px;
+      }
 
-            .googleImage {
-                width: 38px;
-                height: 38px;
-                background: white;
-                margin-top: 1px;
-                margin-left: 1px;
-                float: left;
-            }
+      .googleImage {
+        width: 38px;
+        height: 38px;
+        background: white;
+        margin-top: 1px;
+        margin-left: 1px;
+        float: left;
+      }
 
-            .image {
-                width: 36px;
-                height: 36px;
-                float: left;
-            }
+      .image {
+        width: 36px;
+        height: 36px;
+        float: left;
+      }
 
-            .googleSignInButton {
-                position: fixed;
-                left: 50%;
-                transform: translate(-50%, 0);
-                background-color: #EC9630;
-                color: white;
-                height: 40px;
-                width: 185px;
-                border-radius: 2px;
-                bottom: 100px;
-                float: left;
-            }
+      .googleSignInButton {
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%, 0);
+        background-color: #EC9630;
+        color: white;
+        height: 40px;
+        width: 185px;
+        border-radius: 2px;
+        bottom: 100px;
+        float: left;
+      }
 
-            .text {
-                float: left;
-                margin-left: 12px;
-                line-height: 40px;
-                font-family: Compasse;
-                font-weight: 400;
-                font-size: 14px;
-            }
-        </style>
-        <div class="container">
-            <h1>OH, HI!</h1>
-            <p>Leuk dat je even komt kijken! <br/>
-                BITE is momenteel alleen te gebruiken door medewerkers van Move4Mobile. </p>
-            <div class="googleSignInButton" on-tap="_signIn">
-                <div class="googleImage">
-                    <img class="image" src="../images/Google.png"/>
-                </div>
-                <div class="text">Sign in with Google</div>
-            </div>
-
-            <div class="bottomText">
-                <p class="poweredBy">powered by</p>
-                <img src="../images/M4M.png"/>
-            </div>
+      .text {
+        float: left;
+        margin-left: 12px;
+        line-height: 40px;
+        font-family: Compasse;
+        font-weight: 400;
+        font-size: 14px;
+      }
+    </style>
+    <div class="container">
+      <h1>OH, HI!</h1>
+      <p>Leuk dat je even komt kijken! <br/>
+        BITE is momenteel alleen te gebruiken door medewerkers van Move4Mobile. </p>
+      <div class="googleSignInButton" on-tap="_signIn">
+        <div class="googleImage">
+          <img class="image" src="../images/Google.png"/>
         </div>
-    </template>
+        <div class="text">Sign in with Google</div>
+      </div>
+
+      <div class="bottomText">
+        <p class="poweredBy">powered by</p>
+        <img src="../images/M4M.png"/>
+      </div>
+    </div>
+  </template>
 
 
-    <script>
-        Polymer({
-            is: 'bite-login',
-            properties: {
-                signedIn: {
-                    type: Boolean,
-                    reflectToAttribute: true,
-                    value: false
-                }
-            },
+  <script>
+    Polymer({
+      is: 'bite-login',
+      properties: {
+        signedIn: {
+          type: Boolean,
+          reflectToAttribute: true,
+          value: false
+        }
+      },
 
-            _signIn: function () {
-                this.fire('sign-in', null);
-            },
+      _signIn: function () {
+        this.fire('sign-in', null);
+      },
 
-            ready: function () {
-            }
+      ready: function () {
+      }
 
 
-
-        });
-    </script>
+    });
+  </script>
 </dom-module>

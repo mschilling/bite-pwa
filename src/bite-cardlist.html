@@ -20,35 +20,45 @@
                 width: 100%;
                 margin-bottom: 10px;
             }
-
-            iron-list{
-                flex: 1 1 auto;
-                color: black;
+            #list {
+              flex: 1 1 auto;
+              color: black;
+            }
+            .itemContainer {
+              position: relative;
             }
             .item {
               display: block;
               padding: 10px;
+              height: 72px;
             }
-            .price{
-                margin-left: 17px;
+            .price{;
                 color: black;
                 font-weight: 200;
                 opacity: 0.54;
+                float: left;
+                height: 20px;
             }
             .img{
                 float: left;
                 border-radius: 50%;
-                width: 50px;
-                height: 50px;
+                width: 30px;
+                height: 36px;
                 margin-left: 8px;
                 margin-right: 17px;
                 margin-top: 17px;
+                color: black;
             }
             .info{
               margin-top: 17px;
+              width: 400px;
+              display: block;
+              float: left;
             }
             .name{
+              float: left;
               height: 24px;
+              width: 400px;
               font-size: 16px;
               font-family:Compasse;
               color: #292E35;
@@ -57,41 +67,41 @@
                 display: block;
             }
             .functions{
-                display: inline-block;
+                display: block;
                 float: right;
             }
             .total{
-                float: left;
-                margin-top: 10px;
-                font-size: 20px;
-                font-weight: 800;
-                font-family: Compasse;
-                color: #E98B2B;
-                margin-right: 8px;
-                margin-left: 12px;
+              float: left;
+              margin-top: 44px;
+              color: #EC9630;
+              font-size: 21px;
+              font-family: Compasse;
+
             }
             .add{
-                float: left;
-                height: 32px;
-                width: 32px;
-                font-weight: 800;
-                color: #9B9B9B;
+              float: left;
+              margin-top: 32px;
+              color: #9b9b9b;
+              height: 32px;
+              margin-left: 8px;
             }
             .remove{
-                float: left;
-                height: 32px;
-                width: 32px;
-                color: #9B9B9B;
+              float: left;
+              margin-top: 32px;
+              color: #9b9b9b;
+              height: 32px;
+              margin-right: 8px;
             }
 
         </style>
 
 
-        <paper-card>
 
-            <iron-list id="list" items="[[products]]" as="item">
-                <template>
-                    <div class="item">
+        <paper-card>
+            <!-- <iron-list id="list" items="[[products]]" as="item"> -->
+                <template id="list" is="dom-repeat" items="[[products]]" as="item">
+                  <div class="itemContainer">
+                    <div class="item" on-tap="_itemClick">
                         <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
                         <div class="image">
                             <img class="img" src="[[item.image]]" alt="Img">
@@ -116,9 +126,10 @@
                                 <paper-icon-button icon="add"></paper-icon-button>
                             </div>
                         </div>
-                    </div>
+                      </div>
+                  </div>
                 </template>
-            </iron-list>
+           <!-- </iron-list> -->
         </paper-card>
 
     </template>
@@ -130,8 +141,7 @@
 
                 properties: {
                   products: {
-                    type: Array,
-                    observer: '_productsChanged'
+                    type: Array
                   }
                 },
 
@@ -139,10 +149,11 @@
                     //top level docu as scrolltarget
                     var list = document.querySelector("iron-list");
                     this.$.list.scrollTarget = this.ownerDocument.documentElement;
-                },
 
-                _productsChanged: function(){
-                    console.log(this.products);
+                },
+                _itemClick: function(e){
+                  var data = e.model.get('item.name');
+                  console.log(data);
                 }
             });
     </script>

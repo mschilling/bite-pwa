@@ -23,380 +23,367 @@
 
 
 <dom-module id="bite-pwa">
-    <template id="bitePWA">
-        <style is="custom-style">
-            :host {
-                display: block;
-                position: relative;
-                --app-primary-color: #EC9630;
-                --app-text-color: #EC9630;
-                --app-secondary-color: #FAFAFA;
-                --app-header-color: #F5F5F5;
-                --app-accent-color: #EC9630;
-                --header-shadow: 0px 3px 5px rgba(100, 100, 100, 0.49);
+  <template id="bitePWA">
+    <style is="custom-style">
+      :host {
+        display: block;
+        position: relative;
+        --app-primary-color: #EC9630;
+        --app-text-color: #EC9630;
+        --app-secondary-color: #FAFAFA;
+        --app-header-color: #F5F5F5;
+        --app-accent-color: #EC9630;
+        --header-shadow: 0px 3px 5px rgba(100, 100, 100, 0.49);
 
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                -khtml-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-                cursor: default;
-            }
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        cursor: default;
+      }
 
-            app-header {
-                @apply(--layout-fixed-top);
-                z-index: 1;
-                background-color: var(--app-header-color);
-                box-shadow: var(--header-shadow);
-                font-weight: 600;
-            }
+      app-header {
+        @apply(--layout-fixed-top);
+        z-index: 1;
+        background-color: var(--app-header-color);
+        box-shadow: var(--header-shadow);
+        font-weight: 600;
+      }
 
-            paper-input {
-                --paper-input-container-focus-color: var(--app-primary-color);
-                --paper-input-container-color: var(--app-primary-color);
-                margin: 0;
-            }
-            iron-icon {
-                color: var(--app-primary-color);
-            }
+      paper-input {
+        --paper-input-container-focus-color: var(--app-primary-color);
+        --paper-input-container-color: var(--app-primary-color);
+        margin: 0;
+      }
 
-            app-toolbar {
-                color: var(--app-text-color);
-            }
+      iron-icon {
+        color: var(--app-primary-color);
+      }
 
-            .content {
-                max-width: 800px;
-                margin: 0 auto;
-                color: #E98B2B;
-            }
+      app-toolbar {
+        color: var(--app-text-color);
+      }
 
-            #joinToolbar {
-                background-color: #EC9630;
-                color: white;
-            }
+      .content {
+        max-width: 800px;
+        margin: 0 auto;
+        color: #E98B2B;
+      }
 
-            paper-spinner.orange {
-                position: fixed;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                --paper-spinner-layer-1-color: var(--google-yellow-500);
-            }
+      #joinToolbar {
+        background-color: #EC9630;
+        color: white;
+      }
 
-            .signoutBtn {
-                color: #EC9630;
-            }
+      paper-spinner.orange {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        --paper-spinner-layer-1-color: var(--google-yellow-500);
+      }
 
-            h1{
-                font-family: Compasse;
-                color: #EC9630;
-                font-weight: 800;
-                font-size: 21px;
-                margin: 0;
-            }
+      .signoutBtn {
+        color: #EC9630;
+      }
 
-            paper-button {
-                color: #EC9630;
-                float: right;
-                font-family: Compasse;
-                font-weight: 800;
-                margin: 0;
-            }
+      h1 {
+        font-family: Compasse;
+        color: #EC9630;
+        font-weight: 800;
+        font-size: 21px;
+        margin: 0;
+      }
 
-            paper-dialog {
-                width: 800px;
-            }
+      paper-button {
+        color: #EC9630;
+        float: right;
+        font-family: Compasse;
+        font-weight: 800;
+        margin: 0;
+      }
 
-            #storeName{
-              text-transform: uppercase;
-            }
-            /* Proper CSS */
+      paper-dialog {
+        width: 800px;
+      }
 
-        </style>
+      #storeName {
+        text-transform: uppercase;
+      }
 
+      /* Proper CSS */
 
-
-
-        <!-- app-location binds to the app's URL -->
-        <app-location route="{{route}}"></app-location>
-
-        <!-- this app-route manages the top-level routes -->
-        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subRoute}}">
-        </app-route>
-
-        <app-header-layout>
-            <app-header fixed waterfall>
-                <app-toolbar id="mainToolbar" style="display: none">
-                    <div main-title id="mainTitle" style="text-transform: uppercase;">HI, [[displayName]]!</div>
-                    <a class="signoutBtn" href="/login">
-                        <paper-icon-button id="personButton" icon="social:person" on-tap="_signOut"></paper-icon-button>
-                    </a>
-                </app-toolbar>
-                <app-toolbar id="joinToolbar" style="display: none;">
-                    <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
-                    <div main-title id="storeName">[[storeName]]</div>
-                    <paper-icon-button icon="search"></paper-icon-button>
-                </app-toolbar>
-            </app-header>
+    </style>
 
 
-            <paper-dialog no-cancel-on-outside-click no-cancel-on-esc-key id="actions">
-                <h1>USERNAME PLS?</h1>
-                <paper-input focus id="username" name="username" value="[[user.displayName]]"></paper-input>
-                <paper-button dialog-dismiss on-tap="_changeUsername">OK</paper-button>
-            </paper-dialog>
+    <!-- app-location binds to the app's URL -->
+    <app-location route="{{route}}"></app-location>
 
-            <div class="content">
-                <paper-spinner class="orange" active></paper-spinner>
-                <!-- Login screen -->
-                <bite-login id="login" on-sign-in="_signIn" signed-in="[[signedIn]]" page="login"></bite-login>
+    <!-- this app-route manages the top-level routes -->
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subRoute}}">
+    </app-route>
 
-                <iron-pages id="pages" selected="[[routeData.page]]" attr-for-selected="name" role="main"
-                            selected-attribute="visible">
-                    <!-- Main screen -->
-                    <bite-main on-click-order="_navJoin" id="biteMain" route="{{subRoute}}" name="main" user="{{user}}"></bite-main>
-                    <!-- Screen when opening new Bite-->
-                    <bite-open name="open" route="{{subRoute}}"></bite-open>
-                    <!-- Screen when joining a currently existing bite -->
-                    <bite-join on-store-name="_changeStoreHeader" page="{{page}}" route="{{subRoute}}" name="join" clickedKey="[[clickedKey]]"></bite-join>
-                </iron-pages>
-            </div>
-        </app-header-layout>
-
-    </template>
-
-    <script>
-
-        window.performance && performance.mark && performance.mark('bite-pwa - before register');
-
-        Polymer({
-
-            is: 'bite-pwa',
-
-            properties: {
-                selected: {
-                    type: Number,
-                    value: 0
-                },
-                page: {
-                    type: String,
-                    reflectToAttribute: true,
-                    observer: '_pageChanged',
-                    notify: true,
-                    readOnly: false
-                },
-                user: {
-                    type: Object
-                },
-                displayName: {
-                    type: String,
-                    notify: true
-                },
-                storeName: {
-                    type: String
-                }
-                /*clickedKey: {
-                  type: String,
-                  observer: '_clickedKeyChanged'
-                }
-                */
-            },
-
-            observers: [
-                '_routePageChanged(routeData.page)'
-            ],
-
-            _routePageChanged: function (page) {
-                this.page = page || 'login';
-                //Scroll to the top on every route change
-                //Behavior silent disables the header scroll effects during the scroll.
-                Polymer.AppLayout.scroll({top: 0, behavior: 'silent'});
-
-            },
-
-            _pageChanged: function (page, oldPage) {
-                //load page import on demand
-                if (page != null) {
-                    //main route is eagerly loaded
-                    if (page == 'login') {
-                        this._pageLoaded(Boolean(oldPage));
-                        //other routes are lazy loaded
-                    } else {
-                        this.importHref(
-                                this.resolveUrl('bite-' + page + '.html'),
-                                function () {
-                                    this._pageLoaded(Boolean(oldPage));
-                                }, null, true);
-                    }
-                    this._dynHeader();
-                }
-            },
-
-            _pageLoaded: function () {
-                this._ensureLazyLoaded();
-
-            },
-
-            _ensureLazyLoaded: function () {
-                //load lazy resources after render and set 'loadComplete' when done.
-                if (!this.loadComplete) {
-                    Polymer.RenderStatus.afterNextRender(this, function () {
-                        this.importHref(this.resolveUrl('lazy-resources.html'), function () {
-                            //TODO include serviceworker and network status
-                            this.loadComplete = true;
-                        });
-                    });
-                }
-            },
-            _navBack: function () {
-                window.history.back();
-            },
-            created: function () {
-                window.performance && performance.mark && performance.mark('bite-pwa.created');
-                //Upgrade element, remove unresolved
-                this.removeAttribute('unresolved');
-            },
-            ready: function () {
-                Polymer.RenderStatus.afterNextRender(this, function () {
-                    this.listen(window, 'online', '_notifyNetworkStatus');
-                    this.listen(window, 'offline', '_notifyNetworkStatus');
+    <app-header-layout>
+      <app-header fixed waterfall>
+        <app-toolbar id="mainToolbar" style="display: none">
+          <div main-title id="mainTitle" style="text-transform: uppercase;">HI, [[displayName]]!</div>
+          <a class="signoutBtn" href="/login">
+            <paper-icon-button id="personButton" icon="social:person" on-tap="_signOut"></paper-icon-button>
+          </a>
+        </app-toolbar>
+        <app-toolbar id="joinToolbar" style="display: none;">
+          <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
+          <div main-title id="storeName">[[storeName]]</div>
+          <paper-icon-button icon="search"></paper-icon-button>
+        </app-toolbar>
+      </app-header>
 
 
-                    var spinner = Polymer.dom(this.root).querySelector('paper-spinner');
-                    spinner.removeAttribute('active');
-                    var that = this;
+      <paper-dialog no-cancel-on-outside-click no-cancel-on-esc-key id="actions">
+        <h1>USERNAME PLS?</h1>
+        <paper-input focus id="username" name="username" value="[[user.displayName]]"></paper-input>
+        <paper-button dialog-dismiss on-tap="_changeUsername">OK</paper-button>
+      </paper-dialog>
 
-                    firebase.auth().onAuthStateChanged(function(user){
-                        if(user){
-                            var fireUser = firebase.auth().currentUser;
-                            that.user = fireUser;
+      <div class="content">
+        <paper-spinner class="orange" active></paper-spinner>
+        <!-- Login screen -->
+        <bite-login id="login" on-sign-in="_signIn" signed-in="[[signedIn]]" page="login"></bite-login>
 
-                            if(that.page == 'main'){
-                            that._doesUserExist(that.user.uid);
-                            }
+        <iron-pages id="pages" selected="[[routeData.page]]" attr-for-selected="name" role="main"
+                    selected-attribute="visible">
+          <!-- Main screen -->
+          <bite-main on-click-order="_navJoin" id="biteMain" route="{{subRoute}}" name="main"
+                     user="{{user}}"></bite-main>
+          <!-- Screen when opening new Bite-->
+          <bite-open name="open" route="{{subRoute}}"></bite-open>
+          <!-- Screen when joining a currently existing bite -->
+          <bite-join on-store-name="_changeStoreHeader" page="{{page}}" route="{{subRoute}}" name="join"></bite-join>
+        </iron-pages>
+      </div>
+    </app-header-layout>
 
-                            if(that.user !== null) {
-                                var userRef = firebase.database().ref('users/' + that.user.uid);
-                                userRef.on('value', function (snapshot) {
-                                    that.displayName = snapshot.val().display_name;
-                                });
-                            }
-                            //user signed in
-                            if(document.location.href.indexOf('main') === -1 && document.location.href.indexOf('join') === -1){
-                                window.location.href = 'main';
-                            }
-                        } else {
-                            //no user is signed in
-                            if(document.location.href.indexOf('login') === -1){
-                                window.location.href = 'login';
-                                console.log("logged out");
-                            }
-                        }
-                    });
+  </template>
 
-                    });
+  <script>
 
-            },
+    window.performance && performance.mark && performance.mark('bite-pwa - before register');
 
-            _signIn: function(){
-                var provider = new firebase.auth.GoogleAuthProvider();
+    Polymer({
 
-                provider.setCustomParameters({
-                    'login_hint': 'user@emove4mobile.com'
+      is: 'bite-pwa',
+
+      properties: {
+        selected: {
+          type: Number,
+          value: 0
+        },
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged',
+          notify: true,
+          readOnly: false
+        },
+        user: {
+          type: Object
+        },
+        displayName: {
+          type: String,
+          notify: true
+        },
+        storeName: {
+          type: String
+        }
+
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)'
+      ],
+
+      _routePageChanged: function (page) {
+        this.page = page || 'login';
+        //Scroll to the top on every route change
+        //Behavior silent disables the header scroll effects during the scroll.
+        Polymer.AppLayout.scroll({top: 0, behavior: 'silent'});
+
+      },
+
+      _pageChanged: function (page, oldPage) {
+        //load page import on demand
+        if (page != null) {
+          //main route is eagerly loaded
+          if (page == 'login') {
+            this._pageLoaded(Boolean(oldPage));
+            //other routes are lazy loaded
+          } else {
+            this.importHref(
+              this.resolveUrl('bite-' + page + '.html'),
+              function () {
+                this._pageLoaded(Boolean(oldPage));
+              }, null, true);
+          }
+          this._dynHeader();
+        }
+      },
+
+      _pageLoaded: function () {
+        this._ensureLazyLoaded();
+
+      },
+
+      _ensureLazyLoaded: function () {
+        //load lazy resources after render and set 'loadComplete' when done.
+        if (!this.loadComplete) {
+          Polymer.RenderStatus.afterNextRender(this, function () {
+            this.importHref(this.resolveUrl('lazy-resources.html'), function () {
+              //TODO include serviceworker and network status
+              this.loadComplete = true;
+            });
+          });
+        }
+      },
+      _navBack: function () {
+        window.history.back();
+      },
+      created: function () {
+        window.performance && performance.mark && performance.mark('bite-pwa.created');
+        //Upgrade element, remove unresolved
+        this.removeAttribute('unresolved');
+      },
+      ready: function () {
+        Polymer.RenderStatus.afterNextRender(this, function () {
+          this.listen(window, 'online', '_notifyNetworkStatus');
+          this.listen(window, 'offline', '_notifyNetworkStatus');
+
+
+          var spinner = Polymer.dom(this.root).querySelector('paper-spinner');
+          spinner.removeAttribute('active');
+          var that = this;
+
+          firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+              var fireUser = firebase.auth().currentUser;
+              that.user = fireUser;
+
+              if (that.page == 'main') {
+                that._doesUserExist(that.user.uid);
+              }
+
+              if (that.user !== null) {
+                var userRef = firebase.database().ref('users/' + that.user.uid);
+                userRef.on('value', function (snapshot) {
+                  that.displayName = snapshot.val().display_name;
                 });
-
-                firebase.auth().signInWithRedirect(provider);
-                firebase.auth().getRedirectResult().then(function(result){
-                   if(result.credential) {
-                       //Get Google Access Token
-                       var token = result.credential.accessToken;
-                   }
-                   //signed in user info
-                    this.user = result.user;
-                }).catch(function(error){
-                    //handle errors here
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-
-
-                    console.log("Error code: " + errorCode + " Error message: " + errorMessage);
-                });
-            },
-
-            _signOut: function(){
-                firebase.auth().signOut().then(function(){
-                   //sign out succesful
-                }, function(error){
-                    //something went wrong
-                    console.log("Something went wrong while signing out..")
-                });
-            },
-
-            _dynHeader: function () {
-                //Get the headers
-                var mainToolbar = Polymer.dom(this.root).querySelector('#mainToolbar');
-                var joinToolbar = Polymer.dom(this.root).querySelector('#joinToolbar');
-                var loginPage = Polymer.dom(this.root).querySelector('#login');
-                switch (this.page) {
-                    case 'login':
-                        mainToolbar.setAttribute('style', 'display:none');
-                        joinToolbar.setAttribute('style', 'display:none');
-                        loginPage.setAttribute('style', 'display:visible;');
-
-                        break;
-                    case 'main':
-                        mainToolbar.setAttribute('style', 'display:visible;');
-                        joinToolbar.setAttribute('style', 'display:none;');
-                        loginPage.setAttribute('style', 'display:none;');
-                        break;
-                    case 'join':
-                        mainToolbar.setAttribute('style', 'display:none;');
-                        joinToolbar.setAttribute('style', 'display:visible;');
-                        loginPage.setAttribute('style', 'display:none;');
-                        break;
-                }
-            },
-
-            _doesUserExist: function(uid){
-                var that = this;
-                var ref = firebase.database().ref('users/' +uid);
-                ref.once('value', function(snapshot){
-                   if(snapshot.exists())
-                       //exists do nothing
-                           ;
-                   else
-                       //does not exist
-                        that.$.actions.open();
-                });
-            },
-
-            _changeUsername: function(){
-                var username = this.$.username.value;
-                firebase.database().ref('users/' +this.user.uid+'/').set({
-                    display_name: username,
-                    email: this.user.email,
-                    name: this.user.displayName,
-                    photo_url: this.user.photoURL
-                });
-            },
-
-          /*
-            _clickedKeyChanged: function(){
-              console.log(this.clickedKey);
-            },
-          */
-            _changeStoreHeader: function(e){
-              this.storeName = e.detail.storeName;
+              }
+              //user signed in
+              if (document.location.href.indexOf('main') === -1 && document.location.href.indexOf('join') === -1) {
+                window.location.href = 'main';
+              }
+            } else {
+              //no user is signed in
+              if (document.location.href.indexOf('login') === -1) {
+                window.location.href = 'login';
+                console.log("logged out");
+              }
             }
-
-
-
-
-
-
+          });
 
         });
 
-    </script>
+      },
+
+      _signIn: function () {
+        var provider = new firebase.auth.GoogleAuthProvider();
+
+        provider.setCustomParameters({
+          'login_hint': 'user@emove4mobile.com'
+        });
+
+        firebase.auth().signInWithRedirect(provider);
+        firebase.auth().getRedirectResult().then(function (result) {
+          if (result.credential) {
+            //Get Google Access Token
+            var token = result.credential.accessToken;
+          }
+          //signed in user info
+          this.user = result.user;
+        }).catch(function (error) {
+          //handle errors here
+          var errorCode = error.code;
+          var errorMessage = error.message;
+
+
+          console.log("Error code: " + errorCode + " Error message: " + errorMessage);
+        });
+      },
+
+      _signOut: function () {
+        firebase.auth().signOut().then(function () {
+          //sign out succesful
+        }, function (error) {
+          //something went wrong
+          console.log("Something went wrong while signing out..")
+        });
+      },
+
+      _dynHeader: function () {
+        //Get the headers
+        var mainToolbar = Polymer.dom(this.root).querySelector('#mainToolbar');
+        var joinToolbar = Polymer.dom(this.root).querySelector('#joinToolbar');
+        var loginPage = Polymer.dom(this.root).querySelector('#login');
+        switch (this.page) {
+          case 'login':
+            mainToolbar.setAttribute('style', 'display:none');
+            joinToolbar.setAttribute('style', 'display:none');
+            loginPage.setAttribute('style', 'display:visible;');
+
+            break;
+          case 'main':
+            mainToolbar.setAttribute('style', 'display:visible;');
+            joinToolbar.setAttribute('style', 'display:none;');
+            loginPage.setAttribute('style', 'display:none;');
+            break;
+          case 'join':
+            mainToolbar.setAttribute('style', 'display:none;');
+            joinToolbar.setAttribute('style', 'display:visible;');
+            loginPage.setAttribute('style', 'display:none;');
+            break;
+        }
+      },
+
+      _doesUserExist: function (uid) {
+        var that = this;
+        var ref = firebase.database().ref('users/' + uid);
+        ref.once('value', function (snapshot) {
+          if (snapshot.exists())
+          //exists do nothing
+            ;
+          else
+          //does not exist
+            that.$.actions.open();
+        });
+      },
+
+      _changeUsername: function () {
+        var username = this.$.username.value;
+        firebase.database().ref('users/' + this.user.uid + '/').set({
+          display_name: username,
+          email: this.user.email,
+          name: this.user.displayName,
+          photo_url: this.user.photoURL
+        });
+      },
+
+      _changeStoreHeader: function (e) {
+        this.storeName = e.detail.storeName;
+      }
+
+
+    });
+
+  </script>
 </dom-module>

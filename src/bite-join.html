@@ -152,6 +152,7 @@
             ready: function () {
                 var categories = Polymer.dom(this.root).querySelector('.categories');
                 var menulist = Polymer.dom(this.root).querySelector('.menuList');
+                var self = this;
 
                 var elementPositionTop = this.$.categories.getBoundingClientRect().top;
 
@@ -233,7 +234,9 @@
             _chipActive: function(e){
               this.categories = [];
               this.push('categories', e.detail.name);
-            }
+            },
+
+
         });
 
 

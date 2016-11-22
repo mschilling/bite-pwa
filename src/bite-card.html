@@ -6,182 +6,187 @@
 
 <dom-module id="bite-card">
 
-    <template>
+  <template>
     <style>
-                :host {
-                    display: block;
+      :host {
+        display: block;
 
-                }
+      }
 
-                paper-card {
-                    margin: 0 auto;
-                    width: 90%;
-                    margin-top: 16px;
-                    text-align: left;
-                    font-family: CompasseBoldItalic;
+      paper-card {
+        margin: 0 auto;
+        width: 90%;
+        margin-top: 16px;
+        text-align: left;
+        font-family: CompasseBoldItalic;
 
-                    --paper-card-actions: {
-                        padding: 0;
-                    }
-                }
+        --paper-card-actions: {
+          padding: 0;
+        }
+      }
 
-                .title {
-                    font-size: 16px;
-                    color: #EC9630;
-                    text-transform: uppercase;
+      .title {
+        font-size: 16px;
+        color: #EC9630;
+        text-transform: uppercase;
 
-                }
+      }
 
-                .desc {
-                    margin-top: 6px;
+      .desc {
+        margin-top: 6px;
 
-                }
+      }
 
-                .img {
-                    float: left;
-                    border-radius: 50%;
-                    width: 50px;
-                    height: 50px;
-                    margin-left: 8px;
-                    margin-bottom: 16px;
-                }
+      .img {
+        float: left;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        margin-left: 8px;
+        margin-bottom: 16px;
+      }
 
-                .location {
-                    font-weight: 100;
-                    margin-top: 6px;
-                    font-family: Compasse;
-                    font-size: 14px;
-                    color: #9B9B9B;
+      .location {
+        font-weight: 100;
+        margin-top: 6px;
+        font-family: Compasse;
+        font-size: 14px;
+        color: #9B9B9B;
 
-                }
+      }
 
-                .person {
-                    float: left;
-                    border-radius: 50%;
-                    width: 25px;
-                    height: 25px;
-                    margin-bottom: 15px;
-                    margin-right: 12px;
-                    margin-top: 12px;
-                }
+      .person {
+        float: left;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        margin-bottom: 15px;
+        margin-right: 12px;
+        margin-top: 12px;
+      }
 
-                .fab {
-                    float: left;
-                    width: 24px;
-                    height: 24px;
-                    margin-top: 12px;
-                    background-color: #9B9B9B;
-                    font-size: 8px;
-                }
+      .fab {
+        float: left;
+        width: 24px;
+        height: 24px;
+        margin-top: 12px;
+        background-color: #9B9B9B;
+        font-size: 8px;
+      }
 
-                .personContainer {
-                    float: left;
+      .personContainer {
+        float: left;
 
-                }
+      }
 
-                .fabContainer {
-                    float: right;
-                }
+      .fabContainer {
+        float: right;
+      }
 
-                .cardInfo {
-                    display: inline-block;
-                    margin-left: 16px;
-                }
+      .cardInfo {
+        display: inline-block;
+        margin-left: 16px;
+      }
 
-            </style>
-          <a href="/join/[[key]]">
-            <paper-card>
-                <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
-                <div class="card-content">
-                    <div class="img"
-                         style$="background: url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;">
-                    </div>
-                    <div class="cardInfo">
-                        <div class="title">[[storeName]]</div>
-                        <div class="desc"></div>
-                        <div class="location">
-                            <iron-icon style="height: 15px; width: 15px;" icon="communication:location-on"></iron-icon>
-                            [[storeLocation]]
-                        </div>
-                    </div>
-                </div>
-                <div class="card-actions" style="margin-left: 48px;">
-                    <div class="personContainer">
-                        <div class="person" style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
-                        <div class="person" style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
-                        <div class="person" style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
-                        <div class="person" style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
-                        <div class="person" style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
-                        <div class="fabContainer">
-                            <!--<paper-fab mini class="fab" label="5"></paper-fab>-->
-                        </div>
-                    </div>
+    </style>
+    <a href="/join/[[key]]">
+      <paper-card>
+        <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
+        <div class="card-content">
+          <div class="img"
+               style$="background: url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;">
+          </div>
+          <div class="cardInfo">
+            <div class="title">[[storeName]]</div>
+            <div class="desc"></div>
+            <div class="location">
+              <iron-icon style="height: 15px; width: 15px;" icon="communication:location-on"></iron-icon>
+              [[storeLocation]]
+            </div>
+          </div>
+        </div>
+        <div class="card-actions" style="margin-left: 48px;">
+          <div class="personContainer">
+            <div class="person"
+                 style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+            <div class="person"
+                 style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+            <div class="person"
+                 style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+            <div class="person"
+                 style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+            <div class="person"
+                 style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+            <div class="fabContainer">
+              <!--<paper-fab mini class="fab" label="5"></paper-fab>-->
+            </div>
+          </div>
 
-                </div>
-            </paper-card>
-          </a>
-    </template>
+        </div>
+      </paper-card>
+    </a>
+  </template>
 
-    <script>
-
-
-        Polymer({
-
-            is: 'bite-card',
-            properties: {
-                name: String,
-                background: String,
-                desc: String,
-                location: String,
-                key: String,
-                storeName: String,
-                storeLocation: String,
-                uid: {
-                    type: String
-                },
-                storeid: {
-                    type: String
-                }
-
-            },
-
-            ready: function(){
-                this._getOrder();
-                this._getUser();
-                this._getStore();
-            },
-
-            _getOrder: function(){
-                var that = this;
-                var cardRef = firebase.database().ref('orders/'+that.key);
-                cardRef.on('value', function(snapshot){
-                   that.uid = snapshot.val().opened_by;
-                   that.storeid = snapshot.val().store;
-                });
-
-            },
-
-            _getUser: function(){
-                var that = this;
-                var userRef = firebase.database().ref('users/'+that.uid);
-                userRef.on('value', function(snapshot){
-                   that.background = snapshot.val().photo_url;
-                });
-            },
-
-            _getStore: function(){
-                var that = this;
-                //TODO data has to be removed from database, data should be stored e.g stores/storeid instead of stores/storeid/data
-                var storeRef =  firebase.database().ref('stores/'+that.storeid);
-                storeRef.on('value', function(snapshot){
-                    that.storeName = snapshot.val().name;
-                    that.storeLocation = snapshot.val().location;
-                });
-            }
+  <script>
 
 
+    Polymer({
+
+      is: 'bite-card',
+      properties: {
+        name: String,
+        background: String,
+        desc: String,
+        location: String,
+        key: String,
+        storeName: String,
+        storeLocation: String,
+        uid: {
+          type: String
+        },
+        storeid: {
+          type: String
+        }
+
+      },
+
+      ready: function () {
+        this._getOrder();
+        this._getUser();
+        this._getStore();
+      },
+
+      _getOrder: function () {
+        var that = this;
+        var cardRef = firebase.database().ref('orders/' + that.key);
+        cardRef.on('value', function (snapshot) {
+          that.uid = snapshot.val().opened_by;
+          that.storeid = snapshot.val().store;
         });
 
+      },
 
-    </script>
+      _getUser: function () {
+        var that = this;
+        var userRef = firebase.database().ref('users/' + that.uid);
+        userRef.on('value', function (snapshot) {
+          that.background = snapshot.val().photo_url;
+        });
+      },
+
+      _getStore: function () {
+        var that = this;
+        //TODO data has to be removed from database, data should be stored e.g stores/storeid instead of stores/storeid/data
+        var storeRef = firebase.database().ref('stores/' + that.storeid);
+        storeRef.on('value', function (snapshot) {
+          that.storeName = snapshot.val().name;
+          that.storeLocation = snapshot.val().location;
+        });
+      }
+
+
+    });
+
+
+  </script>
 </dom-module>
