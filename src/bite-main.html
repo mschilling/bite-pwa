@@ -266,10 +266,14 @@
         var orderRef = firebase.database().ref('orders/');
         orderRef.on('value', function (snapshot) {
           that.key = [];
-          snapshot.forEach(function (childSnapshot) {
-            that.push('key', childSnapshot.key);
-            that.biteTotal = that.key.length;
-          });
+          if(snapshot.val() !== null) {
+            snapshot.forEach(function (childSnapshot) {
+              that.push('key', childSnapshot.key);
+              that.biteTotal = that.key.length;
+            });
+          } else {
+              that.biteTotal = 0;
+          }
         });
 
       },
