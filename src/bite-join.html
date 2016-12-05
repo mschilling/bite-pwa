@@ -103,7 +103,7 @@
 
 
             <div class="menuList">
-                <bite-cardlist products=[[products]] style="width: 90%;"></bite-cardlist>
+                <bite-cardlist key="[[key]]" user="[[user]]" storeid="[[storeid]]" products=[[products]] style="width: 90%;"></bite-cardlist>
             </div>
 
         </div>
@@ -146,7 +146,8 @@
                 },
                 products: {
                   type: Array
-                }
+                },
+                user: Object
             },
 
             ready: function () {
@@ -211,9 +212,8 @@
                 that.storeName = snapshot.val().name;
                 that._setStoreName();
               });
-
-
             },
+
 
             _setStoreName: function () {
               this.fire('store-name', {storeName: this.storeName} );
@@ -226,7 +226,8 @@
                   that.products = [];
                   if(snapshot.val() !== null) {
                     snapshot.forEach(function (childSnapshot) {
-                      that.push('products', childSnapshot.val());
+                      that.push('products', childSnapshot.key);
+
                     });
                   }
               });

@@ -52,7 +52,7 @@
 
       .desc {
         margin-top: 6px;
-
+        float: left;
       }
 
       .img {
@@ -127,7 +127,9 @@
           </div>
           <div class="cardInfo">
             <div class="title">[[storeName]]</div>
-            <div class="desc"></div>
+            <template is="dom-repeat" items="{{emoji}}" as="item">
+            [[item]]
+            </template>
             <div class="location">
               <iron-icon style="height: 15px; width: 15px;" icon="communication:location-on"></iron-icon>
               [[storeLocation]]
@@ -179,7 +181,8 @@
         },
         storeid: {
           type: String
-        }
+        },
+        emoji: Array
 
       },
 
@@ -188,6 +191,7 @@
         this._getUser();
         this._getStore();
         this._checkUser();
+        this._getStoreCategory();
       },
 
       _getOrder: function () {
@@ -216,6 +220,22 @@
           that.storeName = snapshot.val().name;
           that.storeLocation = snapshot.val().location;
         });
+      },
+
+      _getStoreCategory: function(){
+        var that = this;
+        var categoryRef = firebase.database().ref('stores/'+that.storeid+'/category/');
+        categoryRef.on('value', function(snapshot){
+            that.emoji = [];
+            snapshot.forEach(function (childSnapshot) {
+              var emojiRef = firebase.database().ref('stores/'+that.storeid+'/category/'+childSnapshot.key);
+              emojiRef.on('value', function(snapshot){
+                that.push('emoji', snapshot.val().emoji);
+              });
+            });
+        });
+
+
       },
 
       _removeBite: function(){

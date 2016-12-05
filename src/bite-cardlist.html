@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="bite-item.html">
 
 <dom-module id="bite-cardlist">
     <template>
@@ -99,23 +100,7 @@
         <paper-card>
             <!-- <iron-list id="list" items="[[products]]" as="item"> -->
                 <template id="list" is="dom-repeat" items="[[products]]" as="item">
-                  <div class="itemContainer">
-                    <div class="item" on-tap="_itemClick">
-                        <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
-                        <div class="infoContainer">
-                          <div class="image">🍟</div>
-                          <div class="namePrice">
-                            <div class="name">[[item.name]]</div>
-                            <div class="price">[[item.price]]</div>
-                          </div>
-                          <div class="actions">
-                            <div class="add"><paper-icon-button icon="remove" mini></paper-icon-button></div>
-                            <div class="total">1</div>
-                            <div class="remove"><paper-icon-button icon="add" mini></div>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
+                  <bite-item key="[[item]]" storeid="[[storeid]]"></bite-item>
                 </template>
            <!-- </iron-list> -->
         </paper-card>
@@ -129,19 +114,61 @@
 
                 properties: {
                   products: {
-                    type: Array
-                  }
+                    type: Array,
+                    observer: '_productsChanged'
+                  },
+                  key: {
+                    type: String,
+                    observer: '_keyChanged'
+                  },
+                  user: {
+                    type: Object,
+                    observer: '_userChanged'
+                  },
+                  uid: String,
+                  storeid: String
                 },
 
                 attached: function () {
                     //top level docu as scrolltarget
                     var list = document.querySelector("iron-list");
                     this.$.list.scrollTarget = this.ownerDocument.documentElement;
+                },
+
+                _itemClick: function(e){
+                  var data = "#"+e.model.get('item.name');
+
+                  var actions = Polymer.dom(this.root).querySelector(data);
+
+                  this._addUserOrder();
+                },
+
+                _getUserOrder: function(){
+                  var that = this;
+                  //get user order of current user in current store
+                  var userOrderRef = firebase.database().ref('user_order/'+that.key);
+                  userOrderRef.on('value', function(snapshot){
+                  });
+                },
+
+                _addUserOrder: function(){
+                  var that = this;
+                  //set user order with clicked item(s)
+                  firebase.database().ref('user_order/'+that.key+"/"+that.uid+"/-IuxeUWgBMTH4Xk9QADM").set({
+                      amount: 1
+                  });
 
                 },
-                _itemClick: function(e){
-                  var data = e.model.get('item.name');
-                  console.log(data);
+
+                _keyChanged: function(){
+                  this._getUserOrder();
+                },
+
+                _productsChanged: function(){
+                },
+
+                _userChanged: function(){
+                  this.uid = this.user.uid;
                 }
             });
     </script>
