@@ -84,7 +84,7 @@
           <div class="actions" style$="display: visible">
             <div class="remove" on-tap="_removeProduct"><paper-icon-button icon="remove" mini></paper-icon-button></div>
             <div class="total">[[amount]]</div>
-            <div class="add" on-tap="_setUserOrder"><paper-icon-button icon="add" mini></paper-icon-button></div>
+            <div class="add" on-tap="_addProduct"><paper-icon-button icon="add" mini></paper-icon-button></div>
           </div>
         </div>
       </div>
@@ -114,6 +114,10 @@
         removeValue: {
             type: Boolean,
             value: false
+        },
+        addValue: {
+            type: Boolean,
+            value: false
         }
       },
       _storeIdChanged: function () {
@@ -129,7 +133,13 @@
       },
 
       _itemClick: function () {
-        this._setUserOrder();
+        if(this.addValue || this.removeValue){
+            this.addValue = false;
+            this.removeValue = false;
+            return;
+        }
+        this._addProduct();
+        this.addValue = false;
       },
 
       _getData: function () {
@@ -154,45 +164,39 @@
         userOrderRef.on('value', function(snapshot){
           if(snapshot.val() == null){
               that.amount = 0;
-
               var actions = Polymer.dom(that.root).querySelector('.actions');
               actions.setAttribute('style', 'display: none;');
               return;
           }
-
           that.amount = snapshot.val().amount;
           var actions = Polymer.dom(that.root).querySelector('.actions');
           actions.setAttribute('style', 'display: visible');
         });
       },
 
-      _removeProduct: function(){
-        this.removeValue = true;
-        if(this.amount == 1){
-          //Remove product all together
-          var that = this;
-          var deleteRef = firebase.database().ref('user_order/'+that.key+'/'+that.uid);
-          deleteRef.child(that.product).remove();
-        } else {
-          //Decrease number
-          this.amount--;
-          var that = this;
-          firebase.database().ref('user_order/'+that.key+"/"+that.uid+"/"+that.product).set({
-            amount: that.amount
-          });
+      _addProduct: function () {
+        this.addValue = true;
+        this.amount++;
+        this._setUserOrder();
+      },
+
+      _removeProduct: function () {
+        if(this.amount > 0) {
+            this.removeValue = true;
+            this.amount--;
+            this._setUserOrder();
         }
       },
 
       _setUserOrder: function () {
-        if(this.removeValue) {
-            this.removeValue = false;
-            return;
-        }
         var that = this;
-        that.amount++;
-        firebase.database().ref('user_order/'+that.key+"/"+that.uid+"/"+that.product).set({
-          amount: that.amount
-        });
+        if(this.amount > 0) {
+          firebase.database().ref('user_order/'+that.key+"/"+that.uid+"/"+that.product).set({
+            amount: that.amount
+          });
+        } else {
+          firebase.database().ref('user_order/'+that.key+"/"+that.uid+"/"+that.product).remove();
+        }
       }
     });
   </script>
