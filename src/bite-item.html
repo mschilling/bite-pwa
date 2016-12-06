@@ -77,7 +77,7 @@
             <div class="name">[[name]]</div>
             <div class="price">[[price]]</div>
           </div>
-          <div class="actions" style="">
+          <div class="actions" style="display: none">
             <div class="add"><paper-icon-button icon="remove" mini></paper-icon-button></div>
             <div class="total">1</div>
             <div class="remove"><paper-icon-button icon="add" mini></paper-icon-button></div>
@@ -90,14 +90,17 @@
     Polymer({
       is: 'bite-item',
       properties: {
-        key: {
+        product: {
           type: String
         },
         storeid: {
           type: String,
           observer: '_storeIdChanged'
         },
-        name: String
+        name: String,
+        key: String,
+        uid: String,
+        amount: Number
       },
       _storeIdChanged: function () {
         console.log(this.storeid);
@@ -105,8 +108,8 @@
       },
 
       _itemClick: function () {
-        console.log(this.key);
-        this._getData();
+        console.log(this.product);
+        this._getUserOrder();
       },
 
       _getData: function () {
@@ -115,15 +118,31 @@
 
       _getOrder: function () {
         var that = this;
-        var productsRef = firebase.database().ref('products/'+that.storeid+'/products/'+that.key);
+        var productsRef = firebase.database().ref('products/'+that.storeid+'/products/'+that.product);
         productsRef.on('value', function(snapshot) {
           if(snapshot.val() == null) return;
           that.name = snapshot.val().name;
           that.price = snapshot.val().price;
         });
+      },
+
+      _getUserOrder: function () {
+        var that = this;
+        var userOrderRef = firebase.database().ref('user_order/'+that.key+'/'+that.uid+'/'+that.product);
+        userOrderRef.on('value', function(snapshot){
+          if(snapshot.val() == null) return;
+          that.amount = snapshot.val().amount;
+        });
+        this._setUserOrder();
+      },
+
+      _setUserOrder: function () {
+        var that = this;
+       /* firebase.database().ref('user_order/'+that.key+"/"+that.uid+"/"+that.product).set({
+          amount: that.amount
+        }); */
+    
       }
-
-
     });
   </script>
 </dom-module>

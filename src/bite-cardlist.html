@@ -100,7 +100,7 @@
         <paper-card>
             <!-- <iron-list id="list" items="[[products]]" as="item"> -->
                 <template id="list" is="dom-repeat" items="[[products]]" as="item">
-                  <bite-item key="[[item]]" storeid="[[storeid]]"></bite-item>
+                  <bite-item uid=[[uid]] key=[[key]] product="[[item]]" storeid="[[storeid]]"></bite-item>
                 </template>
            <!-- </iron-list> -->
         </paper-card>
