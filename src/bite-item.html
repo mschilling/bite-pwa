@@ -110,7 +110,11 @@
             type: String,
             observer: '_uidChanged'
         },
-        amount: Number
+        amount: Number,
+        removeValue: {
+            type: Boolean,
+            value: false
+        }
       },
       _storeIdChanged: function () {
         this._getData();
@@ -125,15 +129,11 @@
       },
 
       _itemClick: function () {
-        console.log(this.product);
-        if(this.amount == 0){
-          this._setUserOrder();
-        }
+        this._setUserOrder();
       },
 
       _getData: function () {
         if(this.storeid == undefined || this.key == undefined || this.uid == undefined) return;
-        console.log("GET DATA");
         this._getOrder();
         this._getUserOrder();
       },
@@ -157,8 +157,7 @@
 
               var actions = Polymer.dom(that.root).querySelector('.actions');
               actions.setAttribute('style', 'display: none;');
-
-              return
+              return;
           }
 
           that.amount = snapshot.val().amount;
@@ -168,6 +167,7 @@
       },
 
       _removeProduct: function(){
+        this.removeValue = true;
         if(this.amount == 1){
           //Remove product all together
           var that = this;
@@ -184,6 +184,10 @@
       },
 
       _setUserOrder: function () {
+        if(this.removeValue) {
+            this.removeValue = false;
+            return;
+        }
         var that = this;
         that.amount++;
         firebase.database().ref('user_order/'+that.key+"/"+that.uid+"/"+that.product).set({
