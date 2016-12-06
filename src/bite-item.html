@@ -13,6 +13,7 @@
         display: block;
         height: 100%;
         width: 100%;
+        z-index: -1;
       }
       .image {
         float: left;
@@ -43,6 +44,7 @@
         margin-top: 17px;
         float: right;
         display: block;
+        z-index: 10;
       }
       .add, .remove {
         float: left;
@@ -54,6 +56,8 @@
       }
       .remove {
         margin-left: 8px;
+        height: 32px;
+        width: 32px;
       }
       .total {
         float: left;
@@ -77,10 +81,10 @@
             <div class="name">[[name]]</div>
             <div class="price">[[price]]</div>
           </div>
-          <div class="actions">
-            <div class="add"><paper-icon-button icon="remove" mini></paper-icon-button></div>
+          <div class="actions" style$="display: visible">
+            <div class="remove" on-tap="_removeProduct"><paper-icon-button icon="remove" mini></paper-icon-button></div>
             <div class="total">[[amount]]</div>
-            <div class="remove"><paper-icon-button icon="add" mini></paper-icon-button></div>
+            <div class="add" on-tap="_setUserOrder"><paper-icon-button icon="add" mini></paper-icon-button></div>
           </div>
         </div>
       </div>
@@ -122,7 +126,9 @@
 
       _itemClick: function () {
         console.log(this.product);
-        this._setUserOrder();
+        if(this.amount == 0){
+          this._setUserOrder();
+        }
       },
 
       _getData: function () {
@@ -149,12 +155,32 @@
           if(snapshot.val() == null){
               that.amount = 0;
 
-              //HIDE THIS GUY
+              var actions = Polymer.dom(that.root).querySelector('.actions');
+              actions.setAttribute('style', 'display: none;');
 
               return
           }
+
           that.amount = snapshot.val().amount;
+          var actions = Polymer.dom(that.root).querySelector('.actions');
+          actions.setAttribute('style', 'display: visible');
         });
+      },
+
+      _removeProduct: function(){
+        if(this.amount == 1){
+          //Remove product all together
+          var that = this;
+          var deleteRef = firebase.database().ref('user_order/'+that.key+'/'+that.uid);
+          deleteRef.child(that.product).remove();
+        } else {
+          //Decrease number
+          this.amount--;
+          var that = this;
+          firebase.database().ref('user_order/'+that.key+"/"+that.uid+"/"+that.product).set({
+            amount: that.amount
+          });
+        }
       },
 
       _setUserOrder: function () {
