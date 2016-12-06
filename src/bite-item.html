@@ -77,9 +77,9 @@
             <div class="name">[[name]]</div>
             <div class="price">[[price]]</div>
           </div>
-          <div class="actions" style="display: none">
+          <div class="actions">
             <div class="add"><paper-icon-button icon="remove" mini></paper-icon-button></div>
-            <div class="total">1</div>
+            <div class="total">[[amount]]</div>
             <div class="remove"><paper-icon-button icon="add" mini></paper-icon-button></div>
           </div>
         </div>
@@ -98,22 +98,38 @@
           observer: '_storeIdChanged'
         },
         name: String,
-        key: String,
-        uid: String,
+        key: {
+            type: String,
+            observer: '_keyChanged'
+        },
+        uid: {
+            type: String,
+            observer: '_uidChanged'
+        },
         amount: Number
       },
       _storeIdChanged: function () {
-        console.log(this.storeid);
+        this._getData();
+      },
+
+      _keyChanged: function () {
+        this._getData();
+      },
+
+      _uidChanged: function () {
         this._getData();
       },
 
       _itemClick: function () {
         console.log(this.product);
-        this._getUserOrder();
+        this._setUserOrder();
       },
 
       _getData: function () {
-        this._getOrder()
+        if(this.storeid == undefined || this.key == undefined || this.uid == undefined) return;
+        console.log("GET DATA");
+        this._getOrder();
+        this._getUserOrder();
       },
 
       _getOrder: function () {
@@ -130,18 +146,23 @@
         var that = this;
         var userOrderRef = firebase.database().ref('user_order/'+that.key+'/'+that.uid+'/'+that.product);
         userOrderRef.on('value', function(snapshot){
-          if(snapshot.val() == null) return;
+          if(snapshot.val() == null){
+              that.amount = 0;
+
+              //HIDE THIS GUY
+
+              return
+          }
           that.amount = snapshot.val().amount;
         });
-        this._setUserOrder();
       },
 
       _setUserOrder: function () {
         var that = this;
-       /* firebase.database().ref('user_order/'+that.key+"/"+that.uid+"/"+that.product).set({
+        that.amount++;
+        firebase.database().ref('user_order/'+that.key+"/"+that.uid+"/"+that.product).set({
           amount: that.amount
-        }); */
-    
+        });
       }
     });
   </script>
