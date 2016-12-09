@@ -14,7 +14,7 @@
    "fonts/**/*",
    "bower.json",
    ".htaccess",
-   ".firebase-messaging-sw.js"
+   "firebase-messaging-sw.js"
   ],
   "includeDependencies": [
     "manifest.json",
