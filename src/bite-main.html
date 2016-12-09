@@ -302,7 +302,8 @@
         var that = this;
         firebase.database().ref('orders').push().set({
           opened_by: this.user.uid,
-          store: "-JhLeOlGIEjaIOFHR0xe"
+          store: "-JhLeOlGIEjaIOFHR0xe",
+          open_time: new Date().getTime()
         });
       }
 
