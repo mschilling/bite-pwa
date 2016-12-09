@@ -17,10 +17,8 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 
-
 <!-- Eager load -->
 <link rel="import" href="bite-login.html" async>
-
 
 <dom-module id="bite-pwa">
   <template id="bitePWA">
@@ -116,7 +114,6 @@
       /* Proper CSS */
 
     </style>
-
 
     <!-- app-location binds to the app's URL -->
     <app-location route="{{route}}"></app-location>
@@ -261,7 +258,6 @@
           this.listen(window, 'online', '_notifyNetworkStatus');
           this.listen(window, 'offline', '_notifyNetworkStatus');
 
-
           var spinner = Polymer.dom(this.root).querySelector('paper-spinner');
           spinner.removeAttribute('active');
           var that = this;
@@ -388,6 +384,9 @@
 
 
     });
+
+
+
 
   </script>
 </dom-module>
