@@ -32,7 +32,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
             return client.focus();
         }
         if(clients.openWindow){
-          return clients.openWindow('httpd://bite.move4mobile.io/join/'+event.notification.data.bite);
+          return clients.openWindow('https://bite.move4mobile.io/join/'+event.notification.data.bite);
         }
       })
     )
