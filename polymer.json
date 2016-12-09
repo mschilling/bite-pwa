@@ -13,7 +13,8 @@
    "images/**/*",
    "fonts/**/*",
    "bower.json",
-   ".htaccess"
+   ".htaccess",
+   ".firebase-messaging-sw.js"
   ],
   "includeDependencies": [
     "manifest.json",
