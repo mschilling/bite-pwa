@@ -4,23 +4,27 @@
       .itemContainer {
         position: relative;
       }
+
       .item {
         display: block;
         padding: 10px;
         height: 72px;
       }
+
       .infoContainer {
         display: block;
         height: 100%;
         width: 100%;
         z-index: -1;
       }
+
       .image {
         float: left;
         margin-top: 12px;
         color: #292E35;
         font-size: 32px;
       }
+
       .namePrice {
         display: block;
         margin-top: 17px;
@@ -28,37 +32,44 @@
         width: 150px;
         margin-left: 17px;
       }
+
       .name {
         float: left;
         width: 150px;
         color: #292E35;
         font-family: Compasse;
       }
+
       .price {
         float: left;
         color: black;
         opacity: 0.54;
         font-family: Compasse;
       }
+
       .actions {
         margin-top: 17px;
         float: right;
         display: block;
         z-index: 10;
       }
+
       .add, .remove {
         float: left;
         width: 24px;
         height: 24px;
       }
+
       .add {
         margin-right: 8px;
       }
+
       .remove {
         margin-left: 8px;
         height: 32px;
         width: 32px;
       }
+
       .total {
         float: left;
         font-family: Compasse;
@@ -67,7 +78,8 @@
         margin-top: 12px;
         margin-left: 10px;
       }
-      paper-icon-button{
+
+      paper-icon-button {
         color: #9b9b9b;
       }
     </style>
@@ -82,9 +94,13 @@
             <div class="price">[[price]]</div>
           </div>
           <div class="actions" style$="display: visible">
-            <div class="remove" on-tap="_removeProduct"><paper-icon-button icon="remove" mini></paper-icon-button></div>
+            <div class="remove" on-tap="_removeProduct">
+              <paper-icon-button icon="remove" mini></paper-icon-button>
+            </div>
             <div class="total">[[amount]]</div>
-            <div class="add" on-tap="_addProduct"><paper-icon-button icon="add" mini></paper-icon-button></div>
+            <div class="add" on-tap="_addProduct">
+              <paper-icon-button icon="add" mini></paper-icon-button>
+            </div>
           </div>
         </div>
       </div>
@@ -103,21 +119,21 @@
         },
         name: String,
         key: {
-            type: String,
-            observer: '_keyChanged'
+          type: String,
+          observer: '_keyChanged'
         },
         uid: {
-            type: String,
-            observer: '_uidChanged'
+          type: String,
+          observer: '_uidChanged'
         },
         amount: Number,
         removeValue: {
-            type: Boolean,
-            value: false
+          type: Boolean,
+          value: false
         },
         addValue: {
-            type: Boolean,
-            value: false
+          type: Boolean,
+          value: false
         }
       },
       _storeIdChanged: function () {
@@ -133,26 +149,26 @@
       },
 
       _itemClick: function () {
-        if(this.addValue || this.removeValue){
-            this.addValue = false;
-            this.removeValue = false;
-            return;
+        if (this.addValue || this.removeValue) {
+          this.addValue = false;
+          this.removeValue = false;
+          return;
         }
         this._addProduct();
         this.addValue = false;
       },
 
       _getData: function () {
-        if(this.storeid == undefined || this.key == undefined || this.uid == undefined) return;
+        if (this.storeid == undefined || this.key == undefined || this.uid == undefined) return;
         this._getOrder();
         this._getUserOrder();
       },
 
       _getOrder: function () {
         var that = this;
-        var productsRef = firebase.database().ref('products/'+that.storeid+'/products/'+that.product);
-        productsRef.on('value', function(snapshot) {
-          if(snapshot.val() == null) return;
+        var productsRef = firebase.database().ref('products/' + that.storeid + '/products/' + that.product);
+        productsRef.on('value', function (snapshot) {
+          if (snapshot.val() == null) return;
           that.name = snapshot.val().name;
           that.price = snapshot.val().price;
         });
@@ -160,13 +176,13 @@
 
       _getUserOrder: function () {
         var that = this;
-        var userOrderRef = firebase.database().ref('user_order/'+that.key+'/'+that.uid+'/'+that.product);
-        userOrderRef.on('value', function(snapshot){
-          if(snapshot.val() == null){
-              that.amount = 0;
-              var actions = Polymer.dom(that.root).querySelector('.actions');
-              actions.setAttribute('style', 'display: none;');
-              return;
+        var userOrderRef = firebase.database().ref('user_order/' + that.key + '/' + that.uid + '/' + that.product);
+        userOrderRef.on('value', function (snapshot) {
+          if (snapshot.val() == null) {
+            that.amount = 0;
+            var actions = Polymer.dom(that.root).querySelector('.actions');
+            actions.setAttribute('style', 'display: none;');
+            return;
           }
           that.amount = snapshot.val().amount;
           var actions = Polymer.dom(that.root).querySelector('.actions');
@@ -181,21 +197,21 @@
       },
 
       _removeProduct: function () {
-        if(this.amount > 0) {
-            this.removeValue = true;
-            this.amount--;
-            this._setUserOrder();
+        if (this.amount > 0) {
+          this.removeValue = true;
+          this.amount--;
+          this._setUserOrder();
         }
       },
 
       _setUserOrder: function () {
         var that = this;
-        if(this.amount > 0) {
-          firebase.database().ref('user_order/'+that.key+"/"+that.uid+"/"+that.product).set({
+        if (this.amount > 0) {
+          firebase.database().ref('user_order/' + that.key + "/" + that.uid + "/" + that.product).set({
             amount: that.amount
           });
         } else {
-          firebase.database().ref('user_order/'+that.key+"/"+that.uid+"/"+that.product).remove();
+          firebase.database().ref('user_order/' + that.key + "/" + that.uid + "/" + that.product).remove();
         }
       }
     });

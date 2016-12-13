@@ -16,8 +16,9 @@
     "paper-button": "polymerelements/paper-button#^1.0.14",
     "paper-ripple": "polymerelements/paper-ripple#^1.0.10",
     "paper-spinner": "polymerelements/paper-spinner#^1.2.1",
+    "paper-input": "polymerelements/paper-input#^1.1.20",
     "paper-dialog": "polymerelements/paper-dialog#^1.1.0",
-    "paper-input": "polymerelements/paper-input#^1.1.20"
+    "neon-elements": "polymerelements/neon-elements#^1.0.0"
   },
   "devDependencies": {
     "iron-component-page": "polymerelements/iron-component-page#^1.0.0",

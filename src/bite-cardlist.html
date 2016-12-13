@@ -8,168 +8,181 @@
 <link rel="import" href="bite-item.html">
 
 <dom-module id="bite-cardlist">
-    <template>
-        <style>
-            /* TODO proper styling */
-            :host{
-                margin: 0;
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-            }
-            paper-card{
-                width: 100%;
-                margin-bottom: 10px;
-            }
-            #list {
-              flex: 1 1 auto;
-              color: black;
-            }
-            .itemContainer {
-              position: relative;
-            }
-            .item {
-              display: block;
-              padding: 10px;
-              height: 72px;
-            }
-            .infoContainer {
-              display: block;
-              height: 100%;
-              width: 100%;
-            }
-            .image {
-              float: left;
-              margin-top: 12px;
-              color: #292E35;
-              font-size: 32px;
-            }
-            .namePrice {
-              display: block;
-              margin-top: 17px;
-              float: left;
-              width: 150px;
-              margin-left: 17px;
-            }
-            .name {
-              float: left;
-              width: 150px;
-              color: #292E35;
-              font-family: Compasse;
-            }
-            .price {
-              float: left;
-              color: black;
-              opacity: 0.54;
-              font-family: Compasse;
-            }
-            .actions {
-              margin-top: 17px;
-              float: right;
-              display: block;
-            }
-            .add, .remove {
-              float: left;
-              width: 24px;
-              height: 24px;
-            }
-            .add {
-              margin-right: 8px;
-            }
-            .remove {
-              margin-left: 8px;
-            }
-            .total {
-              float: left;
-              font-family: Compasse;
-              font-size: 16px;
-              font-weight: 800;
-              margin-top: 12px;
-              margin-left: 10px;
-            }
-            paper-icon-button{
-              color: #9b9b9b;
-            }
+  <template>
+    <style>
+      /* TODO proper styling */
+      :host {
+        margin: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      paper-card {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      #list {
+        flex: 1 1 auto;
+        color: black;
+      }
+
+      .itemContainer {
+        position: relative;
+      }
+
+      .item {
+        display: block;
+        padding: 10px;
+        height: 72px;
+      }
+
+      .infoContainer {
+        display: block;
+        height: 100%;
+        width: 100%;
+      }
+
+      .image {
+        float: left;
+        margin-top: 12px;
+        color: #292E35;
+        font-size: 32px;
+      }
+
+      .namePrice {
+        display: block;
+        margin-top: 17px;
+        float: left;
+        width: 150px;
+        margin-left: 17px;
+      }
+
+      .name {
+        float: left;
+        width: 150px;
+        color: #292E35;
+        font-family: Compasse;
+      }
+
+      .price {
+        float: left;
+        color: black;
+        opacity: 0.54;
+        font-family: Compasse;
+      }
+
+      .actions {
+        margin-top: 17px;
+        float: right;
+        display: block;
+      }
+
+      .add, .remove {
+        float: left;
+        width: 24px;
+        height: 24px;
+      }
+
+      .add {
+        margin-right: 8px;
+      }
+
+      .remove {
+        margin-left: 8px;
+      }
+
+      .total {
+        float: left;
+        font-family: Compasse;
+        font-size: 16px;
+        font-weight: 800;
+        margin-top: 12px;
+        margin-left: 10px;
+      }
+
+      paper-icon-button {
+        color: #9b9b9b;
+      }
 
 
-
-        </style>
-
+    </style>
 
 
-        <paper-card>
-            <!-- <iron-list id="list" items="[[products]]" as="item"> -->
-                <template id="list" is="dom-repeat" items="[[products]]" as="item">
-                  <bite-item uid=[[uid]] key=[[key]] product="[[item]]" storeid="[[storeid]]"></bite-item>
-                </template>
-           <!-- </iron-list> -->
-        </paper-card>
+    <paper-card>
+      <!-- <iron-list id="list" items="[[products]]" as="item"> -->
+      <template id="list" is="dom-repeat" items="[[products]]" as="item">
+        <bite-item uid=[[uid]] key=[[key]] product="[[item]]" storeid="[[storeid]]"></bite-item>
+      </template>
+      <!-- </iron-list> -->
+    </paper-card>
 
-    </template>
+  </template>
 
-    <script>
+  <script>
 
-            Polymer({
-                is: 'bite-cardlist',
+    Polymer({
+      is: 'bite-cardlist',
 
-                properties: {
-                  products: {
-                    type: Array,
-                    observer: '_productsChanged'
-                  },
-                  key: {
-                    type: String,
-                    observer: '_keyChanged'
-                  },
-                  user: {
-                    type: Object,
-                    observer: '_userChanged'
-                  },
-                  uid: String,
-                  storeid: String
-                },
+      properties: {
+        products: {
+          type: Array,
+          observer: '_productsChanged'
+        },
+        key: {
+          type: String,
+          observer: '_keyChanged'
+        },
+        user: {
+          type: Object,
+          observer: '_userChanged'
+        },
+        uid: String,
+        storeid: String
+      },
 
-                attached: function () {
-                    //top level docu as scrolltarget
-                    var list = document.querySelector("iron-list");
-                    this.$.list.scrollTarget = this.ownerDocument.documentElement;
-                },
+      attached: function () {
+        //top level docu as scrolltarget
+        var list = document.querySelector("iron-list");
+        this.$.list.scrollTarget = this.ownerDocument.documentElement;
+      },
 
-                _itemClick: function(e){
-                  var data = "#"+e.model.get('item.name');
+      _itemClick: function (e) {
+        var data = "#" + e.model.get('item.name');
 
-                  var actions = Polymer.dom(this.root).querySelector(data);
+        var actions = Polymer.dom(this.root).querySelector(data);
 
-                  this._addUserOrder();
-                },
+        this._addUserOrder();
+      },
 
-                _getUserOrder: function(){
-                  var that = this;
-                  //get user order of current user in current store
-                  var userOrderRef = firebase.database().ref('user_order/'+that.key);
-                  userOrderRef.on('value', function(snapshot){
-                  });
-                },
+      _getUserOrder: function () {
+        var that = this;
+        //get user order of current user in current store
+        var userOrderRef = firebase.database().ref('user_order/' + that.key);
+        userOrderRef.on('value', function (snapshot) {
+        });
+      },
 
-                _addUserOrder: function(){
-                  var that = this;
-                  //set user order with clicked item(s)
-                  firebase.database().ref('user_order/'+that.key+"/"+that.uid+"/-IuxeUWgBMTH4Xk9QADM").set({
-                      amount: 1
-                  });
+      _addUserOrder: function () {
+        var that = this;
+        //set user order with clicked item(s)
+        firebase.database().ref('user_order/' + that.key + "/" + that.uid + "/-IuxeUWgBMTH4Xk9QADM").set({
+          amount: 1
+        });
 
-                },
+      },
 
-                _keyChanged: function(){
-                  this._getUserOrder();
-                },
+      _keyChanged: function () {
+        this._getUserOrder();
+      },
 
-                _productsChanged: function(){
-                },
+      _productsChanged: function () {
+      },
 
-                _userChanged: function(){
-                  this.uid = this.user.uid;
-                }
-            });
-    </script>
+      _userChanged: function () {
+        this.uid = this.user.uid;
+      }
+    });
+  </script>
 </dom-module>

@@ -1,0 +1,266 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-from-bottom-animation.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="bite-item.html">
+<link rel="import" href="bite-categories.html">
+
+<dom-module is="bite-slide">
+  <template>
+    <style>
+      /* styling */
+      .bottom-drawer {
+        position: fixed;
+        background-color: #fafafa;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        margin-bottom: 0px;
+        height: 50px;
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+        z-index: 3000;
+      }
+
+      ::-webkit-scrollbar {
+        display: none;
+      }
+
+      .content {
+        margin-top: 5vh;
+        margin: 0 auto;
+        width: 95%;
+        height: 90%;
+        display: block;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+      }
+
+      .header {
+        display: block;
+        height: 5vh;
+      }
+
+      .hItems, .hAmount, .hAction {
+        font-family: Compasse;
+        font-size: 16px;
+        font-weight: 800;
+        color: black;
+      }
+
+      .hActions {
+        float: right;
+        margin-right: 16px;
+        margin-top: -13px;
+      }
+
+      .hItems {
+        float: left;
+        margin-left: 16px;
+        margin-top: 20px;
+      }
+
+      .hAmount {
+        float: right;
+        margin-top: 20px;
+      }
+
+      hr {
+        margin-top: 19px;
+        width: 100%;
+      }
+
+      .chips {
+        float: left;
+      }
+
+      .chip {
+        display: inline-block;
+        text-align: center;
+        height: 32px;
+        width: 92px;
+        border-radius: 20px;
+        background-color: #FFFFFF;
+        border-style: solid;
+        border-width: 1px;
+        color: #E98B2B;
+        margin-top: 14px;
+        margin-left: 8px;
+        margin-right: 8px;
+      }
+
+      p {
+        margin-left: 12px;
+        margin-right: 12px;
+        margin-bottom: 6px;
+        margin-top: 6px;
+        font-family: Compasse;
+        font-size: 14px;
+        line-height: 22px;
+      }
+
+      .items {
+        margin: 0 auto;
+        margin-top: 80px;
+      }
+
+      .wBiteCoin, .wStickers, .makeOrder {
+        display: block;
+        float: left;
+        width: 100%;
+      }
+
+      .wStickers {
+        margin-bottom: 16px;
+      }
+
+      .bitecoins, .stickers, .imgCoin, .emoji {
+        float: left;
+        margin-left: 16px;
+        font-family: Compasse;
+        font-weight: 800;
+        font-size: 16px;
+        margin-top: 16px;
+      }
+
+      .makeOrder {
+        margin-bottom: 20px;
+      }
+
+      .imgCoin {
+        float: right;
+        background-image: url(../images/Bitecoinhires.png);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        width: 24px;
+        height: 24px;
+      }
+
+      .emoji {
+        float: right;
+        font-size: 24px;
+      }
+
+      .makeOrderTxt {
+        text-align: left;
+        margin-left: 16px;
+        margin-top: 25px;
+        color: #000000;
+        opacity: 0.54;
+        font-family: Compasse;
+        width: 200px;
+      }
+
+      .orderBtn {
+        font-family: Compasse;
+        font-size: 14px;
+        background-color: #EC9630;
+        color: white;
+        float: right;
+        margin-top: -32px;
+      }
+    </style>
+
+
+    <div id="drawer" class="bottom-drawer">
+      <div class="header">
+        <div class="hItems">3 ITEMS</div>
+        <div class="hAmount">€13,37
+          <div class="hActions">
+            <paper-icon-button on-tap="_showDrawer" class="hAction" icon="expand-less"></paper-icon-button>
+          </div>
+        </div>
+      </div>
+      <div class="content" style="display: none;">
+        <hr>
+        <div class="chips">
+          <div class="chip">
+            <p>Jij</p>
+          </div>
+          <div class="chip">
+            <p>Top 5</p>
+          </div>
+        </div>
+        <div class="items" style="pointer-events: none;">
+          <bite-item name="Patat Normaal" Price="€1,85" amount="1"></bite-item>
+          <bite-item name="Frikadel Speciaal" Price="€1,50" amount="1"></bite-item>
+          <bite-item name="Broodje Hamburger Speciaal" Price="€2,50" amount="1"></bite-item>
+        </div>
+        <hr>
+        <div class="wBiteCoin">
+          <div class="bitecoins">BITECOINS</div>
+          <div class="imgCoin"></div>
+        </div>
+        <div class="wStickers">
+          <div class="stickers">STICKERS</div>
+          <div class="emoji">🍔🍟🍕</div>
+        </div>
+        <hr>
+        <div class="makeOrder">
+          <div class="makeOrderTxt">Met deze bestelling ga je drie sticker(s) verdienen!</div>
+          <paper-button raised class="orderBtn">Bring it on!</paper-button>
+        </div>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'bite-slide',
+      behaviors: [Polymer.NeonAnimationRunnerBehavior],
+      properties: {
+        animationConfig: {
+          value: function () {
+            return {
+              'entry': {
+                name: 'slide-from-bottom-animation',
+                node: this.$.drawer,
+                timing: {duration: 1000}
+              },
+              'exit': {
+                name: 'slide-from-bottom-animation',
+                node: this.$.drawer,
+                timing: {duration: 1000}
+              }
+            }
+          }
+        },
+        opened: {
+          type: Boolean,
+          value: false
+        },
+        listeners: {
+          'neon-animation-finish': '_onNeonAnimationFinish'
+        }
+      },
+
+      ready: function () {
+      },
+
+      _showDrawer: function () {
+        var drawer = Polymer.dom(this.root).querySelector('.bottom-drawer');
+        var content = Polymer.dom(this.root).querySelector('.content');
+        var actions = Polymer.dom(this.root).querySelector('.hAction');
+        if (this.opened == false) {
+          this.opened = true;
+          drawer.setAttribute('style', 'height: 90vh;');
+          content.setAttribute('style', 'display: visible');
+          actions.setAttribute('icon', 'expand-more');
+          this.fire('disable');
+          this.playAnimation('entry');
+        } else {
+          this.opened = false;
+          drawer.setAttribute('style', 'height: 8vh;');
+          content.setAttribute('style', 'display: none');
+          actions.setAttribute('icon', 'expand-less');
+          this.fire('enable');
+          this.playAnimation('exit');
+        }
+      }
+    });
+
+  </script>
+</dom-module>
+

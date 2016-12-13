@@ -5,241 +5,255 @@
 <link rel="import" href="bite-tallcard.html">
 <link rel="import" href="bite-categories.html">
 <link rel="import" href="bite-cardlist.html">
+<link rel="import" href="bite-slide.html">
 
 <dom-module id="bite-join">
-    <style>
-        :host {
-            margin: 0 auto;
-            display: block;
-        }
+  <style>
+    :host {
+      margin: 0 auto;
+      display: block;
+    }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            color: #EC9630;
-        }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      color: #EC9630;
+    }
 
-        .cardContainer {
-            display: block;
-            margin: 0 auto;
-            text-align: center;
-            width: 100%;
-        }
+    .cardContainer {
+      display: block;
+      margin: 0 auto;
+      text-align: center;
+      width: 100%;
+    }
 
-        .tallCard {
-            margin: 0 auto;
-            display: block;
-            width: 100%;
-        }
+    .tallCard {
+      margin: 0 auto;
+      display: block;
+      width: 100%;
+    }
 
-        .categories,
-        .menuList {
-            display: flex;
-            display: -webkit-flex;
-            flex-wrap: wrap;
-            -webkit-flex-wrap: wrap;
-            justify-content: center;
-            -webkit-justify-content: center;
-            margin-top: 16px;
-            width: 100%
-        }
+    .categories,
+    .menuList {
+      display: flex;
+      display: -webkit-flex;
+      flex-wrap: wrap;
+      -webkit-flex-wrap: wrap;
+      justify-content: center;
+      -webkit-justify-content: center;
+      margin-top: 16px;
+      width: 100%
+    }
 
-        .categories {
-            margin: 0 auto;
-            left: 0px;
-            right: 0px;
-            width: 100%;
-            margin-top: 16px;
-        }
+    .categories {
+      margin: 0 auto;
+      left: 0px;
+      right: 0px;
+      width: 100%;
+      margin-top: 16px;
+    }
 
-        .menuList {
-        }
+    .menuList {
+    }
 
-        .categorieList {
-            white-space: nowrap;
-            overflow: hidden;
-            overflow-x: scroll;
-        }
+    .categorieList {
+      white-space: nowrap;
+      overflow: hidden;
+      overflow-x: scroll;
+    }
 
-        ::-webkit-scrollbar {
-            width: 0px; /* remove scrollbar space */
-            background: transparent; /* optional: just make scrollbar invisible */
-        }
+    ::-webkit-scrollbar {
+      width: 0px; /* remove scrollbar space */
+      background: transparent; /* optional: just make scrollbar invisible */
+    }
 
-        .sticky {
+    .sticky {
 
-        }
+    }
 
-    </style>
+  </style>
 
-    <template>
+  <template>
 
-        <app-route
-        route="[[route]]"
-        pattern="/:key"
-        data="{{routeData}}"
-        ></app-route>
+    <app-route
+      route="[[route]]"
+      pattern="/:key"
+      data="{{routeData}}"
+    ></app-route>
 
-        <div class="container">
+    <div class="container">
 
-            <div class="cardContainer">
-                <div class="tallCard">
-                    <bite-tallcard name="GESTART DOOR [[displayName]]" background="url([[photoURL]])"
-                                   desc="Gestart om 09:11, sluit om 13:37"
-                                   location="Gramsbergen"></bite-tallcard>
-                </div>
-            </div>
-            <div id="categories" class="categories">
-                <div class="categorieList">
-                    <bite-categories on-chip-active="_chipActive" name="PATAT"></bite-categories>
-                    <bite-categories on-chip-active="_chipActive" name="SNACKS"></bite-categories>
-                    <bite-categories on-chip-active="_chipActive" name="MILKSHAKES"></bite-categories>
-                    <bite-categories on-chip-active="_chipActive" name="SAUZEN"></bite-categories>
-                    <bite-categories on-chip-active="_chipActive" name="POPULAIR"></bite-categories>
-                    <bite-categories on-chip-active="_chipActive" name="ALLE ITEMS"></bite-categories>
-                    <bite-categories on-chip-active="_chipActive" name="PATAT"></bite-categories>
-                </div>
-            </div>
-
-
-            <div class="menuList">
-                <bite-cardlist key="[[key]]" user="[[user]]" storeid="[[storeid]]" products=[[products]] style="width: 90%;"></bite-cardlist>
-            </div>
-
+      <div class="cardContainer">
+        <div class="tallCard">
+          <bite-tallcard name="GESTART DOOR [[displayName]]" background="url([[photoURL]])"
+                         desc="Gestart om 09:11, sluit om 13:37"
+                         location="Gramsbergen"></bite-tallcard>
         </div>
-
-    </template>
-
-
-    <script>
-        Polymer({
-            is: 'bite-join',
-            properties: {
-
-                page: {
-                    type: String,
-                    observers: '_pageChange',
-                    notify: true,
-                    readOnly: false
-                },
-                biteUserName: {
-                    type: String,
-                    readOnly: false,
-                    notify: true
-                },
-                key: {
-                  type: String
-                },
-                route: {
-                  type: Object
-                },
-                routeData: {
-                  type: Object,
-                  observer: '_routeDataChanged'
-                },
-                uid: String,
-                displayName: String,
-                photoURL: String,
-                storeName: String,
-                categories: {
-                  type: Array
-                },
-                products: {
-                  type: Array
-                },
-                user: Object
-            },
-
-            ready: function () {
-                var categories = Polymer.dom(this.root).querySelector('.categories');
-                var menulist = Polymer.dom(this.root).querySelector('.menuList');
-                var self = this;
-
-                var elementPositionTop = this.$.categories.getBoundingClientRect().top;
+      </div>
+      <div id="categories" class="categories">
+        <div class="categorieList">
+          <bite-categories on-chip-active="_chipActive" name="PATAT"></bite-categories>
+          <bite-categories on-chip-active="_chipActive" name="SNACKS"></bite-categories>
+          <bite-categories on-chip-active="_chipActive" name="MILKSHAKES"></bite-categories>
+          <bite-categories on-chip-active="_chipActive" name="SAUZEN"></bite-categories>
+          <bite-categories on-chip-active="_chipActive" name="POPULAIR"></bite-categories>
+          <bite-categories on-chip-active="_chipActive" name="ALLE ITEMS"></bite-categories>
+          <bite-categories on-chip-active="_chipActive" name="PATAT"></bite-categories>
+        </div>
+      </div>
 
 
-                $(window).scroll(function () {
-                    if ($(window).scrollTop() > elementPositionTop - 64) {
-                        categories.setAttribute("style", "position: fixed;top: 0;z-index: 99999;margin-top: 64px;background-color:#FFFFFF;text-align: center;left: 0px;right: 0px;box-shadow:0px 3px 5px rgba(100, 100, 100, 0.49);");
-                        menulist.setAttribute("style", "margin-top: 80px;");
+      <div class="menuList">
+        <bite-cardlist key="[[key]]" user="[[user]]" storeid="[[storeid]]" products=[[products]]
+                       style="width: 90%;"></bite-cardlist>
+      </div>
+
+    </div>
+      <bite-slide on-disable="_disableTouch" on-enable="_enableTouch"></bite-slide>
+  </template>
 
 
-                    } else {
-                        categories.removeAttribute("style");
-                        menulist.removeAttribute("style");
+  <script>
+    Polymer({
+      is: 'bite-join',
+      properties: {
 
-                    }
-                });
-            },
+        page: {
+          type: String,
+          observers: '_pageChange',
+          notify: true,
+          readOnly: false
+        },
+        biteUserName: {
+          type: String,
+          readOnly: false,
+          notify: true
+        },
+        key: {
+          type: String
+        },
+        route: {
+          type: Object
+        },
+        routeData: {
+          type: Object,
+          observer: '_routeDataChanged'
+        },
+        uid: String,
+        displayName: String,
+        photoURL: String,
+        storeName: String,
+        categories: {
+          type: Array
+        },
+        products: {
+          type: Array
+        },
+        user: Object
+      },
 
-            _routeDataChanged: function(){
-              this.key = this.routeData.key;
-              this._getOrder();
-            },
+      ready: function () {
+        var categories = Polymer.dom(this.root).querySelector('.categories');
+        var menulist = Polymer.dom(this.root).querySelector('.menuList');
+        var self = this;
 
-            _getOrder: function(){
-              var that = this;
-              var joinRef = firebase.database().ref('orders/'+that.key);
-              joinRef.on('value', function(snapshot){
-                if(snapshot.val() == null) return;
-                that.uid = snapshot.val().opened_by;
-                that.storeid = snapshot.val().store;
-                that._getData();
-              });
-            },
-
-            _getData: function () {
-              if(this.uid !== undefined){
-                this._getUser();
-                this._getStore();
-                this._getProducts();
-              }
-            },
-
-            _getUser: function(){
-              var that = this;
-              var userRef = firebase.database().ref('users/'+that.uid);
-              userRef.on('value', function(snapshot){
-                that.displayName = snapshot.val().display_name;
-                that.photoURL = snapshot.val().photo_url;
-              });
-            },
-
-            _getStore: function(e, detail){
-              var that = this;
-              var storeRef =  firebase.database().ref('stores/'+that.storeid);
-              storeRef.on('value', function(snapshot){
-                that.storeName = snapshot.val().name;
-                that._setStoreName();
-              });
-            },
+        var elementPositionTop = this.$.categories.getBoundingClientRect().top;
 
 
-            _setStoreName: function () {
-              this.fire('store-name', {storeName: this.storeName} );
-            },
+        $(window).scroll(function () {
+          if ($(window).scrollTop() > elementPositionTop - 64) {
+            categories.setAttribute("style", "position: fixed;top: 0;z-index: 2999;margin-top: 64px;background-color:#FFFFFF;text-align: center;left: 0px;right: 0px;box-shadow:0px 3px 5px rgba(100, 100, 100, 0.49);");
+            menulist.setAttribute("style", "margin-top: 80px;");
 
-            _getProducts: function(){
-              var that = this;
-              var productsRef = firebase.database().ref('products/'+that.storeid+'/products');
-              productsRef.on('value', function(snapshot){
-                  that.products = [];
-                  if(snapshot.val() !== null) {
-                    snapshot.forEach(function (childSnapshot) {
-                      that.push('products', childSnapshot.key);
 
-                    });
-                  }
-              });
-            },
+          } else {
+            categories.removeAttribute("style");
+            menulist.removeAttribute("style");
 
-            _chipActive: function(e){
-              this.categories = [];
-              this.push('categories', e.detail.name);
-            }
-
+          }
         });
+      },
+
+      _routeDataChanged: function () {
+        this.key = this.routeData.key;
+        this._getOrder();
+      },
+
+      _getOrder: function () {
+        var that = this;
+        var joinRef = firebase.database().ref('orders/' + that.key);
+        joinRef.on('value', function (snapshot) {
+          if (snapshot.val() == null) return;
+          that.uid = snapshot.val().opened_by;
+          that.storeid = snapshot.val().store;
+          that._getData();
+        });
+      },
+
+      _getData: function () {
+        if (this.uid !== undefined) {
+          this._getUser();
+          this._getStore();
+          this._getProducts();
+        }
+      },
+
+      _getUser: function () {
+        var that = this;
+        var userRef = firebase.database().ref('users/' + that.uid);
+        userRef.on('value', function (snapshot) {
+          that.displayName = snapshot.val().display_name;
+          that.photoURL = snapshot.val().photo_url;
+        });
+      },
+
+      _getStore: function (e, detail) {
+        var that = this;
+        var storeRef = firebase.database().ref('stores/' + that.storeid);
+        storeRef.on('value', function (snapshot) {
+          that.storeName = snapshot.val().name;
+          that._setStoreName();
+        });
+      },
 
 
-    </script>
+      _setStoreName: function () {
+        this.fire('store-name', {storeName: this.storeName});
+      },
+
+      _getProducts: function () {
+        var that = this;
+        var productsRef = firebase.database().ref('products/' + that.storeid + '/products');
+        productsRef.on('value', function (snapshot) {
+          that.products = [];
+          if (snapshot.val() !== null) {
+            snapshot.forEach(function (childSnapshot) {
+              that.push('products', childSnapshot.key);
+
+            });
+          }
+        });
+      },
+
+      _chipActive: function (e) {
+        this.categories = [];
+        this.push('categories', e.detail.name);
+      },
+
+      _disableTouch: function () {
+        //Shopping cart open, stop touch functionality
+        var container = Polymer.dom(this.root).querySelector('.container');
+        container.setAttribute('style', 'pointer-events: none;');
+      },
+
+      _enableTouch: function () {
+        //Shopping cart closed, start touch functionality
+        var container = Polymer.dom(this.root).querySelector('.container');
+        container.setAttribute('style', 'pointer-events: auto;');
+      }
+
+    });
+
+
+  </script>
 </dom-module>
