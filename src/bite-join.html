@@ -109,7 +109,7 @@
       </div>
 
     </div>
-      <bite-slide on-disable="_disableTouch" on-enable="_enableTouch"></bite-slide>
+    <bite-slide on-disable="_disableTouch" on-enable="_enableTouch"></bite-slide>
   </template>
 
 
@@ -153,6 +153,12 @@
       },
 
       ready: function () {
+        //Add backstack if from notification
+        if (history.length <= 2) {
+          history.replaceState(null, "Bite Main", "main");
+          history.pushState(null, "Bite Join", "join/" + this.routeData.key);
+        }
+
         var categories = Polymer.dom(this.root).querySelector('.categories');
         var menulist = Polymer.dom(this.root).querySelector('.menuList');
         var self = this;
@@ -245,13 +251,11 @@
         var container = Polymer.dom(this.root).querySelector('.container');
         container.setAttribute('style', 'pointer-events: none;');
       },
-
       _enableTouch: function () {
         //Shopping cart closed, start touch functionality
         var container = Polymer.dom(this.root).querySelector('.container');
         container.setAttribute('style', 'pointer-events: auto;');
       }
-
     });
 
 
