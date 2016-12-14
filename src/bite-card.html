@@ -12,25 +12,29 @@
     <style>
       :host {
         display: block;
-
       }
+
       h1 {
         font-family: CompasseBoldItalic;
         color: #EC9630;
       }
-      paper-button{
+
+      paper-button {
         color: #EC9630;
         font-family: CompasseBoldItalic;
       }
+
       .adminRemove {
         position: absolute;
         z-index: 2;
       }
+
       .adminFab {
         background-color: red;
         height: 32px;
         width: 32px;
       }
+
       paper-card {
         margin: 0 auto;
         width: 90%;
@@ -91,12 +95,17 @@
         background-color: #9B9B9B;
         font-size: 8px;
       }
-
+      .personOuterContainer{
+        overflow: scroll;
+        width: 100%;
+      }
       .personContainer {
         float: left;
-
       }
-
+      ::-webkit-scrollbar {
+        width: 0px; /* remove scrollbar space */
+        background: transparent; /* optional: just make scrollbar invisible */
+      }
       .fabContainer {
         float: right;
       }
@@ -128,7 +137,7 @@
           <div class="cardInfo">
             <div class="title">[[storeName]]</div>
             <template is="dom-repeat" items="{{emoji}}" as="item">
-            [[item]]
+              [[item]]
             </template>
             <div class="location">
               <iron-icon style="height: 15px; width: 15px;" icon="communication:location-on"></iron-icon>
@@ -137,22 +146,15 @@
           </div>
         </div>
         <div class="card-actions" style="margin-left: 48px;">
-          <div class="personContainer">
-            <div class="person"
-                 style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
-            <div class="person"
-                 style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
-            <div class="person"
-                 style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
-            <div class="person"
-                 style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
-            <div class="person"
-                 style$="background:url([[background]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
-            <div class="fabContainer">
-              <!--<paper-fab mini class="fab" label="5"></paper-fab>-->
+          <div class="personOuterContainer">
+            <div class="personContainer" style="width: 100%;">
+              <template is="dom-repeat" items="{{currentUser}}" as="item">
+                <div class="person"
+                     style$="background:url([[item]]); background-repeat: no-repeat; background-position: center center; background-size: cover;">
+                </div>
+              </template>
             </div>
           </div>
-
         </div>
       </paper-card>
     </a>
@@ -182,23 +184,31 @@
         storeid: {
           type: String
         },
-        emoji: Array
+        emoji: Array,
+        currentUser: {
+          type: Array,
+          observer: '_personsChanged'
+        }
 
       },
-
-      ready: function () {
+      attached: function () {
         this._getOrder();
         this._getUser();
         this._getStore();
         this._checkUser();
         this._getStoreCategory();
+        this._getCurrentUsers();
+      },
+
+      ready: function () {
+
       },
 
       _getOrder: function () {
         var that = this;
         var cardRef = firebase.database().ref('orders/' + that.key);
         cardRef.on('value', function (snapshot) {
-          if(snapshot.val() == null) return;
+          if (snapshot.val() == null) return;
           that.uid = snapshot.val().opened_by;
           that.storeid = snapshot.val().store;
         });
@@ -222,48 +232,81 @@
         });
       },
 
-      _getStoreCategory: function(){
+      _getStoreCategory: function () {
         var that = this;
-        var categoryRef = firebase.database().ref('stores/'+that.storeid+'/category/');
-        categoryRef.on('value', function(snapshot){
-            that.emoji = [];
-            snapshot.forEach(function (childSnapshot) {
-              var emojiRef = firebase.database().ref('stores/'+that.storeid+'/category/'+childSnapshot.key);
-              emojiRef.on('value', function(snapshot){
-                that.push('emoji', snapshot.val().emoji);
-              });
+        var categoryRef = firebase.database().ref('stores/' + that.storeid + '/category/');
+        categoryRef.on('value', function (snapshot) {
+          that.emoji = [];
+          snapshot.forEach(function (childSnapshot) {
+            var emojiRef = firebase.database().ref('stores/' + that.storeid + '/category/' + childSnapshot.key);
+            emojiRef.on('value', function (snapshot) {
+              that.push('emoji', snapshot.val().emoji);
             });
+          });
         });
 
 
       },
 
-      _removeBite: function(){
+      _removeBite: function () {
         this.$.actions.open();
       },
 
-      _closeDialog: function(){
+      _closeDialog: function () {
         this.$.actions.close();
       },
 
-      _deleteBite: function(){
+      _deleteBite: function () {
         var that = this;
         var deleteRef = firebase.database().ref('orders');
         deleteRef.child(that.key).remove();
       },
 
-      _checkUser: function(){
+      _checkUser: function () {
         var adminFab = Polymer.dom(this.root).querySelector('.adminRemove');
 
-        if(this.admin == true){
+        if (this.admin == true) {
           adminFab.setAttribute('style', 'display: visible;');
-        } else if(this.admin == false){
+        } else if (this.admin == false) {
           adminFab.setAttribute('style', 'display: none;');
         }
       },
 
-      _keyChanged: function(){
+      _keyChanged: function () {
         this.ready();
+      },
+
+      //_getCurrentUsers()
+      //Gets all users that are currently ordering in this order.
+      //Sets array with user keys
+      _getCurrentUsers: function () {
+        var that = this;
+        var currentUserRef = firebase.database().ref('user_order/' + that.key);
+        that.currentUser = [];
+        currentUserRef.on('child_added', function (snapshot) {
+          var userKey = snapshot.key;
+          var userPictureRef = firebase.database().ref('users/' + userKey);
+          userPictureRef.once('value', function (snapshot) {
+            that.push('currentUser', snapshot.val().photo_url);
+            that._personsChanged();
+          });
+        });
+        currentUserRef.on('child_removed', function (snapshot) {
+          var userKey = snapshot.key;
+          var userPictureRef = firebase.database().ref('users/' + userKey);
+          userPictureRef.once('value', function (snapshot) {
+            var index = that.currentUser.indexOf(snapshot.val().photo_url);
+            that.splice('currentUser', index, 1);
+            that._personsChanged();
+          });
+        });
+
+      },
+
+      _personsChanged: function () {
+        var container_width = 37 * this.currentUser.length;
+        var personContainer = Polymer.dom(this.root).querySelector('.personContainer');
+        personContainer.setAttribute('style', 'width:'+container_width+'px;');
       }
 
 
