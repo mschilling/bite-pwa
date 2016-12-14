@@ -58,6 +58,14 @@
         margin-top: 6px;
         float: left;
       }
+      .imgEmoji {
+        float: left;
+        width: 18px;
+        height: 18px;
+        margin-left: 5px;
+        margin-top: 10px;
+        margin-bottom: 8px;
+      }
 
       .img {
         float: left;
@@ -69,8 +77,9 @@
       }
 
       .location {
+        display: block;
         font-weight: 100;
-        margin-top: 6px;
+        margin-top: 40px;
         font-family: Compasse;
         font-size: 14px;
         color: #9B9B9B;
@@ -87,27 +96,18 @@
         margin-top: 12px;
       }
 
-      .fab {
-        float: left;
-        width: 24px;
-        height: 24px;
-        margin-top: 12px;
-        background-color: #9B9B9B;
-        font-size: 8px;
-      }
-      .personOuterContainer{
+      .personOuterContainer {
         overflow: scroll;
         width: 100%;
       }
+
       .personContainer {
         float: left;
       }
+
       ::-webkit-scrollbar {
         width: 0px; /* remove scrollbar space */
         background: transparent; /* optional: just make scrollbar invisible */
-      }
-      .fabContainer {
-        float: right;
       }
 
       .cardInfo {
@@ -137,7 +137,8 @@
           <div class="cardInfo">
             <div class="title">[[storeName]]</div>
             <template is="dom-repeat" items="{{emoji}}" as="item">
-              [[item]]
+                <div class="imgEmoji"
+                     style$="background-image: url([[item]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
             </template>
             <div class="location">
               <iron-icon style="height: 15px; width: 15px;" icon="communication:location-on"></iron-icon>
@@ -184,7 +185,9 @@
         storeid: {
           type: String
         },
-        emoji: Array,
+        emoji: {
+          type: Array
+        },
         currentUser: {
           type: Array,
           observer: '_personsChanged'
@@ -196,8 +199,8 @@
         this._getUser();
         this._getStore();
         this._checkUser();
-        this._getStoreCategory();
         this._getCurrentUsers();
+        this._getStoreCategory();
       },
 
       ready: function () {
@@ -235,13 +238,44 @@
       _getStoreCategory: function () {
         var that = this;
         var categoryRef = firebase.database().ref('stores/' + that.storeid + '/category/');
+        that.emoji = [];
         categoryRef.on('value', function (snapshot) {
-          that.emoji = [];
+          var image;
           snapshot.forEach(function (childSnapshot) {
-            var emojiRef = firebase.database().ref('stores/' + that.storeid + '/category/' + childSnapshot.key);
-            emojiRef.on('value', function (snapshot) {
-              that.push('emoji', snapshot.val().emoji);
-            });
+
+            switch (childSnapshot.val().type) {
+              case "0":
+                image = "images/emoji/ic_dessert.png";
+                break;
+              case "1":
+                image = "images/emoji/ic_drinks.png";
+                break;
+              case "2":
+                image = "images/emoji/ic_fish.png";
+                break;
+              case "3":
+                image = "images/emoji/ic_fries.png";
+                break;
+              case "4":
+                image = "images/emoji/ic_hamburger.png";
+                break;
+              case "5":
+                image = "images/emoji/ic_kebab.png";
+                break;
+              case "6":
+                image = "images/emoji/ic_meat.png";
+                break;
+              case "7":
+                image = "images/emoji/ic_pizza.png";
+                break;
+              case "8":
+                image = "images/emoji/ic_sauce.png";
+                break;
+              case "9":
+                image = "images/emoji/ic_snacks.png";
+                break;
+            }
+            that.push('emoji', image);
           });
         });
 
@@ -273,7 +307,10 @@
       },
 
       _keyChanged: function () {
-        this.ready();
+        this._getOrder();
+        this._getUser();
+        this._getStore();
+        this._checkUser();
       },
 
       //_getCurrentUsers()
@@ -306,9 +343,8 @@
       _personsChanged: function () {
         var container_width = 37 * this.currentUser.length;
         var personContainer = Polymer.dom(this.root).querySelector('.personContainer');
-        personContainer.setAttribute('style', 'width:'+container_width+'px;');
-      }
-
+        personContainer.setAttribute('style', 'width:' + container_width + 'px;');
+      },
 
     });
 
