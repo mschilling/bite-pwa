@@ -184,10 +184,11 @@
             <p>Top 5</p>
           </div>
         </div>
-        <div class="items" style="pointer-events: none;">
-          <bite-item name="Patat Normaal" Price="€1,85" amount="1"></bite-item>
-          <bite-item name="Frikadel Speciaal" Price="€1,50" amount="1"></bite-item>
-          <bite-item name="Broodje Hamburger Speciaal" Price="€2,50" amount="1"></bite-item>
+        <div class="items">
+
+          <template is="dom-repeat" items={{products}} as="item">
+            <bite-item uid="[[uid]]" key="[[key]]" product="[[item]]" storeid="[[storeid]]"></bite-item>
+          </template>
         </div>
         <hr>
         <div class="wBiteCoin">
@@ -201,7 +202,7 @@
         <hr>
         <div class="makeOrder">
           <div class="makeOrderTxt">Met deze bestelling ga je drie sticker(s) verdienen!</div>
-          <paper-button raised class="orderBtn">Bring it on!</paper-button>
+          <paper-button raised class="orderBtn" on-tap="_orderBtn">Bring it on!</paper-button>
         </div>
       </div>
     </div>
@@ -226,6 +227,20 @@
               }
             }
           }
+        },
+        key: {
+          type: String,
+          observer: '_keyChanged'
+        },
+        user: {
+          type: Object,
+          observer: '_userChanged'
+        },
+        uid: {
+          type: String
+        },
+        products: {
+          type: Array
         },
         opened: {
           type: Boolean,
@@ -258,7 +273,42 @@
           this.fire('enable');
           this.playAnimation('exit');
         }
+      },
+
+      _keyChanged: function () {
+        this._getData();
+      },
+
+      _userChanged: function () {
+        this._getData();
+      },
+
+      _getData: function () {
+        if (this.key == undefined || this.user == undefined) return;
+        console.log("== Getting Data for cart ==");
+        this.uid = this.user.uid;
+        this._getUserOrder();
+      },
+
+      _getUserOrder: function () {
+        var that = this;
+        console.log("User id: " + this.uid + " Order key:" +this.key);
+        this.products = [];
+        //Get ordered productlist
+        var userOrderProducts = firebase.database().ref('user_order/'+that.key+'/'+that.uid);
+
+        userOrderProducts.on('child_added', function(snapshot){
+          that.push('products', snapshot.key);
+          console.log(that.products);
+        });
+        userOrderProducts.on('child_removed', function(snapshot){
+          var index = that.products.indexOf(snapshot.key);
+          that.splice('products', index, 1);
+          console.log(that.products);
+        });
       }
+
+
     });
 
   </script>
