@@ -282,9 +282,11 @@
         var that = this;
         var userRef = firebase.database().ref('users/' + that.user.uid);
         userRef.on('value', function (snapshot) {
-          that.admin = snapshot.val().admin;
-          that.uid = snapshot.val().uid;
-          that._checkUser();
+          if(snapshot.val() !== null) {
+            that.admin = snapshot.val().admin;
+            that.uid = snapshot.val().uid;
+            that._checkUser();
+          }
         });
 
       },
