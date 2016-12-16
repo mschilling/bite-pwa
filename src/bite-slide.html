@@ -167,8 +167,8 @@
 
     <div id="drawer" class="bottom-drawer">
       <div class="header">
-        <div class="hItems">3 ITEMS</div>
-        <div class="hAmount">€13,37
+        <div class="hItems">[[totalAmount]] ITEM(S)</div>
+        <div class="hAmount">[[totalPrice]]
           <div class="hActions">
             <paper-icon-button on-tap="_showDrawer" class="hAction" icon="expand-less"></paper-icon-button>
           </div>
@@ -239,8 +239,20 @@
         uid: {
           type: String
         },
+        storeid: {
+          type: String,
+          observer: '_storeChanged'
+        },
+        price: {
+          type: Number,
+          value: 0
+        },
         products: {
           type: Array
+        },
+        totalItems: {
+          type: Number,
+          value: 0
         },
         opened: {
           type: Boolean,
@@ -248,6 +260,16 @@
         },
         listeners: {
           'neon-animation-finish': '_onNeonAnimationFinish'
+        },
+        amount: {
+          type: Number,
+          value: 0
+        },
+        totalPrice: {
+          type: Number
+        },
+        totalAmount: {
+          type: Number
         }
       },
 
@@ -283,28 +305,40 @@
         this._getData();
       },
 
+      _storeChanged: function () {
+        this._getData();
+      },
+
       _getData: function () {
-        if (this.key == undefined || this.user == undefined) return;
-        console.log("== Getting Data for cart ==");
+        if (this.key == undefined || this.user == undefined || this.storeid == undefined) return;
         this.uid = this.user.uid;
         this._getUserOrder();
       },
 
       _getUserOrder: function () {
         var that = this;
-        console.log("User id: " + this.uid + " Order key:" +this.key);
-        this.products = [];
         //Get ordered productlist
-        var userOrderProducts = firebase.database().ref('user_order/'+that.key+'/'+that.uid);
+        var userOrderProducts = firebase.database().ref('user_order/' + that.key + '/' + that.uid);
+        this.products = [];
+        userOrderProducts.on('value', function (snapshot) {
+          that.totalAmount = 0;
+          that.totalPrice = 0;
+          snapshot.forEach(function (child) {
+            if (child.val() !== null) {
+              that.totalAmount += child.val().amount;
+              firebase.database().ref('products/' + that.storeid + '/products/' + child.key).on('value', function (snapshotData) {
+                that.totalPrice += snapshotData.val().price * child.val().amount;
+              });
+            }
+          });
+        });
 
         userOrderProducts.on('child_added', function(snapshot){
           that.push('products', snapshot.key);
-          console.log(that.products);
         });
         userOrderProducts.on('child_removed', function(snapshot){
           var index = that.products.indexOf(snapshot.key);
           that.splice('products', index, 1);
-          console.log(that.products);
         });
       }
 

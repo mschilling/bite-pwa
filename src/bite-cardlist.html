@@ -149,13 +149,6 @@
         this.$.list.scrollTarget = this.ownerDocument.documentElement;
       },
 
-      _itemClick: function (e) {
-        var data = "#" + e.model.get('item.name');
-
-        var actions = Polymer.dom(this.root).querySelector(data);
-
-        this._addUserOrder();
-      },
 
       _getUserOrder: function () {
         var that = this;
@@ -163,15 +156,6 @@
         var userOrderRef = firebase.database().ref('user_order/' + that.key);
         userOrderRef.on('value', function (snapshot) {
         });
-      },
-
-      _addUserOrder: function () {
-        var that = this;
-        //set user order with clicked item(s)
-        firebase.database().ref('user_order/' + that.key + "/" + that.uid + "/-IuxeUWgBMTH4Xk9QADM").set({
-          amount: 1
-        });
-
       },
 
       _keyChanged: function () {
