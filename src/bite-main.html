@@ -238,10 +238,11 @@
       },
 
       ready: function () {
-        this._getOrders();
         var empty = Polymer.dom(this.root).querySelector('.emptyBites');
-        if(this.user !== null){
+        if(this.user !== undefined || this.user !== null){
           this._getUser();
+        } else {
+          console.log("User is not defined");
         }
         //Hide emptybites text when key Array is not empty
         if (this.key !== null) {
@@ -286,6 +287,7 @@
             that.admin = snapshot.val().admin;
             that.uid = snapshot.val().uid;
             that._checkUser();
+            that._getOrders();
           }
         });
 
