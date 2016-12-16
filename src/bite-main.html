@@ -220,7 +220,8 @@
           value: 0
         },
         user: {
-          type: Object
+          type: Object,
+          observer: '_userChanged'
         },
         biteUserName: {
           type: String
@@ -236,8 +237,7 @@
         admin: Boolean,
         uid: String
       },
-
-      ready: function () {
+      _userChanged: function () {
         var empty = Polymer.dom(this.root).querySelector('.emptyBites');
         if(this.user !== undefined || this.user !== null){
           this._getUser();
@@ -251,6 +251,8 @@
           empty.setAttribute('style', 'display:visible;');
         }
 
+      },
+      ready: function () {
       },
 
       _cardClick: function (e) {
