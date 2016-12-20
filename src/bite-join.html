@@ -109,7 +109,10 @@
       </div>
 
     </div>
-    <bite-slide on-disable="_disableTouch" on-enable="_enableTouch" key="[[key]]" user="[[user]]" storeid="[[storeid]]"></bite-slide>
+    <div id="slideContainer">
+      <!-- <bite-slide on-disable="_disableTouch" on-enable="_enableTouch" key="[[key]]" user="[[user]]"
+                storeid="[[storeid]]"></bite-slide> -->
+    </div>
   </template>
 
 
@@ -149,7 +152,11 @@
         products: {
           type: Array
         },
-        user: Object
+        user: Object,
+        slideActive: {
+          type: Boolean,
+          value: false
+        }
       },
 
       ready: function () {
@@ -181,7 +188,13 @@
       },
 
       _routeDataChanged: function () {
-        this.key = this.routeData.key;
+        if(this.key == this.routeData.key){
+
+        } else if(this.key != this.routeData.key){
+          this._resetOrder();
+          this.products = [];
+          this.key = this.routeData.key;
+        }
         this._getOrder();
       },
 
@@ -201,6 +214,7 @@
           this._getUser();
           this._getStore();
           this._getProducts();
+          this._checkOrder();
         }
       },
 
@@ -240,7 +254,6 @@
           }
         });
       },
-
       _chipActive: function (e) {
         this.categories = [];
         this.push('categories', e.detail.name);
@@ -255,9 +268,37 @@
         //Shopping cart closed, start touch functionality
         var container = Polymer.dom(this.root).querySelector('.container');
         container.setAttribute('style', 'pointer-events: auto;');
+      },
+
+      _resetOrder: function () {
+        var that = this;
+        var resetOrderRef = firebase.database().ref('user_order/' + that.key + '/' + that.user.uid);
+        resetOrderRef.remove();
+      },
+
+      _checkOrder: function(){
+        var that = this;
+        var slideContainer = Polymer.dom(this.root).querySelector('#slideContainer');
+        var slide = document.createElement('bite-slide');
+        var checkOrderRef = firebase.database().ref('user_order/' + that.key + '/' + that.user.uid);
+        checkOrderRef.on('value', function(snapshot){
+          if(snapshot.val() == null){
+            if(Polymer.dom(that.root).querySelector('bite-slide') !== null)
+            {
+              slideContainer.removeChild(slide);
+            }
+          }else if(Polymer.dom(that.root).querySelector('bite-slide') == null){
+            slideContainer.appendChild(slide);
+            //add attributes to dynamically added list
+            slide.setAttribute('on-disable', '_disableTouch');
+            slide.setAttribute('on-enable', '_enableTouch');
+            slide.setAttribute('key', that.key);
+            slide.setAttribute('user', that.user.uid);
+            slide.setAttribute('storeid', that.storeid);
+          }
+        });
       }
     });
-
 
   </script>
 </dom-module>

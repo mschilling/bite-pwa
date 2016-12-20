@@ -186,7 +186,7 @@
         </div>
         <div class="items">
 
-          <template is="dom-repeat" items={{products}} as="item">
+          <template id="cart" is="dom-repeat" items={{cartProducts}} as="item">
             <bite-item uid="[[uid]]" key="[[key]]" product="[[item]]" storeid="[[storeid]]"></bite-item>
           </template>
         </div>
@@ -247,8 +247,9 @@
           type: Number,
           value: 0
         },
-        products: {
-          type: Array
+        cartProducts: {
+          type: Array,
+          observer: '_onProductsChanged'
         },
         totalItems: {
           type: Number,
@@ -289,7 +290,7 @@
           this.playAnimation('entry');
         } else {
           this.opened = false;
-          drawer.setAttribute('style', 'height: 8vh;');
+          drawer.setAttribute('style', 'height: 50px;');
           content.setAttribute('style', 'display: none');
           actions.setAttribute('icon', 'expand-less');
           this.fire('enable');
@@ -311,7 +312,8 @@
 
       _getData: function () {
         if (this.key == undefined || this.user == undefined || this.storeid == undefined) return;
-        this.uid = this.user.uid;
+        this.uid = this.user;
+        this.cartProducts = [];
         this._getUserOrder();
       },
 
@@ -319,7 +321,7 @@
         var that = this;
         //Get ordered productlist
         var userOrderProducts = firebase.database().ref('user_order/' + that.key + '/' + that.uid);
-        this.products = [];
+        this.cartProducts = [];
         userOrderProducts.on('value', function (snapshot) {
           that.totalAmount = 0;
           that.totalPrice = 0;
@@ -334,13 +336,21 @@
         });
 
         userOrderProducts.on('child_added', function(snapshot){
-          that.push('products', snapshot.key);
+          that.push('cartProducts', snapshot.key);
+          that._onProductsChanged();
         });
         userOrderProducts.on('child_removed', function(snapshot){
-          var index = that.products.indexOf(snapshot.key);
-          that.splice('products', index, 1);
+          var index = that.cartProducts.indexOf(snapshot.key);
+          that.splice('cartProducts', index, 1);
+          that._onProductsChanged();
         });
+      },
+
+      _onProductsChanged: function () {
+        this.$.cart.render();
       }
+
+
 
 
     });
