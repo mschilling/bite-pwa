@@ -297,9 +297,12 @@
 
       _checkUser: function(){
         var orderFab = Polymer.dom(this.root).querySelector('.orderFab');
-        if(this.admin == true){
+        var canAdd = true; //Everybody is allowed to open a new Bite
+        // canAdd = !!(this.admin)
+
+        if(canAdd){
           orderFab.setAttribute('style', 'display: visible');
-        } else if(this.admin == false){
+        } else {
           orderFab.setAttribute('style', 'display: none')
         }
       },
