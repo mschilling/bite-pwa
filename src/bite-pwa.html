@@ -267,6 +267,8 @@
               var fireUser = firebase.auth().currentUser;
               that.user = fireUser;
 
+              that._updateUserNotificationSettings(that.user.uid)
+
               if (that.page == 'main') {
                 that._doesUserExist(that.user.uid);
               }
@@ -377,11 +379,25 @@
         });
       },
 
+      _updateUserNotificationSettings: function () {
+        // Nothing to update without a fcm token
+        if(!userSessionToken) return;
+
+        // Use is not really logged on?
+        if(!this.user.uid) return;
+
+        var subscribeRef = firebase.database().ref().child('subscribe_queue');
+        subscribeRef.push({ token: userSessionToken, user: this.user.uid, subscribe: true, timestamp: (new Date()).getTime() });
+
+        // Some future stuff will handle this server side for now ;-)
+        // firebase.database().ref().child('user_subscriptions/' + this.user.uid + '/').once('value').then(function(snapshot) {
+        //   console.log(snapshot.val());
+        // });
+      },
+
       _changeStoreHeader: function (e) {
         this.storeName = e.detail.storeName;
       },
-
-
 
     });
 
