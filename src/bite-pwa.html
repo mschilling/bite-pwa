@@ -388,6 +388,7 @@
 
         var subscribeRef = firebase.database().ref().child('subscribe_queue');
         subscribeRef.push({ token: userSessionToken, user: this.user.uid, subscribe: true, timestamp: (new Date()).getTime() });
+        console.log('Refresh (or init) fcm token');
 
         // Some future stuff will handle this server side for now ;-)
         // firebase.database().ref().child('user_subscriptions/' + this.user.uid + '/').once('value').then(function(snapshot) {
