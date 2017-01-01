@@ -297,11 +297,18 @@
       },
 
       _checkUser: function () {
+        var that = this;
         var adminFab = Polymer.dom(this.root).querySelector('.adminRemove');
 
-        if (this.admin == true) {
+        var canDelete = false;
+        // console.log('key', this.uid, firebase.auth().currentUser.uid);
+        if(firebase.auth().currentUser && firebase.auth().currentUser.uid === that.uid) {
+          canDelete = true;
+        }
+
+        if (canDelete) {
           adminFab.setAttribute('style', 'display: visible;');
-        } else if (this.admin == false) {
+        } else {
           adminFab.setAttribute('style', 'display: none;');
         }
       },
