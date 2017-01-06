@@ -1,27 +1,28 @@
 <!doctype html>
 
 <html>
-  <head>
-    <base href="/">
-    <title>Bite</title>
-    <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
-    <meta charset="utf-8" />
-    <meta name="description" content="Eten bestellen in Zwolle en Gramsbergen">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <link rel="import" href="/src/bite-pwa.html" async>
-    <link rel="shortcut icon" sizes="32x32" href="/images/favicon-32x32.png">
 
-    <!-- PWA meta tags -->
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+  <base href="/">
+  <title>Bite</title>
+  <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
+  <meta charset="utf-8" />
+  <meta name="description" content="Eten bestellen in Zwolle en Gramsbergen">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <link rel="import" href="/src/bite-pwa.html" async>
+  <link rel="shortcut icon" sizes="32x32" href="/images/favicon-32x32.png">
 
-    <!-- Apple meta tags -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-180x180.png">
+  <!-- PWA meta tags -->
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <!-- Manifest import -->
-    <link rel="manifest" href="/manifest.json">
+  <!-- Apple meta tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-180x180.png">
 
-    <style>
+  <!-- Manifest import -->
+  <link rel="manifest" href="/manifest.json">
+
+  <style>
       @font-face {font-family: CompasseBoldItalic; src: url('fonts/Compasse-ExtraBoldItalic.otf');}
       @font-face {font-family: Compasse; font-weight: 800; src: url('fonts/Compasse.otf');}
       /*@font-face {font-family: Compasse; src: url('fonts/Compasse-Thin.otf');}*/
@@ -53,8 +54,9 @@
       }
 
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
   <!-- Firebase init -->
 
 
@@ -69,65 +71,23 @@
     };
     firebase.initializeApp(config);
 
-    var userSessionToken;
-
-    const messaging = firebase.messaging();
-    messaging.requestPermission()
-      .then(function() { console.log('Notification Permission granted.');
-          messaging.getToken()
-            .then(function(currentToken){
-              if(currentToken){
-                console.log("fcm token :\r\n"+currentToken);
-
-                // TODO: @Jesper please think of a better solution/implementation ;-)
-                userSessionToken = currentToken;
-
-                // var userSubscriptionsRef = firebase.database().ref().child('user_subscriptions');
-                // userSubscriptionsRef.once('value').then( function(snapshot) {
-                //   console.log(snapshot.val());
-                // } )
-
-              } else {
-                //Show permission request
-                console.log('No Instance ID token available. Request permission to generate one');
-                //Show permission UI.
-              }
-            }).catch(function(err){
-              console.log('An error occurred while retrieving token.', err);
-          })
-      })
-      .catch(function(err) { console.log('Unable to get permission to notify.', err)});
-
-    messaging.onTokenRefresh(function(){
-      messaging.getToken().then(function(refreshedToken){
-        console.log('Token refreshed');
-      }).catch(function(err){
-        console.log('unable to retrieve refreshed token', err);
-      })
-    });
-
-    messaging.onMessage(function(payload) {
-      console.log("Message received. ", payload);
-      // ...
-    });
-
   </script>
 
-    <bite-pwa unresolved>
-      <div id="background">
-        <img class="bgImage" src="images/Splashscreen.png"/>
-      </div>
-    </bite-pwa>
+<bite-pwa unresolved>
+  <div id="background">
+    <img class="bgImage" src="images/Splashscreen.png" />
+  </div>
+</bite-pwa>
 
-    <script>
+<script>
       window.performance && performance.mark && performance.mark('index.html');
 
-      Polymer = {lazyRegister: true, dom: 'shadow'};
+      Polymer = { lazyRegister: true, dom: 'shadow' };
 
-      (function() {
+      (function () {
         if ('registerElement' in document
-                && 'import' in document.createElement('link')
-                && 'content' in document.createElement('template')) {
+          && 'import' in document.createElement('link')
+          && 'content' in document.createElement('template')) {
           // platform is good!
         } else {
           // polyfill the platform!
@@ -138,11 +98,13 @@
       })();
     </script>
 
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<script>
+      (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
       ga('create', 'UA-31584143-3', 'auto');
       ga('send', 'pageview');
@@ -153,5 +115,6 @@
 
     </script>
 
-  </body>
+</body>
+
 </html>
