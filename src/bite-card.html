@@ -118,9 +118,17 @@
     </style>
 
     <paper-dialog no-cancel-on-outside-click no-cancel-on-esc-key id="actions">
-      <h1>Verwijderen?</h1>
-      <paper-button dialog-dismiss on-tap="_deleteBite">OK</paper-button>
-      <paper-button dialog-dismiss on-tap="_closeDialog">NEEEEE</paper-button>
+      <h1>Wat nu??</h1>
+      <paper-button dialog-dismiss on-tap="_closeDialog">Annuleer</paper-button>
+
+      <template is="dom-if" if="[[canClose]]">
+        <paper-button dialog-dismiss on-tap="_closeBite" >Sluiten</paper-button>
+      </template>
+
+      <template is="dom-if" if="[[canDelete]]">
+        <paper-button dialog-dismiss on-tap="_deleteBite">Verwijderen</paper-button>
+      </template>
+
     </paper-dialog>
 
     <div class="adminRemove" style="display: none;">
@@ -179,6 +187,8 @@
         storeName: String,
         storeLocation: String,
         admin: Boolean,
+        canClose: Boolean,
+        canDelete: Boolean,
         uid: {
           type: String
         },
@@ -214,6 +224,10 @@
           if (snapshot.val() == null) return;
           that.uid = snapshot.val().opened_by;
           that.storeid = snapshot.val().store;
+
+          var orderStatus = snapshot.val().status;
+          that.canClose = (orderStatus === 'open');
+          that.canDelete = (orderStatus === 'closed')
         });
 
       },
@@ -294,6 +308,12 @@
         var that = this;
         var deleteRef = firebase.database().ref('orders');
         deleteRef.child(that.key).remove();
+      },
+
+      _closeBite: function () {
+        var that = this;
+        var closeRef = firebase.database().ref('orders');
+        closeRef.child(that.key).child('status').set('closed');
       },
 
       _checkUser: function () {
