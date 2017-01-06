@@ -380,6 +380,9 @@
       },
 
       _updateUserNotificationSettings: function () {
+        if(!userSessionToken || !this.user.uid) {
+          console.log('skip _updateUserNotificationSettings', userSessionToken, this.user);
+        }
         // Nothing to update without a fcm token
         if(!userSessionToken) return;
 
