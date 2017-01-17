@@ -3,8 +3,7 @@
   "shell": "src/bite-pwa.html",
   "fragments": [
     "src/bite-main.html",
-    "src/bite-join.html",
-    "src/lazy-resources.html"
+    "src/bite-join.html"
   ]
   ,
   "sourceGlobs": [
