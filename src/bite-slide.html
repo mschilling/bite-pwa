@@ -248,8 +248,7 @@
           value: 0
         },
         cartProducts: {
-          type: Array,
-          observer: '_onProductsChanged'
+          type: Array
         },
         totalItems: {
           type: Number,
@@ -323,6 +322,9 @@
         var userOrderProducts = firebase.database().ref('user_order/' + that.key + '/' + that.uid);
         this.cartProducts = [];
         userOrderProducts.on('value', function (snapshot) {
+          if(snapshot.val() == null){
+            that._showDrawer();
+          }
           that.totalAmount = 0;
           that.totalPrice = 0;
           snapshot.forEach(function (child) {
@@ -337,17 +339,11 @@
 
         userOrderProducts.on('child_added', function(snapshot){
           that.push('cartProducts', snapshot.key);
-          that._onProductsChanged();
         });
         userOrderProducts.on('child_removed', function(snapshot){
           var index = that.cartProducts.indexOf(snapshot.key);
           that.splice('cartProducts', index, 1);
-          that._onProductsChanged();
         });
-      },
-
-      _onProductsChanged: function () {
-        this.$.cart.render();
       }
 
 
