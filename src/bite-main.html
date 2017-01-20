@@ -192,7 +192,7 @@
         <div id="cards" class="bite-cards">
           <!-- Bites are added here dynamically -->
           <template is="dom-repeat" items="{{key}}" as="key">
-            <bite-card key="[[key]]" admin="[[admin]]"></bite-card>
+            <bite-card locked="[[locked]]" key="[[key]]" admin="[[admin]]" user="[[user]]"></bite-card>
           </template>
 
           <div class="emptyBites">
@@ -233,7 +233,9 @@
         key: {
           type: Array
         },
-
+        locked :{
+          type: Boolean
+        },
         admin: Boolean,
         uid: String
       },
@@ -277,7 +279,10 @@
           } else {
               that.biteTotal = 0;
           }
+
+          that._checkLocked();
         });
+
 
       },
 
@@ -314,8 +319,29 @@
           store: "-JhLeOlGIEjaIOFHR0xe",
           open_time: new Date().getTime()
         });
-      }
+      },
 
+      _checkLocked: function () {
+        var i;
+        var that = this;
+
+        for(i = 0; i < this.key.length; i++){
+          that.lockedBites = [];
+          var lockedRef = firebase.database().ref('user_order_locked/' + that.key[i]);
+          lockedRef.on('child_added', function(snapshot){
+            if(snapshot.val() == true){
+                that.locked = true;
+            } else {
+                that.locked = false;
+            }
+          });
+          lockedRef.on('child_removed', function(snapshot){
+            that.locked = false;
+          });
+
+        }
+
+      }
 
     });
   </script>

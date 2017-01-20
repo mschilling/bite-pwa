@@ -164,13 +164,13 @@
       }
     </style>
 
-
+  <div id="container">
     <div id="drawer" class="bottom-drawer">
       <div class="header">
         <div class="hItems">[[totalAmount]] ITEM(S)</div>
         <div class="hAmount">[[totalPrice]]
           <div class="hActions">
-            <paper-icon-button on-tap="_showDrawer" class="hAction" icon="expand-less"></paper-icon-button>
+            <paper-icon-button id="drawerBtn" on-tap="_showDrawer" class="hAction" icon="expand-less"></paper-icon-button>
           </div>
         </div>
       </div>
@@ -184,7 +184,7 @@
             <p>Top 5</p>
           </div>
         </div>
-        <div class="items">
+        <div class="items" id="itemList">
 
           <template id="cart" is="dom-repeat" items={{cartProducts}} as="item">
             <bite-item uid="[[uid]]" key="[[key]]" product="[[item]]" storeid="[[storeid]]"></bite-item>
@@ -200,12 +200,13 @@
           <div class="emoji">🍔🍟🍕</div>
         </div>
         <hr>
-        <div class="makeOrder">
+        <div class="makeOrder" style="pointer-events: all">
           <div class="makeOrderTxt">Met deze bestelling ga je drie sticker(s) verdienen!</div>
-          <paper-button raised class="orderBtn" on-tap="_orderBtn">Bring it on!</paper-button>
+          <paper-button raised id="orderBtn" class="orderBtn" on-tap="_orderBtn" >[[btnText]]</paper-button>
         </div>
       </div>
     </div>
+  </div>
   </template>
   <script>
     Polymer({
@@ -270,6 +271,16 @@
         },
         totalAmount: {
           type: Number
+        },
+        locked: {
+          type: String
+        },
+        btnText: {
+          type: String
+        },
+        btnStatus: {
+          type: Boolean,
+          value: false
         }
       },
 
@@ -314,6 +325,7 @@
         this.uid = this.user;
         this.cartProducts = [];
         this._getUserOrder();
+        this._checkLocked();
       },
 
       _getUserOrder: function () {
@@ -344,8 +356,48 @@
           var index = that.cartProducts.indexOf(snapshot.key);
           that.splice('cartProducts', index, 1);
         });
-      }
+      },
 
+      _orderBtn: function () {
+        console.log("bring it on");
+        //lock user order
+        var that = this;
+        if(this.btnStatus == false) {
+          firebase.database().ref('user_order_locked/' + that.key + '/' + that.uid + '/').set(true);
+        } else if (this.btnStatus == true){
+          var resetLockedRef = firebase.database().ref('user_order_locked/' +that.key + '/' +that.uid);
+          resetLockedRef.remove();
+        }
+      },
+
+      _checkLocked: function () {
+        var that = this;
+        var drawer = Polymer.dom(this.root).querySelector('.bottom-drawer');
+        var actions = Polymer.dom(this.root).querySelector('.hAction');
+        var content = Polymer.dom(this.root).querySelector('.content');
+        firebase.database().ref('user_order_locked/' + that.key + '/' + that.uid + '/').on('value', function (snapshot){
+          if (snapshot.val() == true) {
+            that.$.orderBtn.setAttribute('style', 'background:grey;');
+            that.btnText = "Wijzig";
+            that.btnStatus = true;
+            that.$.itemList.setAttribute('style', 'pointer-events: none;');
+            that.$.drawerBtn.setAttribute('style', 'pointer-events: none;');
+            drawer.setAttribute('style', 'height: 90vh;');
+            content.setAttribute('style', 'display: visible');
+            actions.setAttribute('icon', 'expand-more');
+            that.fire('disable');
+          } else if (snapshot.val() == null){
+            that.btnText = "Bring it on!";
+            that.btnStatus = false;
+            that.$.orderBtn.setAttribute('style', 'background:#EC9630;');
+            that.$.itemList.setAttribute('style', 'pointer-events: auto;');
+            that.$.drawerBtn.setAttribute('style', 'pointer-events: auto;');
+            that.fire('enable');
+
+          }
+        });
+
+      }
 
 
 

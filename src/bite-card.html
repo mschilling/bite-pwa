@@ -21,7 +21,6 @@
 
       paper-button {
         color: #EC9630;
-        font-family: CompasseBoldItalic;
       }
 
       .adminRemove {
@@ -34,7 +33,23 @@
         height: 32px;
         width: 32px;
       }
-
+      .dialogH {
+        color: black;
+        font-family: Roboto, Noto, sans-serif;
+        font-size: 20px;
+        float: left;
+      }
+      .dialogP {
+        color: grey;
+        float: left;
+        font-family: Roboto, Noto, sans-serif;
+        font-size: 16px;
+        text-align: left;
+      }
+      .dialogActions {
+        float: right;
+        font-family: Roboto, Noto, sans-serif;
+      }
       paper-card {
         margin: 0 auto;
         width: 90%;
@@ -132,11 +147,24 @@
 
     </paper-dialog>
 
+    <paper-dialog no-cancel-on-outside-click no-cancel-on-esc-key id="newBiteDialog">
+      <div class="dialogTitle">
+      <h1 class="dialogH">Nieuwe BITE ingaan?</h1>
+      </div>
+      <div class="dialogText">
+      <p class="dialogP">Als je doorgaat, wordt je andere bestelling geannuleerd.</p>
+      </div>
+      <div class="dialogActions">
+      <paper-button dialog-dismiss on-tap="_closeDialog">Nee</paper-button>
+      <paper-button dialog-dismiss on-tap="_openNewBiteRemoveOrder">Doorgaan</paper-button>
+      </div>
+    </paper-dialog>
+
     <div class="adminRemove" style="display: none;">
       <paper-fab class="adminFab" mini on-tap="_removeBite" icon="delete"></paper-fab>
     </div>
 
-    <a href="/join/[[key]]">
+    <a href="/join/[[key]]" on-click="_checkLocked">
       <paper-card>
         <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
         <div class="card-content">
@@ -202,6 +230,13 @@
         currentUser: {
           type: Array,
           observer: '_personsChanged'
+        },
+        user: {
+          type: Object
+        },
+        locked: {
+          type: Boolean,
+          observer: '_lockedChanged'
         }
 
       },
@@ -374,6 +409,36 @@
         personContainer.setAttribute('style', 'width:' + container_width + 'px;');
       },
 
+      _checkLocked: function(){
+        var that = this;
+
+        firebase.database().ref('user_order_locked/' + that.key + '/' + that.user.uid + '/').on('value', function (snapshot) {
+          if (snapshot.val() == true && that.locked == true) {
+            console.log(snapshot.val());
+          } else if (snapshot.val() == null && that.locked == true) {
+            console.log(false);
+            that.$.newBiteDialog.open();
+            event.preventDefault();
+          } else if (snapshot.val() == null && that.locked == false){
+
+          }
+        });
+      },
+
+      _openNewBiteRemoveOrder: function () {
+        this.$.newBiteDialog.close();
+        var that = this;
+        var resetOrderRef = firebase.database().ref('user_order/' + that.key + '/' + that.user.uid);
+        var resetLockedRef = firebase.database().ref('user_order_locked/' + that.key + '/' + that.user.uid);
+        resetOrderRef.remove();
+        resetLockedRef.remove();
+        window.history.pushState({}, null, '/join/'+this.key);
+        window.dispatchEvent(new CustomEvent('location-changed'));
+      },
+
+      _lockedChanged: function () {
+        console.log("Locked: " +this.locked);
+      }
     });
 
 

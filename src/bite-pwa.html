@@ -208,6 +208,9 @@
       },
       storeName: {
         type: String
+      },
+      locked: {
+        type: Boolean
       }
 
     },
@@ -418,8 +421,7 @@
 
     _changeStoreHeader: function (e) {
       this.storeName = e.detail.storeName;
-    },
-
+    }
   });
 
 
