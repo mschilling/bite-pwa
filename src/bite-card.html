@@ -412,17 +412,16 @@
       _checkLocked: function(){
         var that = this;
 
-        firebase.database().ref('user_order_locked/' + that.key + '/' + that.user.uid + '/').on('value', function (snapshot) {
-          if (snapshot.val() == true && that.locked == true) {
-            console.log(snapshot.val());
-          } else if (snapshot.val() == null && that.locked == true) {
-            console.log(false);
-            that.$.newBiteDialog.open();
+//        firebase.database().ref('user_order_locked/' + that.key + '/' + that.user.uid + '/').on('value', function (snapshot) {
+//          if (snapshot.val() == true && that.locked == true) {
+//            console.log(snapshot.val());
+            if (this.locked == true) {
+            this.$.newBiteDialog.open();
+            console.log("demonspawn");
             event.preventDefault();
-          } else if (snapshot.val() == null && that.locked == false){
+          } else if (this.locked == false){
 
           }
-        });
       },
 
       _openNewBiteRemoveOrder: function () {
