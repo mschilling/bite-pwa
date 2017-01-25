@@ -1,26 +1,161 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="bite-radio-item.html">
 
 <dom-module id="bite-open">
-    <style>
+    <template>
+      <style include="iron-flex iron-flex-alignment">
         :host{
+          display: block;
+        }
+        .container {
+          max-width: 800px;
+          margin: 0 auto;
+          color: #EC9630;
+        }
+        .cardContent{
+          width: 90%;
+          margin: 0 auto;
 
         }
+        paper-card {
+          margin: 0 auto;
+          display: block;
+          width: 90%;
+          margin-top: 16px;
+          text-align: left;
+          margin-bottom: 16px;
+        }
+        .cardTitle{
+          font-family: CompasseBoldItalic;
+          font-size: 16px;
+          height: 24px;
+        }
+        .cardText {
+          font-family: Compasse;
+          font-size: 14px;
+          color: #9B9B9B;
+          height: 24px;
+        }
+        #btnContainer{
+          text-align: right;
+        }
+        hr{
+          display: block;
+          height: 1px;
+          border: 0;
+          border-top: 1px solid #EDEDED;
+          margin: 1em 0;
+          padding: 0;
+        }
+        .openBtn {
+          background-color: #C7C7CD;
+          color: white;
+          width: 120px;
+          margin-top: 16px;
+        }
+        .item {
+          text-align: left;
+          float: left;
+        }
+        .card-actions{
+          margin: 0 auto;
+          width: 90%;
+          padding: 0;
+        }
+        .timeTitle{
+          margin-top: 16px;
+          color: #292E34;
+          font-family: Compasse;
+          height: 24px;
+        }
+        .timeDesc {
+          font-family: Compasse;
+          color: #ED962F;
+          height: 20px;
+          font-size: 14px;
+          text-align: left;
+        }
+        #itemContainer {
+          text-align: left;
+        }
+      </style>
+      <app-route
+        route="[[route]]"
+        pattern="/:key"
+        data="{{routeData}}"
+      ></app-route>
 
-
-    </style>
-
-    <template>
-        <h1>herro</h1>
+      <div class="container" id="container">
+        <paper-card>
+          <div class="cardContent" style="display: block;">
+            <div class="card-content" style="display: block;">
+              <div class="cardInfo">
+                <div class="cardTitle">KIES RESTAURANT EN BESTELTIJD</div>
+                <div class="cardText">Of kies twee of meer om een vote te starten</div>
+              </div>
+              <hr>
+              <div class="layout vertical wrap" style="width: 80%; margin: 0 auto; margin-top: 30px;" id="itemContainer">
+                  <template is="dom-repeat" items="[[key]]" as="key" id="list">
+                    <bite-radio-item class="item" key="[[key]]" storename="PRIMATARIA" location="Gramsbergen"></bite-radio-item>
+                  </template>
+              </div>
+            </div>
+            <div class="card-actions" id="timeContent">
+              <div class="timeContainer">
+              <div class="timeTitle">Deze BITE sluit om</div>
+              <div class="timeDesc" on-click="_pickTime">Kies tijd</div>
+              </div>
+            </div>
+            <div class="card-actions" id="btnContainer">
+              <paper-button class="openBtn" style="margin-bottom: 20px;">LET'S GO!</paper-button>
+            </div>
+          </div>
+        </paper-card>
+      </div>
     </template>
 
 
     <script>
         Polymer({
             is: 'bite-open',
-            properties: {}
+            properties: {
+              user: {
+                type: Object,
+                observer: '_userChanged'
+              },
+              key: {
+                type: Array,
+                value: function() { return []; },
+                notify: true
+              }
+            },
 
+            _userChanged: function () {
+              this._getStores();
+            },
 
+            _pickTime: function () {
 
+            },
+
+            _getStores: function() {
+              var that = this;
+              var storeRef = firebase.database().ref('stores/');
+              storeRef.on('value', function(snapshot){
+              that.key = [];
+                if(snapshot.val() !== null) {
+                  snapshot.forEach(function(childSnapshot){
+                    that.push('key', childSnapshot.key);
+                  });
+                }
+              });
+            }
         });
     </script>
 </dom-module>

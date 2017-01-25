@@ -74,7 +74,10 @@
         background-color: #EC9630;
         color: white;
       }
-
+      #openToolbar {
+        background-color: #EC9630;
+        color: white;
+      }
       paper-spinner.orange {
         position: fixed;
         left: 50%;
@@ -137,6 +140,10 @@
 <div main-title id="storeName">[[storeName]]</div>
 <paper-icon-button icon="search"></paper-icon-button>
 </app-toolbar>
+    <app-toolbar id="openToolbar" style="display: none;">
+      <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
+      <div main-title id="openName">BITE OPENEN</div>
+    </app-toolbar>
 </app-header>
 
 
@@ -154,10 +161,10 @@
   <iron-pages id="pages" selected="[[routeData.page]]" attr-for-selected="name" role="main" selected-attribute="visible">
     <!-- Main screen -->
     <bite-main on-click-order="_navJoin" id="biteMain" route="{{subRoute}}" name="main" user="{{user}}"></bite-main>
-    <!-- Screen when opening new Bite-->
-    <bite-open name="open" route="{{subRoute}}"></bite-open>
     <!-- Screen when joining a currently existing bite -->
     <bite-join user={{user}} on-store-name="_changeStoreHeader" page="{{page}}" route="{{subRoute}}" name="join"></bite-join>
+    <!-- Screen for opening a new Bite -->
+    <bite-open user={{user}} page="{{page}}" route="{{subRoute}}" name="open"></bite-open>
   </iron-pages>
 </div>
 </app-header-layout>
@@ -293,13 +300,14 @@
               });
             }
             //user signed in
-            if (document.location.href.indexOf('main') === -1 && document.location.href.indexOf('join') === -1) {
+            if (document.location.href.indexOf('main') === -1 && document.location.href.indexOf('join') === -1 && document.location.href.indexOf('open') === -1) {
               window.location.href = 'main';
             }
           } else {
             //no user is signed in
             if (document.location.href.indexOf('login') === -1) {
-              window.location.href = 'login';
+              window.history.pushState({}, null, '/login');
+              window.dispatchEvent(new CustomEvent('location-changed'));
               console.log("logged out");
             }
           }
@@ -348,23 +356,31 @@
       var mainToolbar = Polymer.dom(this.root).querySelector('#mainToolbar');
       var joinToolbar = Polymer.dom(this.root).querySelector('#joinToolbar');
       var loginPage = Polymer.dom(this.root).querySelector('#login');
+      var openToolbar = Polymer.dom(this.root).querySelector('#openToolbar');
       switch (this.page) {
         case 'login':
           mainToolbar.setAttribute('style', 'display:none');
           joinToolbar.setAttribute('style', 'display:none');
           loginPage.setAttribute('style', 'display:visible;');
-
+          openToolbar.setAttribute('style', 'display:none');
           break;
         case 'main':
           mainToolbar.setAttribute('style', 'display:visible;');
           joinToolbar.setAttribute('style', 'display:none;');
           loginPage.setAttribute('style', 'display:none;');
+          openToolbar.setAttribute('style', 'display:none');
           break;
         case 'join':
           mainToolbar.setAttribute('style', 'display:none;');
           joinToolbar.setAttribute('style', 'display:visible;');
           loginPage.setAttribute('style', 'display:none;');
+          openToolbar.setAttribute('style', 'display:none');
           break;
+        case 'open':
+          mainToolbar.setAttribute('style', 'display:none;');
+          joinToolbar.setAttribute('style', 'display:none;');
+          loginPage.setAttribute('style', 'display:none;');
+          openToolbar.setAttribute('style', 'display:visible');
       }
     },
 

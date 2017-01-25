@@ -1,0 +1,84 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+
+<dom-module id="bite-radio-item">
+  <template>
+    <style>
+      :host{
+        display: block;
+        margin-bottom: 30px;
+      }
+      .itemContent{
+        display: block;
+        float: left;
+      }
+      .radioButton{
+        display: block;
+        float: left;
+      }
+      .information{
+        display: block;
+        float: left;
+        margin-left: 33px;
+      }
+      .infoTitle {
+        display: block;
+        font-family: CompasseBoldItalic;
+        float: left;
+        height: 24px;
+        font-size: 16px;
+        text-transform: uppercase;
+      }
+      .infoDesc{
+        display: block;
+        font-family: Compasse;
+        color: #9B9B9B;
+        font-size: 14px;
+      }
+      .emoji{
+        float: left;
+        font-size: 24px;
+      }
+      paper-radio-button{
+        margin-top: 10px;
+        --paper-radio-button-checked-color: #EC9630;
+        --paper-radio-button-unchecked-color: #9B9B9B;
+      }
+    </style>
+    <div class="itemContent">
+      <div class="radioButton">
+        <paper-radio-button noink></paper-radio-button>
+      </div>
+      <div class="information">
+        <div class="infoTitle">[[storeName]]</div>
+        <div class="infoDesc">[[location]]</div>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'bite-radio-item',
+      properties: {
+        storeName: String,
+        location: String,
+        key: {
+          type: String,
+          observer: '_keyChanged'
+        }
+      },
+
+      _keyChanged: function () {
+        this._getInfo();
+      },
+
+      _getInfo: function () {
+        var that = this;
+        var storeRef = firebase.database().ref('stores/'+that.key);
+        storeRef.on('value', function(snapshot){
+          that.storeName = snapshot.val().name;
+          that.location = snapshot.val().location;
+        });
+      }
+    });
+  </script>
+</dom-module>

@@ -165,8 +165,9 @@
     </style>
 
     <img src="../images/bite.png" alt="bite" class="logoImg" style="z-index: -1;">
+    <a href="/open">
     <paper-fab class="orderFab" icon="add" on-tap="_addBite" style="display: none;"></paper-fab>
-
+    </a>
 
     <div class="container">
       <div class="cardContainer">
@@ -313,12 +314,7 @@
       },
 
       _addBite: function(){
-        var that = this;
-        firebase.database().ref('orders').push().set({
-          opened_by: this.user.uid,
-          store: "-JhLeOlGIEjaIOFHR0xe",
-          open_time: new Date().getTime()
-        });
+
       },
 
       _checkLocked: function () {
