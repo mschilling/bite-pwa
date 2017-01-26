@@ -100,7 +100,11 @@
         color: #9B9B9B;
 
       }
-
+      .closedText {
+        color: #9B9B9B;
+        font-family: Compasse;
+        margin-top: 5px;
+      }
       .person {
         float: left;
         border-radius: 50%;
@@ -173,6 +177,7 @@
           </div>
           <div class="cardInfo">
             <div class="title">[[storeName]]</div>
+            <div class="closedText" style="">Deze BITE is gesloten om [[closedTime]]</div>
             <template is="dom-repeat" items="{{emoji}}" as="item">
                 <div class="imgEmoji"
                      style$="background-image: url([[item]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
@@ -235,9 +240,9 @@
           type: Object
         },
         locked: {
-          type: Boolean,
-          observer: '_lockedChanged'
-        }
+          type: Boolean
+        },
+        closedTime: String
 
       },
       attached: function () {
@@ -374,6 +379,7 @@
         this._getUser();
         this._getStore();
         this._checkUser();
+        this._checkClosed();
       },
 
       //_getCurrentUsers()
@@ -418,7 +424,6 @@
 
           } else if (snapshot.val() == null && that.locked == true) {
             that.$.newBiteDialog.open();
-            console.log("demonspawn");
             event.preventDefault();
           } else if (that.locked == false && snapshot.val() == null) {
 
@@ -437,8 +442,25 @@
         window.dispatchEvent(new CustomEvent('location-changed'));
       },
 
-      _lockedChanged: function () {
-        console.log("Locked: " +this.locked);
+      _checkClosed: function () {
+        var that = this;
+        var closedRef = firebase.database().ref('orders/' +that.key);
+        var closedText = Polymer.dom(that.root).querySelector('.closedText');
+        closedRef.on('value', function(snapshot){
+          if(snapshot.val().status == 'closed'){
+            //closed change bite style
+            var date = new Date(snapshot.val().close_time);
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var time = hours + ":" + minutes;
+            that.closedTime = time;
+            closedText.setAttribute('style', 'display: visible;');
+          }else {
+            //nothing
+            closedText.setAttribute('style', 'display: none;');
+
+          }
+        })
       }
     });
 

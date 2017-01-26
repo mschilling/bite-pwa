@@ -282,6 +282,7 @@
           }
 
           that._checkLocked();
+
         });
 
 
@@ -320,19 +321,20 @@
       _checkLocked: function () {
         var i;
         var that = this;
-
         for(i = 0; i < this.key.length; i++){
           that.lockedBites = [];
-          var lockedRef = firebase.database().ref('user_order_locked/' + that.key[i]);
-          lockedRef.on('child_added', function(snapshot){
-            if(snapshot.val() == true){
+          firebase.database().ref('user_order_locked/' + that.key[i]).on('child_added', function(snapshot){
+            console.log(snapshot.key);
+            if(snapshot.val() == true && snapshot.key == that.user.uid){
                 that.locked = true;
-            } else {
+            } else if(snapshot.val() == null && that.user.uid == null){
                 that.locked = false;
             }
           });
-          lockedRef.on('child_removed', function(snapshot){
-            that.locked = false;
+          firebase.database().ref('user_order_locked/' + that.key[i]).on('child_removed', function(snapshot){
+            if(that.user.uid == snapshot.key){
+              that.locked = false;
+            }
           });
 
         }

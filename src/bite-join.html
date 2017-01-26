@@ -87,7 +87,7 @@
       <div class="cardContainer">
         <div class="tallCard">
           <bite-tallcard name="GESTART DOOR [[displayName]]" background="url([[photoURL]])"
-                         desc="Gestart om 09:11, sluit om 13:37"
+                         desc="Gestart om [[startTime]] sluit om [[closeTime]]"
                          location="Gramsbergen"></bite-tallcard>
         </div>
       </div>
@@ -157,7 +157,9 @@
         slideActive: {
           type: Boolean,
           value: false
-        }
+        },
+        closeTime: String,
+        startTime: String
       },
 
       ready: function () {
@@ -217,6 +219,7 @@
           this._getProducts();
           this._checkOrder();
           this._checkLocked();
+          this._checkTimes();
         }
       },
 
@@ -312,6 +315,27 @@
           }
         });
       },
+
+      _checkTimes: function () {
+        var that = this;
+        var timeRef = firebase.database().ref('orders/' +that.key);
+        timeRef.on('value', function(snapshot){
+          if(snapshot.val().close_time !== null && snapshot.val().open_time !== null) {
+            //closed change bite style
+            var closeDate = new Date(snapshot.val().close_time);
+            var closeHours = closeDate.getHours();
+            var closeMinutes = closeDate.getMinutes();
+            var closeTime = closeHours + ":" + closeMinutes;
+            that.closeTime = closeTime;
+
+            var openDate = new Date(snapshot.val().open_time);
+            var openHours = openDate.getHours();
+            var openMinutes = openDate.getMinutes();
+            var openTime = openHours + ":" + openMinutes;
+            that.startTime = openTime;
+           }
+          });
+      }
 
 
     });
