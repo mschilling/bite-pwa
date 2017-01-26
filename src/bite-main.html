@@ -303,10 +303,10 @@
 
       _checkUser: function(){
         var orderFab = Polymer.dom(this.root).querySelector('.orderFab');
-        var canAdd = true; //Everybody is allowed to open a new Bite
-        // canAdd = !!(this.admin)
+//        var canAdd = true; //Everybody is allowed to open a new Bite
+        //canAdd = !!(this.admin)
 
-        if(canAdd){
+        if(this.admin == true){
           orderFab.setAttribute('style', 'display: visible');
         } else {
           orderFab.setAttribute('style', 'display: none')

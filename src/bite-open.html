@@ -5,8 +5,11 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/paper-time-picker/paper-time-picker-dialog-style.html">
-<link rel="import" href="../bower_components/paper-time-picker/paper-time-picker.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="bite-radio-item.html">
 
 <dom-module id="bite-open">
@@ -14,6 +17,11 @@
       <style include="iron-flex iron-flex-alignment" include="paper-time-picker-dialog-style">
         :host{
           display: block;
+        }
+        paper-radio-button{
+          margin-top: 10px;
+          --paper-radio-button-checked-color: #EC9630;
+          --paper-radio-button-unchecked-color: #9B9B9B;
         }
         .container {
           max-width: 800px;
@@ -25,6 +33,20 @@
           margin: 0 auto;
 
         }
+        .radioItem {
+          display: block;
+        }
+        .item {
+          float: left;
+        }
+        .radioBtn {
+          float: left;
+        }
+        paper-time-picker{
+          --light-primary-color: #f0f0f0;
+          --default-primary-color: #EC9630;
+          --default-background-color: white;
+        }
         paper-card {
           margin: 0 auto;
           display: block;
@@ -33,10 +55,24 @@
           text-align: left;
           margin-bottom: 16px;
         }
+        paper-slider {
+          --paper-slider-knob-color: #EC9630;
+          --paper-slider-active-color: #EC9630;
+          --paper-slider-pin-color: #EC9630;
+          --paper-slider-markers-color: #EC9630;
+          --paper-slider-knob-start-border-color: #EC9630;
+          --paper-input-container-focus-color: #EC9630;
+          max-width: 100%;
+        }
         .cardTitle{
           font-family: CompasseBoldItalic;
           font-size: 16px;
           height: 24px;
+        }
+        .cardFinalize {
+          margin: 0 auto;
+          width: 90%;
+          padding: 0;
         }
         .cardText {
           font-family: Compasse;
@@ -61,10 +97,6 @@
           width: 120px;
           margin-top: 16px;
         }
-        .item {
-          text-align: left;
-          float: left;
-        }
         .card-actions{
           margin: 0 auto;
           width: 90%;
@@ -87,6 +119,10 @@
           text-align: left;
           margin-top: 30px;
         }
+        .timeBtn {
+          color: #EC9630;
+          font-family: Compasse;
+        }
       </style>
       <app-route
         route="[[route]]"
@@ -94,14 +130,6 @@
         data="{{routeData}}"
       ></app-route>
 
-      <paper-dialog id="dialog"  class="paper-time-picker-dialog"
-                    on-iron-overlay-closed="_dismissDialog" style="margin: 0 auto;">
-        <paper-time-picker id="timePicker" time="0:00pm"></paper-time-picker>
-        <div class="buttons">
-          <paper-button dialog-dismiss>Cancel</paper-button>
-          <paper-button dialog-confirm>OK</paper-button>
-        </div>
-      </paper-dialog>
 
       <div class="container" id="container">
         <paper-card>
@@ -113,21 +141,36 @@
               </div>
               <hr>
               <div class="layout vertical wrap" id="itemContainer">
-                  <template is="dom-repeat" items="[[key]]" as="key" id="list">
-                    <bite-radio-item class="item" key="[[key]]" storename="PRIMATARIA" location="Gramsbergen"></bite-radio-item>
-                  </template>
+                  <paper-radio-group class="radioItem">
+                    <template is="dom-repeat" items="[[key]]" as="key">
+                     <paper-radio-button name="[[key]]" class="radioBtn" id="[[key]]" on-tap="_selectStore"></paper-radio-button>
+                      <div class="item">
+                        <bite-radio-item on-radio-toggle="_toggled" key="[[key]]" toggledKey="{{toggledKey}}" id="radio"></bite-radio-item>
+                      </div>
+                      <!-- Usage of breaks because paper-radio-group does not allow <div> as child before <paper-radio-button> -->
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                    </template>
+                  </paper-radio-group>
               </div>
             </div>
             <div class="card-actions" id="timeContent">
               <div class="timeContainer">
-              <div class="timeTitle">Deze BITE sluit om</div>
-              <div class="timeDesc" on-click="_pickTime">Kies tijd</div>
+              <div class="timeTitle">Deze BITE sluit over</div>
+              <div class="timeDesc"> <!-- on-click="_pickTime" --> Kies aantal minuten</div>
               </div>
-            </div>
+              <div style="display:block; margin-bottom: 60px;">
+                <paper-slider id="time" value="30" max="60" editable style="width: 100%; float:left;"></paper-slider>
+                </div>
+              </div>
             <div class="card-actions" id="btnContainer">
-              <paper-button class="openBtn" style="margin-bottom: 20px;">LET'S GO!</paper-button>
+              <paper-button disabled$="{{disabledBtn}}" on-tap="_openBite" id="openBtn" class="openBtn" style="margin-bottom: 30px;">LET'S GO!</paper-button>
             </div>
-          </div>
+            </div>
         </paper-card>
       </div>
     </template>
@@ -145,19 +188,33 @@
                 type: Array,
                 value: function() { return []; },
                 notify: true
+              },
+              time: {
+                type: String,
+                value: "12:00",
+                observer: '_timeChanged'
+              },
+              selectedStore: {
+                type: String,
+                observer: '_observeFilled'
+              },
+              selectedTime: {
+                type: String,
+                value: 0,
+                observer: '_observeFilled'
+              },
+              timeEdit: {
+                type: Boolean,
+                value: false
+              },
+              disabledBtn: {
+                type: Boolean,
+                value: true
               }
             },
 
             _userChanged: function () {
               this._getStores();
-            },
-
-            _pickTime: function () {
-                this.$.dialog.open();
-            },
-
-            _dismissDialog: function () {
-
             },
 
             _getStores: function() {
@@ -171,7 +228,53 @@
                   });
                 }
               });
+            },
+
+          _timeChanged: function () {
+            console.log(this.time);
+          },
+
+          _selectStore: function (event) {
+            this.selectedStore = event.model.get('key');
+          },
+
+          _observeFilled: function () {
+            var openBtn = Polymer.dom(this.root).querySelector('#openBtn');
+
+            if(this.selectedStore !== undefined){
+              openBtn.setAttribute('style', 'background-color: #EC9630; margin-bottom: 30px;');
+              this.disabledBtn = false;
+            } else {
+              this.disabledBtn = true;
+              openBtn.setAttribute('style', 'background-color: #C7C7CD; margin-bottom: 30px;');
+
             }
+          },
+
+          _openBite: function () {
+            var time = Polymer.dom(this.root).querySelector('#time');
+            var radioGroup = Polymer.dom(this.root).querySelector('.radioItem');
+            var openBtn = Polymer.dom(this.root).querySelector('#openBtn');
+
+            this.selectedTime = time.value;
+
+            if(this.selectedTime !== null && this.selectedStore !== null){
+              console.log("#Open voor: " + this.selectedTime + " Minuten" + " #Store: " +this.selectedStore);
+              var that = this;
+              firebase.database().ref('orders').push().set({
+              opened_by: that.user.uid,
+              store: that.selectedStore,
+              duration: that.selectedTime,
+              status: 'new'
+              });
+
+              window.history.pushState({}, null, '/main');
+              window.dispatchEvent(new CustomEvent('location-changed'));
+            } else {
+              console.log("something went wrong");
+            }
+          }
+
         });
     </script>
 </dom-module>

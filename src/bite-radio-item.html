@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
 
 <dom-module id="bite-radio-item">
   <template>
@@ -12,14 +13,10 @@
         display: block;
         float: left;
       }
-      .radioButton{
-        display: block;
-        float: left;
-      }
       .information{
         display: block;
         float: left;
-        margin-left: 33px;
+        margin-right: 20px;
       }
       .infoTitle {
         display: block;
@@ -39,16 +36,10 @@
         float: left;
         font-size: 24px;
       }
-      paper-radio-button{
-        margin-top: 10px;
-        --paper-radio-button-checked-color: #EC9630;
-        --paper-radio-button-unchecked-color: #9B9B9B;
-      }
+
     </style>
-    <div class="itemContent">
-      <div class="radioButton">
-        <paper-radio-button noink></paper-radio-button>
-      </div>
+    <div class="itemContent" on-tap="_check">
+
       <div class="information">
         <div class="infoTitle">[[storeName]]</div>
         <div class="infoDesc">[[location]]</div>
@@ -78,7 +69,8 @@
           that.storeName = snapshot.val().name;
           that.location = snapshot.val().location;
         });
-      }
+      },
+
     });
   </script>
 </dom-module>
