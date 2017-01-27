@@ -181,6 +181,8 @@
     <bite-open user={{user}} page="{{page}}" route="{{subRoute}}" name="open"></bite-open>
     <!-- Profile  screen for insight in closed and opened Bites -->
     <bite-profile user={{user}} page="{{page}}" route="{{subRoute}}" name="profile"></bite-profile>
+    <!-- Profile  screen for insight in closed bite -->
+    <bite-closed user={{user}} page="{{page}}" route="{{subRoute}}" name="closed"></bite-closed>
   </iron-pages>
 </div>
 </app-header-layout>
@@ -412,6 +414,14 @@
           loginPage.setAttribute('style', 'display:none;');
           openToolbar.setAttribute('style', 'display:none');
           profileToolbar.setAttribute('style', 'display:visible');
+          break;
+        case 'closed':
+          mainToolbar.setAttribute('style', 'display:none;');
+          joinToolbar.setAttribute('style', 'display:none;');
+          loginPage.setAttribute('style', 'display:none;');
+          openToolbar.setAttribute('style', 'display:none');
+          profileToolbar.setAttribute('style', 'display:none');
+          break;
       }
     },
 

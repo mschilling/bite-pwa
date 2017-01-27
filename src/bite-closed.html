@@ -1,0 +1,28 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+
+<dom-module id="bite-closed">
+  <template>
+    <style>
+      :host{
+        display: block;
+      }
+
+    </style>
+    <app-route
+      route="[[route]]"
+      pattern="/:key"
+      data="{{routeData}}"
+    ></app-route>
+<h1 style="margin: 0 auto; text-align: center;"> Gesloten bite inzage (SOON)</h1>
+  </template>
+
+
+  <script>
+    Polymer({
+      is: 'bite-closed',
+      properties: {}
+
+    });
+  </script>
+</dom-module>

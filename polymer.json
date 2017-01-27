@@ -5,7 +5,8 @@
     "src/bite-main.html",
     "src/bite-join.html",
     "src/bite-open.html",
-    "src/bite-profile.html"
+    "src/bite-profile.html",
+    "src/bite-closed.html"
   ]
   ,
   "sourceGlobs": [

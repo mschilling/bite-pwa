@@ -325,12 +325,18 @@
             var closeDate = new Date(snapshot.val().close_time);
             var closeHours = closeDate.getHours();
             var closeMinutes = closeDate.getMinutes();
+            if(closeMinutes.toString().length == 1) {
+              var closeMinutes = "0"+closeDate.getMinutes();
+            }
             var closeTime = closeHours + ":" + closeMinutes;
             that.closeTime = closeTime;
 
             var openDate = new Date(snapshot.val().open_time);
             var openHours = openDate.getHours();
             var openMinutes = openDate.getMinutes();
+            if(openMinutes.toString().length == 1) {
+              var openMinutes = "0"+openDate.getMinutes();
+            }
             var openTime = openHours + ":" + openMinutes;
             that.startTime = openTime;
            }

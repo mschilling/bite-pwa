@@ -446,18 +446,24 @@
         var that = this;
         var closedRef = firebase.database().ref('orders/' +that.key);
         var closedText = Polymer.dom(that.root).querySelector('.closedText');
+        var closedTitle = Polymer.dom(that.root).querySelector('.title');
         closedRef.on('value', function(snapshot){
           if(snapshot.val().status == 'closed'){
             //closed change bite style
             var date = new Date(snapshot.val().close_time);
             var hours = date.getHours();
             var minutes = date.getMinutes();
+            if(minutes.toString().length == 1) {
+              var minutes = "0"+date.getMinutes();
+            }
             var time = hours + ":" + minutes;
             that.closedTime = time;
             closedText.setAttribute('style', 'display: visible;');
+            closedTitle.setAttribute('style', 'color: #9B9B9B;');
           }else {
             //nothing
             closedText.setAttribute('style', 'display: none;');
+            closedTitle.setAttribute('style', 'color: #EC9630;');
 
           }
         })
