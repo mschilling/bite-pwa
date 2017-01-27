@@ -1,5 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="bite-closed-item.html">
 
 <dom-module id="bite-profile">
   <template>
@@ -7,7 +10,36 @@
       :host{
         display: block;
       }
-
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        color: #EC9630;
+      }
+      .bitesHeader{
+        margin: 0 auto;
+        margin-top: 24px;
+        width: 90%;
+      }
+      .bitesTitle {
+        font-family: CompasseBoldItalic;
+        font-size: 20px;
+      }
+      hr {
+        display: block;
+        height: 1px;
+        border: 0;
+        border-top: 2px solid #EC9630;
+        margin: 1em 0;
+        padding: 0;
+      }
+      paper-card {
+        margin: 0 auto;
+        display: block;
+        width: 90%;
+        margin-top: 16px;
+        text-align: left;
+        margin-bottom: 16px;
+      }
     </style>
     <app-route
       route="[[route]]"
@@ -15,7 +47,25 @@
       data="{{routeData}}"
     ></app-route>
 
-  <h1 style="text-align: center;"> Hier komt een profiel pagina </h1>
+    <div class="container">
+      <div class="bitesHeader">
+        <div class="bitesTitle">GESLOTEN BITES (DUMMY DATA)</div>
+        <hr>
+      </div>
+    </div>
+
+    <paper-card>
+      <div class="card-content">
+        <!--<template is="dom-repeat"> -->
+            <bite-closed-item></bite-closed-item>
+            <bite-closed-item></bite-closed-item>
+            <bite-closed-item></bite-closed-item>
+            <bite-closed-item></bite-closed-item>
+            <bite-closed-item></bite-closed-item>
+            <bite-closed-item></bite-closed-item>
+        <!-- </template> -->
+      </div>
+    </paper-card>
   </template>
 
 
