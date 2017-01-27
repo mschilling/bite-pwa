@@ -74,11 +74,17 @@
         background-color: #EC9630;
         color: white;
       }
+
       #openToolbar {
         background-color: #EC9630;
         color: white;
       }
+
       #profileToolbar {
+        background-color: #EC9630;
+        color: white;
+      }
+      #closedToolbar {
         background-color: #EC9630;
         color: white;
       }
@@ -117,7 +123,8 @@
       #storeName {
         text-transform: uppercase;
       }
-      .mainTitle{
+
+      .mainTitle {
         text-transform: uppercase;
       }
 
@@ -125,364 +132,383 @@
 
     </style>
 
-<!-- app-location binds to the app's URL -->
-<app-location route="{{route}}"></app-location>
+    <!-- app-location binds to the app's URL -->
+    <app-location route="{{route}}"></app-location>
 
-<!-- this app-route manages the top-level routes -->
-<app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subRoute}}">
-</app-route>
+    <!-- this app-route manages the top-level routes -->
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subRoute}}">
+    </app-route>
 
-<app-header-layout>
-  <app-header fixed waterfall id="appHeader">
-    <app-toolbar id="mainToolbar" style="display: none">
-    <template is="dom-if" if="[[displayName]]">
-      <div class="mainTitle" main-title id="mainTitle" style="text-transform: uppercase;">HI, [[displayName]]!</div>
-    </template>
-<a class="signoutBtn" href="/profile">
-  <paper-icon-button id="personButton" icon="social:person"></paper-icon-button>
-</a>
-</app-toolbar>
-<app-toolbar id="joinToolbar" style="display: none;">
-<paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
-<div class="mainTitle" main-title id="storeName">[[storeName]]</div>
-<paper-icon-button icon="search"></paper-icon-button>
-</app-toolbar>
-    <app-toolbar id="openToolbar" style="display: none;">
-    <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
-    <div class="mainTitle" main-title id="openName">BITE OPENEN</div>
-  </app-toolbar>
-  <app-toolbar id="profileToolbar" style="display: none;">
-    <paper-icon-button icon="arrow-back" on-tap="_navBack" style="color:white"></paper-icon-button>
-    <div class="mainTitle" main-title id="profileName" style="color:white">[[displayName]]</div>
-    <a href="/login">
-    <paper-icon-button style="color:white" icon="exit-to-app" on-tap="_signOut"></paper-icon-button>
-    </a>
-  </app-toolbar>
-</app-header>
+    <app-header-layout>
+      <app-header fixed waterfall id="appHeader">
+        <app-toolbar id="mainToolbar" style="display: none">
+          <template is="dom-if" if="[[displayName]]">
+            <div class="mainTitle" main-title id="mainTitle" style="text-transform: uppercase;">HI, [[displayName]]!
+            </div>
+          </template>
+          <a class="signoutBtn" href="/profile">
+            <paper-icon-button id="personButton" icon="social:person"></paper-icon-button>
+          </a>
+        </app-toolbar>
+        <app-toolbar id="joinToolbar" style="display: none;">
+          <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
+          <div class="mainTitle" main-title id="storeName">[[storeName]]</div>
+          <paper-icon-button icon="search"></paper-icon-button>
+        </app-toolbar>
+        <app-toolbar id="openToolbar" style="display: none;">
+          <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
+          <div class="mainTitle" main-title id="openName">BITE OPENEN</div>
+        </app-toolbar>
+        <app-toolbar id="profileToolbar" style="display: none;">
+          <paper-icon-button icon="arrow-back" on-tap="_navBack" style="color:white"></paper-icon-button>
+          <div class="mainTitle" main-title id="profileName" style="color:white">[[displayName]]</div>
+          <a href="/login">
+            <paper-icon-button style="color:white" icon="exit-to-app" on-tap="_signOut"></paper-icon-button>
+          </a>
+        </app-toolbar>
+        <app-toolbar id="closedToolbar" style="display: none;">
+          <paper-icon-button icon="arrow-back" on-tap="_navBack" style="color:white"></paper-icon-button>
+          <div class="mainTitle" main-title id="closedName" style="color:white">PRIMATARIA</div>
+        </app-toolbar>
+      </app-header>
 
 
-<paper-dialog no-cancel-on-outside-click no-cancel-on-esc-key id="actions">
-  <h1>USERNAME PLS?</h1>
-  <paper-input focus id="username" name="username" value="[[user.displayName]]"></paper-input>
-  <paper-button dialog-dismiss on-tap="_changeUsername">OK</paper-button>
-</paper-dialog>
+      <paper-dialog no-cancel-on-outside-click no-cancel-on-esc-key id="actions">
+        <h1>USERNAME PLS?</h1>
+        <paper-input focus id="username" name="username" value="[[user.displayName]]"></paper-input>
+        <paper-button dialog-dismiss on-tap="_changeUsername">OK</paper-button>
+      </paper-dialog>
 
-<div class="content">
-  <paper-spinner class="orange" active></paper-spinner>
-  <!-- Login screen -->
-  <bite-login id="login" on-sign-in="_signIn" signed-in="[[signedIn]]" page="login"></bite-login>
+      <div class="content">
+        <paper-spinner class="orange" active></paper-spinner>
+        <!-- Login screen -->
+        <bite-login id="login" on-sign-in="_signIn" signed-in="[[signedIn]]" page="login"></bite-login>
 
-  <iron-pages id="pages" selected="[[routeData.page]]" attr-for-selected="name" role="main" selected-attribute="visible">
-    <!-- Main screen -->
-    <bite-main on-click-order="_navJoin" id="biteMain" route="{{subRoute}}" name="main" user="{{user}}"></bite-main>
-    <!-- Screen when joining a currently existing bite -->
-    <bite-join user={{user}} on-store-name="_changeStoreHeader" page="{{page}}" route="{{subRoute}}" name="join"></bite-join>
-    <!-- Screen for opening a new Bite -->
-    <bite-open user={{user}} page="{{page}}" route="{{subRoute}}" name="open"></bite-open>
-    <!-- Profile  screen for insight in closed and opened Bites -->
-    <bite-profile user={{user}} page="{{page}}" route="{{subRoute}}" name="profile"></bite-profile>
-    <!-- Profile  screen for insight in closed bite -->
-    <bite-closed user={{user}} page="{{page}}" route="{{subRoute}}" name="closed"></bite-closed>
-  </iron-pages>
-</div>
-</app-header-layout>
+        <iron-pages id="pages" selected="[[routeData.page]]" attr-for-selected="name" role="main"
+                    selected-attribute="visible">
+          <!-- Main screen -->
+          <bite-main on-click-order="_navJoin" id="biteMain" route="{{subRoute}}" name="main"
+                     user="{{user}}"></bite-main>
+          <!-- Screen when joining a currently existing bite -->
+          <bite-join user={{user}} on-store-name="_changeStoreHeader" page="{{page}}" route="{{subRoute}}"
+                     name="join"></bite-join>
+          <!-- Screen for opening a new Bite -->
+          <bite-open user={{user}} page="{{page}}" route="{{subRoute}}" name="open"></bite-open>
+          <!-- Profile  screen for insight in closed and opened Bites -->
+          <bite-profile user={{user}} page="{{page}}" route="{{subRoute}}" name="profile"></bite-profile>
+          <!-- Profile  screen for insight in closed bite -->
+          <bite-closed user={{user}} page="{{page}}" route="{{subRoute}}" name="closed"></bite-closed>
+        </iron-pages>
+      </div>
+    </app-header-layout>
 
-</template>
+  </template>
 
-<script>
+  <script>
 
-  window.performance && performance.mark && performance.mark('bite-pwa - before register');
+    window.performance && performance.mark && performance.mark('bite-pwa - before register');
 
-  const messaging = firebase.messaging();
+    const messaging = firebase.messaging();
 
-  messaging.onTokenRefresh(function () {
-    messaging.getToken().then(function (refreshedToken) {
-      console.log('Token refreshed');
-    }).catch(function (err) {
-      console.log('unable to retrieve refreshed token', err);
-    })
-  });
+    messaging.onTokenRefresh(function () {
+      messaging.getToken().then(function (refreshedToken) {
+        console.log('Token refreshed');
+      }).catch(function (err) {
+        console.log('unable to retrieve refreshed token', err);
+      })
+    });
 
-  messaging.onMessage(function (payload) {
-    console.log("Message received. ", payload);
-    // ...
-  });
+    messaging.onMessage(function (payload) {
+      console.log("Message received. ", payload);
+      // ...
+    });
 
-  Polymer({
+    Polymer({
 
-    is: 'bite-pwa',
+      is: 'bite-pwa',
 
-    properties: {
-      selected: {
-        type: Number,
-        value: 0
-      },
-      page: {
-        type: String,
-        reflectToAttribute: true,
-        observer: '_pageChanged',
-        notify: true,
-        readOnly: false
-      },
-      user: {
-        type: Object
-      },
-      displayName: {
-        type: String,
-        notify: true
-      },
-      storeName: {
-        type: String
-      },
-      locked: {
-        type: Boolean
-      }
-
-    },
-
-    observers: [
-      '_routePageChanged(routeData.page)'
-    ],
-
-    _routePageChanged: function (page) {
-      this.page = page || 'login';
-      //Scroll to the top on every route change
-      //Behavior silent disables the header scroll effects during the scroll.
-      Polymer.AppLayout.scroll({ top: 0, behavior: 'silent' });
-
-    },
-
-    _pageChanged: function (page, oldPage) {
-      //load page import on demand
-      if (page != null) {
-        //main route is eagerly loaded
-        if (page == 'login') {
-          this._pageLoaded(Boolean(oldPage));
-          //other routes are lazy loaded
-        } else {
-          this.importHref(
-            this.resolveUrl('bite-' + page + '.html'),
-            function () {
-              this._pageLoaded(Boolean(oldPage));
-            }, null, true);
+      properties: {
+        selected: {
+          type: Number,
+          value: 0
+        },
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged',
+          notify: true,
+          readOnly: false
+        },
+        user: {
+          type: Object
+        },
+        displayName: {
+          type: String,
+          notify: true
+        },
+        storeName: {
+          type: String
+        },
+        locked: {
+          type: Boolean
         }
-        this._dynHeader();
-      }
-    },
 
-    _pageLoaded: function () {
-      this._ensureLazyLoaded();
+      },
 
-    },
+      observers: [
+        '_routePageChanged(routeData.page)'
+      ],
 
-    _ensureLazyLoaded: function () {
-      //load lazy resources after render and set 'loadComplete' when done.
-      if (!this.loadComplete) {
-        Polymer.RenderStatus.afterNextRender(this, function () {
-          this.loadComplete = true;
-        });
-      }
-    },
-    _navBack: function () {
-      window.history.back();
-    },
-    created: function () {
-      window.performance && performance.mark && performance.mark('bite-pwa.created');
-      //Upgrade element, remove unresolved
-      this.removeAttribute('unresolved');
-    },
-    ready: function () {
-      Polymer.RenderStatus.afterNextRender(this, function () {
-        this.listen(window, 'online', '_notifyNetworkStatus');
-        this.listen(window, 'offline', '_notifyNetworkStatus');
+      _routePageChanged: function (page) {
+        this.page = page || 'login';
+        //Scroll to the top on every route change
+        //Behavior silent disables the header scroll effects during the scroll.
+        Polymer.AppLayout.scroll({top: 0, behavior: 'silent'});
 
-        var spinner = Polymer.dom(this.root).querySelector('paper-spinner');
-        spinner.removeAttribute('active');
-        var that = this;
+      },
 
-        firebase.auth().onAuthStateChanged(function (user) {
-          if (user) {
-            var fireUser = firebase.auth().currentUser;
-            that.user = fireUser;
-
-            that._refreshUserNotificationSettings(that.user.uid);
-
-            if (that.page == 'main') {
-              that._doesUserExist(that.user.uid);
-            }
-
-            if (that.user !== null) {
-              var userRef = firebase.database().ref('users/' + that.user.uid);
-              userRef.on('value', function (snapshot) {
-                that.displayName = snapshot.val().display_name;
-              });
-            }
-            //user signed in
-            //if the page is not equal to any of the below, route back to the main screen.
-            if (document.location.href.indexOf('main') === -1 && document.location.href.indexOf('join') === -1 && document.location.href.indexOf('open') === -1 && document.location.href.indexOf('profile') === -1) {
-              window.location.href = 'main';
-            }
+      _pageChanged: function (page, oldPage) {
+        //load page import on demand
+        if (page != null) {
+          //main route is eagerly loaded
+          if (page == 'login') {
+            this._pageLoaded(Boolean(oldPage));
+            //other routes are lazy loaded
           } else {
-            //no user is signed in
-            //if no user is signed it, route back to the loging screen.
-            if (document.location.href.indexOf('login') === -1) {
-              window.history.pushState({}, null, '/login');
-              window.dispatchEvent(new CustomEvent('location-changed'));
-              console.log("logged out");
-            }
+            this.importHref(
+              this.resolveUrl('bite-' + page + '.html'),
+              function () {
+                this._pageLoaded(Boolean(oldPage));
+              }, null, true);
           }
+          this._dynHeader();
+        }
+      },
+
+      _pageLoaded: function () {
+        this._ensureLazyLoaded();
+
+      },
+
+      _ensureLazyLoaded: function () {
+        //load lazy resources after render and set 'loadComplete' when done.
+        if (!this.loadComplete) {
+          Polymer.RenderStatus.afterNextRender(this, function () {
+            this.loadComplete = true;
+          });
+        }
+      },
+      _navBack: function () {
+        window.history.back();
+      },
+      created: function () {
+        window.performance && performance.mark && performance.mark('bite-pwa.created');
+        //Upgrade element, remove unresolved
+        this.removeAttribute('unresolved');
+      },
+      ready: function () {
+        Polymer.RenderStatus.afterNextRender(this, function () {
+          this.listen(window, 'online', '_notifyNetworkStatus');
+          this.listen(window, 'offline', '_notifyNetworkStatus');
+
+          var spinner = Polymer.dom(this.root).querySelector('paper-spinner');
+          spinner.removeAttribute('active');
+          var that = this;
+
+          firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+              var fireUser = firebase.auth().currentUser;
+              that.user = fireUser;
+
+              that._refreshUserNotificationSettings(that.user.uid);
+
+              if (that.page == 'main') {
+                that._doesUserExist(that.user.uid);
+              }
+
+              if (that.user !== null) {
+                var userRef = firebase.database().ref('users/' + that.user.uid);
+                userRef.on('value', function (snapshot) {
+                  that.displayName = snapshot.val().display_name;
+                });
+              }
+              //user signed in
+              //if the page is not equal to any of the below, route back to the main screen.
+              if (document.location.href.indexOf('main') === -1 && document.location.href.indexOf('join') === -1 && document.location.href.indexOf('open') === -1 && document.location.href.indexOf('profile') === -1 && document.location.href.indexOf('closed') === -1) {
+                window.location.href = 'main';
+              }
+            } else {
+              //no user is signed in
+              //if no user is signed it, route back to the loging screen.
+              if (document.location.href.indexOf('login') === -1) {
+                window.history.pushState({}, null, '/login');
+                window.dispatchEvent(new CustomEvent('location-changed'));
+                console.log("logged out");
+              }
+            }
+          });
+
         });
 
-      });
+      },
 
-    },
+      _signIn: function () {
+        var provider = new firebase.auth.GoogleAuthProvider();
 
-    _signIn: function () {
-      var provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({
+          'login_hint': 'user@emove4mobile.com'
+        });
 
-      provider.setCustomParameters({
-        'login_hint': 'user@emove4mobile.com'
-      });
+        firebase.auth().signInWithRedirect(provider);
+        firebase.auth().getRedirectResult().then(function (result) {
+          if (result.credential) {
+            //Get Google Access Token
+            var token = result.credential.accessToken;
+          }
+          //signed in user info
+          this.user = result.user;
+        }).catch(function (error) {
+          //handle errors here
+          var errorCode = error.code;
+          var errorMessage = error.message;
 
-      firebase.auth().signInWithRedirect(provider);
-      firebase.auth().getRedirectResult().then(function (result) {
-        if (result.credential) {
-          //Get Google Access Token
-          var token = result.credential.accessToken;
+
+          console.log("Error code: " + errorCode + " Error message: " + errorMessage);
+        });
+      },
+
+      _signOut: function () {
+        firebase.auth().signOut().then(function () {
+          //sign out succesful
+        }, function (error) {
+          //something went wrong
+          console.log("Something went wrong while signing out..")
+        });
+      },
+
+      _dynHeader: function () {
+        //Get the headers
+        var mainToolbar = Polymer.dom(this.root).querySelector('#mainToolbar');
+        var joinToolbar = Polymer.dom(this.root).querySelector('#joinToolbar');
+        var loginPage = Polymer.dom(this.root).querySelector('#login');
+        var openToolbar = Polymer.dom(this.root).querySelector('#openToolbar');
+        var profileToolbar = Polymer.dom(this.root).querySelector('#profileToolbar');
+        var closedToolbar = Polymer.dom(this.root).querySelector('#closedToolbar');
+        switch (this.page) {
+          case 'login':
+            mainToolbar.setAttribute('style', 'display:none');
+            joinToolbar.setAttribute('style', 'display:none');
+            loginPage.setAttribute('style', 'display:visible;');
+            openToolbar.setAttribute('style', 'display:none');
+            profileToolbar.setAttribute('style', 'display:none');
+            closedToolbar.setAttribute('style', 'display:none');
+            break;
+          case 'main':
+            mainToolbar.setAttribute('style', 'display:visible;');
+            joinToolbar.setAttribute('style', 'display:none;');
+            loginPage.setAttribute('style', 'display:none;');
+            openToolbar.setAttribute('style', 'display:none');
+            profileToolbar.setAttribute('style', 'display:none');
+            closedToolbar.setAttribute('style', 'display:none');
+            break;
+          case 'join':
+            mainToolbar.setAttribute('style', 'display:none;');
+            joinToolbar.setAttribute('style', 'display:visible;');
+            loginPage.setAttribute('style', 'display:none;');
+            openToolbar.setAttribute('style', 'display:none');
+            profileToolbar.setAttribute('style', 'display:none');
+            closedToolbar.setAttribute('style', 'display:none');
+            break;
+          case 'open':
+            mainToolbar.setAttribute('style', 'display:none;');
+            joinToolbar.setAttribute('style', 'display:none;');
+            loginPage.setAttribute('style', 'display:none;');
+            openToolbar.setAttribute('style', 'display:visible');
+            profileToolbar.setAttribute('style', 'display:none');
+            closedToolbar.setAttribute('style', 'display:none');
+            break;
+          case 'profile':
+            mainToolbar.setAttribute('style', 'display:none;');
+            joinToolbar.setAttribute('style', 'display:none;');
+            loginPage.setAttribute('style', 'display:none;');
+            openToolbar.setAttribute('style', 'display:none');
+            profileToolbar.setAttribute('style', 'display:visible');
+            closedToolbar.setAttribute('style', 'display:none');
+            break;
+          case 'closed':
+            mainToolbar.setAttribute('style', 'display:none;');
+            joinToolbar.setAttribute('style', 'display:none;');
+            loginPage.setAttribute('style', 'display:none;');
+            openToolbar.setAttribute('style', 'display:none');
+            profileToolbar.setAttribute('style', 'display:none');
+            closedToolbar.setAttribute('style', 'display:visible');
+            break;
         }
-        //signed in user info
-        this.user = result.user;
-      }).catch(function (error) {
-        //handle errors here
-        var errorCode = error.code;
-        var errorMessage = error.message;
+      },
 
-
-        console.log("Error code: " + errorCode + " Error message: " + errorMessage);
-      });
-    },
-
-    _signOut: function () {
-      firebase.auth().signOut().then(function () {
-        //sign out succesful
-      }, function (error) {
-        //something went wrong
-        console.log("Something went wrong while signing out..")
-      });
-    },
-
-    _dynHeader: function () {
-      //Get the headers
-      var mainToolbar = Polymer.dom(this.root).querySelector('#mainToolbar');
-      var joinToolbar = Polymer.dom(this.root).querySelector('#joinToolbar');
-      var loginPage = Polymer.dom(this.root).querySelector('#login');
-      var openToolbar = Polymer.dom(this.root).querySelector('#openToolbar');
-      var profileToolbar = Polymer.dom(this.root).querySelector('#profileToolbar');
-      var appHeader = Polymer.dom(this.root).querySelector('#appToolbar');
-      switch (this.page) {
-        case 'login':
-          mainToolbar.setAttribute('style', 'display:none');
-          joinToolbar.setAttribute('style', 'display:none');
-          loginPage.setAttribute('style', 'display:visible;');
-          openToolbar.setAttribute('style', 'display:none');
-          profileToolbar.setAttribute('style', 'display:none');
-          break;
-        case 'main':
-          mainToolbar.setAttribute('style', 'display:visible;');
-          joinToolbar.setAttribute('style', 'display:none;');
-          loginPage.setAttribute('style', 'display:none;');
-          openToolbar.setAttribute('style', 'display:none');
-          profileToolbar.setAttribute('style', 'display:none');
-          break;
-        case 'join':
-          mainToolbar.setAttribute('style', 'display:none;');
-          joinToolbar.setAttribute('style', 'display:visible;');
-          loginPage.setAttribute('style', 'display:none;');
-          openToolbar.setAttribute('style', 'display:none');
-          profileToolbar.setAttribute('style', 'display:none');
-          break;
-        case 'open':
-          mainToolbar.setAttribute('style', 'display:none;');
-          joinToolbar.setAttribute('style', 'display:none;');
-          loginPage.setAttribute('style', 'display:none;');
-          openToolbar.setAttribute('style', 'display:visible');
-          profileToolbar.setAttribute('style', 'display:none');
-          break;
-        case 'profile':
-          mainToolbar.setAttribute('style', 'display:none;');
-          joinToolbar.setAttribute('style', 'display:none;');
-          loginPage.setAttribute('style', 'display:none;');
-          openToolbar.setAttribute('style', 'display:none');
-          profileToolbar.setAttribute('style', 'display:visible');
-          break;
-        case 'closed':
-          mainToolbar.setAttribute('style', 'display:none;');
-          joinToolbar.setAttribute('style', 'display:none;');
-          loginPage.setAttribute('style', 'display:none;');
-          openToolbar.setAttribute('style', 'display:none');
-          profileToolbar.setAttribute('style', 'display:none');
-          break;
-      }
-    },
-
-    _doesUserExist: function (uid) {
-      var that = this;
-      var ref = firebase.database().ref('users/' + uid);
-      ref.once('value', function (snapshot) {
-        if (snapshot.exists())
+      _doesUserExist: function (uid) {
+        var that = this;
+        var ref = firebase.database().ref('users/' + uid);
+        ref.once('value', function (snapshot) {
+          if (snapshot.exists())
           //exists do nothing
-          ;
-        else
+            ;
+          else
           //does not exist
-          that.$.actions.open();
-      });
-    },
+            that.$.actions.open();
+        });
+      },
 
-    _changeUsername: function () {
-      var username = this.$.username.value;
-      firebase.database().ref('users/' + this.user.uid + '/').set({
-        admin: false,
-        display_name: username,
-        email: this.user.email,
-        name: this.user.displayName,
-        photo_url: this.user.photoURL
-      });
-    },
+      _changeUsername: function () {
+        var username = this.$.username.value;
+        firebase.database().ref('users/' + this.user.uid + '/').set({
+          admin: false,
+          display_name: username,
+          email: this.user.email,
+          name: this.user.displayName,
+          photo_url: this.user.photoURL
+        });
+      },
 
-    _refreshUserNotificationSettings: function () {
-      var that = this;
-      // Use is not really logged on?
-      if (!this.user.uid) return;
+      _refreshUserNotificationSettings: function () {
+        var that = this;
+        // Use is not really logged on?
+        if (!this.user.uid) return;
 
-      messaging.requestPermission()
-        .then(function () {
-          console.log('Notification Permission granted.');
-          messaging.getToken()
-            .then(function (currentToken) {
-              if (currentToken) {
-                console.log("fcm token :\r\n" + currentToken);
-                var subscribeRef = firebase.database().ref().child('subscribe_queue');
-                subscribeRef.push({ token: currentToken, user: that.user.uid, subscribe: true, timestamp: (new Date()).getTime() });
-              } else {
-                //Show permission request
-                console.log('No Instance ID token available. Request permission to generate one');
-                //Show permission UI.
-              }
-            }).catch(function (err) {
+        messaging.requestPermission()
+          .then(function () {
+            console.log('Notification Permission granted.');
+            messaging.getToken()
+              .then(function (currentToken) {
+                if (currentToken) {
+                  console.log("fcm token :\r\n" + currentToken);
+                  var subscribeRef = firebase.database().ref().child('subscribe_queue');
+                  subscribeRef.push({
+                    token: currentToken,
+                    user: that.user.uid,
+                    subscribe: true,
+                    timestamp: (new Date()).getTime()
+                  });
+                } else {
+                  //Show permission request
+                  console.log('No Instance ID token available. Request permission to generate one');
+                  //Show permission UI.
+                }
+              }).catch(function (err) {
               console.log('An error occurred while retrieving token.', err);
             })
-        })
-        .catch(function (err) { console.log('Unable to get permission to notify.', err) });
+          })
+          .catch(function (err) {
+            console.log('Unable to get permission to notify.', err)
+          });
 
-    },
+      },
 
-    _changeStoreHeader: function (e) {
-      this.storeName = e.detail.storeName;
-    }
-  });
-
-
+      _changeStoreHeader: function (e) {
+        this.storeName = e.detail.storeName;
+      }
+    });
 
 
-</script>
+  </script>
 </dom-module>

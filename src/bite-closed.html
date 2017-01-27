@@ -1,5 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="bite-closed-item.html">
 
 <dom-module id="bite-closed">
   <template>
@@ -7,14 +9,129 @@
       :host{
         display: block;
       }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        color: #EC9630;
+      }
+      .chips {
+        float: left;
+      }
+      .content {
+        margin-top: 5vh;
+        margin: 0 auto;
+        width: 95%;
+        height: 90%;
+        display: block;
+        overflow-y: auto;
+        overflow-x: hidden;
 
+      }
+      .chip {
+        font-family: Compasse;
+        display: inline-block;
+        text-align: center;
+        height: 32px;
+        width: 92px;
+        border-radius: 20px;
+        background-color: #FFFFFF;
+        border-style: solid;
+        border-width: 1px;
+        color: #E98B2B;
+        margin-top: 14px;
+        margin-left: 8px;
+        margin-right: 8px;
+      }
+      .items {
+        margin: 0 auto;
+        margin-top: 80px;
+      }
+
+      .wStickers{
+        display: block;
+        float: left;
+        width: 100%;
+      }
+      .wStickers, .wTotal {
+        margin-bottom: 16px;
+      }
+      .wTotal {
+        display: block;
+        height: 5vh;
+      }
+
+      .hItems, .hAmount{
+        font-family: Compasse;
+        font-size: 16px;
+        font-weight: 800;
+        color: black;
+      }
+      .hItems {
+        float: left;
+        margin-top: 20px;
+      }
+
+      .hAmount {
+        float: right;
+        margin-top: 20px;
+      }
+
+      .emoji {
+        float: right;
+        font-size: 24px;
+      }
+
+      .stickers {
+        float: left;
+        font-family: Compasse;
+        font-weight: 800;
+        font-size: 16px;
+        margin-top: 16px;
+      }
+      hr {
+        display: block;
+        height: 1px;
+        border: 0;
+        border-top: 1px solid #e0e0e0;
+        margin: 1em 0;
+        padding: 0;
+      }
     </style>
-    <app-route
-      route="[[route]]"
-      pattern="/:key"
-      data="{{routeData}}"
-    ></app-route>
-<h1 style="margin: 0 auto; text-align: center;"> Gesloten bite inzage (SOON)</h1>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="chips">
+          <div class="chip">
+            <p>JIJ</p>
+          </div>
+          <div class="chip">
+            <p>TOTAAL</p>
+          </div>
+        </div>
+
+        <div class="items" id="itemList">
+          <bite-closed-item uid="[[uid]]" key="[[key]]" product="[[item]]" storeid="[[storeid]]"></bite-closed-item>
+          <bite-closed-item uid="[[uid]]" key="[[key]]" product="[[item]]" storeid="[[storeid]]"></bite-closed-item>
+          <bite-closed-item uid="[[uid]]" key="[[key]]" product="[[item]]" storeid="[[storeid]]"></bite-closed-item>
+          <bite-closed-item uid="[[uid]]" key="[[key]]" product="[[item]]" storeid="[[storeid]]"></bite-closed-item>
+
+        </div>
+
+        <hr>
+        <div class="wTotal">
+          <div class="hItems">10 ITEM(S)</div>
+          <div class="hAmount">€200</div>
+        </div>
+        <hr>
+        <div class="wStickers">
+          <div class="stickers">STICKERS</div>
+          <div class="emoji">🍔🍟🍕</div>
+        </div>
+
+      </div>
+    </div>
+
   </template>
 
 
