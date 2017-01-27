@@ -78,6 +78,10 @@
         background-color: #EC9630;
         color: white;
       }
+      #profileToolbar {
+        background-color: #EC9630;
+        color: white;
+      }
       paper-spinner.orange {
         position: fixed;
         left: 50%;
@@ -113,6 +117,9 @@
       #storeName {
         text-transform: uppercase;
       }
+      .mainTitle{
+        text-transform: uppercase;
+      }
 
       /* Proper CSS */
 
@@ -126,24 +133,31 @@
 </app-route>
 
 <app-header-layout>
-  <app-header fixed waterfall>
+  <app-header fixed waterfall id="appHeader">
     <app-toolbar id="mainToolbar" style="display: none">
     <template is="dom-if" if="[[displayName]]">
-      <div main-title id="mainTitle" style="text-transform: uppercase;">HI, [[displayName]]!</div>
+      <div class="mainTitle" main-title id="mainTitle" style="text-transform: uppercase;">HI, [[displayName]]!</div>
     </template>
-<a class="signoutBtn" href="/login">
-  <paper-icon-button id="personButton" icon="social:person" on-tap="_signOut"></paper-icon-button>
+<a class="signoutBtn" href="/profile">
+  <paper-icon-button id="personButton" icon="social:person"></paper-icon-button>
 </a>
 </app-toolbar>
 <app-toolbar id="joinToolbar" style="display: none;">
 <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
-<div main-title id="storeName">[[storeName]]</div>
+<div class="mainTitle" main-title id="storeName">[[storeName]]</div>
 <paper-icon-button icon="search"></paper-icon-button>
 </app-toolbar>
     <app-toolbar id="openToolbar" style="display: none;">
-      <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
-      <div main-title id="openName">BITE OPENEN</div>
-    </app-toolbar>
+    <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
+    <div class="mainTitle" main-title id="openName">BITE OPENEN</div>
+  </app-toolbar>
+  <app-toolbar id="profileToolbar" style="display: none;">
+    <paper-icon-button icon="arrow-back" on-tap="_navBack" style="color:white"></paper-icon-button>
+    <div class="mainTitle" main-title id="profileName" style="color:white">[[displayName]]</div>
+    <a href="/login">
+    <paper-icon-button style="color:white" icon="exit-to-app" on-tap="_signOut"></paper-icon-button>
+    </a>
+  </app-toolbar>
 </app-header>
 
 
@@ -165,6 +179,8 @@
     <bite-join user={{user}} on-store-name="_changeStoreHeader" page="{{page}}" route="{{subRoute}}" name="join"></bite-join>
     <!-- Screen for opening a new Bite -->
     <bite-open user={{user}} page="{{page}}" route="{{subRoute}}" name="open"></bite-open>
+    <!-- Profile  screen for insight in closed and opened Bites -->
+    <bite-profile user={{user}} page="{{page}}" route="{{subRoute}}" name="profile"></bite-profile>
   </iron-pages>
 </div>
 </app-header-layout>
@@ -287,7 +303,7 @@
             var fireUser = firebase.auth().currentUser;
             that.user = fireUser;
 
-            that._refreshUserNotificationSettings(that.user.uid)
+            that._refreshUserNotificationSettings(that.user.uid);
 
             if (that.page == 'main') {
               that._doesUserExist(that.user.uid);
@@ -300,11 +316,13 @@
               });
             }
             //user signed in
-            if (document.location.href.indexOf('main') === -1 && document.location.href.indexOf('join') === -1 && document.location.href.indexOf('open') === -1) {
+            //if the page is not equal to any of the below, route back to the main screen.
+            if (document.location.href.indexOf('main') === -1 && document.location.href.indexOf('join') === -1 && document.location.href.indexOf('open') === -1 && document.location.href.indexOf('profile') === -1) {
               window.location.href = 'main';
             }
           } else {
             //no user is signed in
+            //if no user is signed it, route back to the loging screen.
             if (document.location.href.indexOf('login') === -1) {
               window.history.pushState({}, null, '/login');
               window.dispatchEvent(new CustomEvent('location-changed'));
@@ -357,30 +375,43 @@
       var joinToolbar = Polymer.dom(this.root).querySelector('#joinToolbar');
       var loginPage = Polymer.dom(this.root).querySelector('#login');
       var openToolbar = Polymer.dom(this.root).querySelector('#openToolbar');
+      var profileToolbar = Polymer.dom(this.root).querySelector('#profileToolbar');
+      var appHeader = Polymer.dom(this.root).querySelector('#appToolbar');
       switch (this.page) {
         case 'login':
           mainToolbar.setAttribute('style', 'display:none');
           joinToolbar.setAttribute('style', 'display:none');
           loginPage.setAttribute('style', 'display:visible;');
           openToolbar.setAttribute('style', 'display:none');
+          profileToolbar.setAttribute('style', 'display:none');
           break;
         case 'main':
           mainToolbar.setAttribute('style', 'display:visible;');
           joinToolbar.setAttribute('style', 'display:none;');
           loginPage.setAttribute('style', 'display:none;');
           openToolbar.setAttribute('style', 'display:none');
+          profileToolbar.setAttribute('style', 'display:none');
           break;
         case 'join':
           mainToolbar.setAttribute('style', 'display:none;');
           joinToolbar.setAttribute('style', 'display:visible;');
           loginPage.setAttribute('style', 'display:none;');
           openToolbar.setAttribute('style', 'display:none');
+          profileToolbar.setAttribute('style', 'display:none');
           break;
         case 'open':
           mainToolbar.setAttribute('style', 'display:none;');
           joinToolbar.setAttribute('style', 'display:none;');
           loginPage.setAttribute('style', 'display:none;');
           openToolbar.setAttribute('style', 'display:visible');
+          profileToolbar.setAttribute('style', 'display:none');
+          break;
+        case 'profile':
+          mainToolbar.setAttribute('style', 'display:none;');
+          joinToolbar.setAttribute('style', 'display:none;');
+          loginPage.setAttribute('style', 'display:none;');
+          openToolbar.setAttribute('style', 'display:none');
+          profileToolbar.setAttribute('style', 'display:visible');
       }
     },
 
