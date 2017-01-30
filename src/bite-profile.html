@@ -49,21 +49,16 @@
 
     <div class="container">
       <div class="bitesHeader">
-        <div class="bitesTitle">GESLOTEN BITES (DUMMY DATA)</div>
+        <div class="bitesTitle">GESLOTEN BITES</div>
         <hr>
       </div>
     </div>
 
     <paper-card>
       <div class="card-content">
-        <!--<template is="dom-repeat"> -->
-            <bite-closed-view-item></bite-closed-view-item>
-            <bite-closed-view-item></bite-closed-view-item>
-            <bite-closed-view-item></bite-closed-view-item>
-            <bite-closed-view-item></bite-closed-view-item>
-            <bite-closed-view-item></bite-closed-view-item>
-
-        <!-- </template> -->
+        <template is="dom-repeat" items="{{keys}}" as="item">
+            <bite-closed-view-item key="[[item]]" uid="[[user.uid]]"></bite-closed-view-item>
+         </template>
       </div>
     </paper-card>
   </template>
@@ -72,7 +67,32 @@
   <script>
     Polymer({
       is: 'bite-profile',
-      properties: {}
+      properties: {
+        user: {
+          type: Object,
+          observer: '_userChanged'
+        },
+        keys: {
+          type: Array
+        }
+
+      },
+        _userChanged: function () {
+          console.log("user is " + this.user.uid);
+          this._getCompleteOrders();
+        },
+
+        _getCompleteOrders: function () {
+          var that = this;
+          firebase.database().ref('archive/' + 'order_items_per_user/' + that.user.uid).on('value', function(snapshot){
+            that.keys = [];
+            if(snapshot.val() !== null){
+            snapshot.forEach(function(childSnapshot){
+              that.push('keys', childSnapshot.key);
+            });
+            }
+          });
+        }
 
     });
   </script>

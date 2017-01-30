@@ -5,52 +5,59 @@
 <dom-module id="bite-closed-view-item">
   <template>
     <style>
-      :host{
+      :host {
         display: block;
       }
+
       .itemContainer {
         position: relative;
       }
+
       .item {
         display: block;
         padding: 10px;
         height: 62px;
       }
-      .title{
+
+      .title {
         font-family: CompasseBoldItalic;
         font-size: 16px;
         color: #EC9630;
 
       }
+
       .price, .date {
         margin-top: 5px;
         float: left;
         font-family: Compasse;
         color: #9B9B9B;
       }
+
       .date {
         margin-left: 30px;
       }
+
       .emoji {
         float: right;
       }
+
       a {
-      text-decoration:none;
+        text-decoration: none;
       }
     </style>
 
     <a href="/closed">
-    <div class="itemContainer">
-      <div class="item">
-        <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
-          <div class="title">PRIMATARIA</div>
+      <div class="itemContainer">
+        <div class="item">
+          <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
+          <div class="title" style="text-transform: uppercase;">[[storeName]]</div>
           <div class="emoji">🍔🍔🍔</div>
           <div class="desc">
-          <div class="price">$13,37</div>
-          <div class="date">vr 9 sept.</div>
+            <div class="price">€[[total]]</div>
+            <div class="date">[[date]]</div>
           </div>
-      </div>
-      </a>
+        </div>
+    </a>
     </div>
 
 
@@ -60,7 +67,97 @@
   <script>
     Polymer({
       is: 'bite-closed-view-item',
-      properties: {}
+      properties: {
+        key: {
+          type: String
+        },
+        uid: {
+          type: String,
+          observer: '_uidChanged'
+        },
+
+        storeName: String,
+        date: String,
+        total: Number
+      },
+
+
+      _uidChanged: function () {
+        console.log(this.key);
+        console.log(this.uid);
+        this._getData();
+      },
+
+      _getData: function () {
+        if (this.uid !== undefined) {
+          this._getOrder();
+          this._getProducts();
+        }
+      },
+
+      _getOrder: function () {
+        var that = this;
+        firebase.database().ref('archive/order_items_per_user/' + that.uid + '/' + that.key).on('value', function (snapshot) {
+          console.log(snapshot.val());
+          if(snapshot.val() !== null){
+          that.storeName = snapshot.val().store;
+          var closeDate = new Date(snapshot.val().close_time);
+          var day = closeDate.getDate();
+          var month = closeDate.getMonth();
+          var finalMonth;
+          switch (month){
+            case 0:
+              finalMonth = "Jan.";
+              break;
+            case 1:
+              finalMonth = "Feb.";
+              break;
+            case 2:
+              finalMonth = "Mrt.";
+              break;
+            case 3:
+              finalMonth = "Apr.";
+              break;
+            case 4:
+              finalMonth = "Mei";
+              break;
+            case 5:
+              finalMonth = "Jun.";
+              break;
+            case 6:
+              finalMonth = "Jul.";
+              break;
+            case 7:
+              finalMonth = "Aug.";
+              break;
+            case 8:
+              finalMonth = "Sept.";
+              break;
+            case 9:
+              finalMonth = "Okt.";
+              break;
+            case 10:
+              finalMonth = "Nov.";
+              break;
+            case 11:
+              finalMonth = "Dec.";
+              break;
+          }
+          that.date = day + ' ' + finalMonth;
+          }
+        });
+      },
+
+      _getProducts: function () {
+        var that = this;
+        firebase.database().ref('archive/order_items_per_user/' + that.uid + '/' + that.key + '/products').on('value', function(snapshot){
+          that.total = 0;
+          snapshot.forEach(function(childSnapshot){
+            that.total += childSnapshot.val().amount * childSnapshot.val().price;
+          });
+        });
+        that.total = (that.total/100).toFixed(2);
+      }
 
     });
   </script>
