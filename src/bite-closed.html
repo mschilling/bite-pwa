@@ -98,6 +98,13 @@
       }
     </style>
 
+    <app-route
+      route="[[route]]"
+      pattern="/:key"
+      data="{{routeData}}"
+    ></app-route>
+
+
     <div class="container">
 
       <div class="content">
@@ -111,17 +118,15 @@
         </div>
 
         <div class="items" id="itemList">
-          <bite-closed-item uid="[[uid]]" key="[[key]]" product="[[item]]" storeid="[[storeid]]"></bite-closed-item>
-          <bite-closed-item uid="[[uid]]" key="[[key]]" product="[[item]]" storeid="[[storeid]]"></bite-closed-item>
-          <bite-closed-item uid="[[uid]]" key="[[key]]" product="[[item]]" storeid="[[storeid]]"></bite-closed-item>
-          <bite-closed-item uid="[[uid]]" key="[[key]]" product="[[item]]" storeid="[[storeid]]"></bite-closed-item>
-
+          <template id="list" is="dom-repeat" items="{{products}}" as="item">
+          <bite-closed-item key="[[key]]" product="[[item]]" uid="[[user.uid]]"></bite-closed-item>
+          </template>
         </div>
 
         <hr>
         <div class="wTotal">
-          <div class="hItems">10 ITEM(S)</div>
-          <div class="hAmount">€200</div>
+          <div class="hItems">[[productAmount]] ITEMS</div>
+          <div class="hAmount">€[[total]]</div>
         </div>
         <hr>
         <div class="wStickers">
@@ -138,7 +143,82 @@
   <script>
     Polymer({
       is: 'bite-closed',
-      properties: {}
+      properties: {
+        routeData: {
+          type: Object,
+          observer: '_routeDataChanged'
+        },
+        key: {
+          type: String,
+          observer: '_keyChanged'
+        },
+
+        user: {
+          type: Object
+        },
+
+        products: {
+          type: Array,
+          observer: '_productsChanged'
+        },
+        productAmount: {
+          type: Number
+        },
+        total: {
+          type: Number
+        },
+        storeName: {
+          type: String,
+          observer: '_storeNameChanged'
+        }
+      },
+        _routeDataChanged: function () {
+          this.key = this.routeData.key;
+        },
+
+        _keyChanged: function () {
+          this._getProductList();
+          this._getTotalPrice();
+          this._setStoreName();
+        },
+
+        _getProductList: function () {
+          var that = this;
+          firebase.database().ref('archive/order_items_per_user/' +that.user.uid+ '/' +that.key+ '/products').on('value', function(snapshot){
+            that.products = [];
+            snapshot.forEach(function (childSnapshot){
+                that.push('products', childSnapshot.key);
+            });
+          });
+        },
+
+      _getTotalPrice: function () {
+        var that = this;
+        firebase.database().ref('archive/order_items_per_user/' +that.user.uid+ '/' +that.key+ '/products').on('value', function(snapshot){
+          that.productAmount = 0;
+          that.total = 0;
+            snapshot.forEach(function (childSnapshot){
+              that.productAmount += 1;
+              that.total += childSnapshot.val().amount * childSnapshot.val().price;
+            });
+          that.total = (that.total/100).toFixed(2);
+        });
+      },
+
+      _productsChanged: function () {
+        this.$.list.render();
+      },
+
+      _setStoreName: function () {
+        var that = this;
+        firebase.database().ref('archive/order_items_per_user/'+that.user.uid+'/'+that.key).on('value', function(snapshot){
+          that.storeName = snapshot.val().store;
+        });
+      },
+
+      _storeNameChanged: function () {
+        this.fire('store-name', {storeName: this.storeName});
+      }
 
     });
   </script>

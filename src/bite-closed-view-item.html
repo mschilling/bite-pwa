@@ -46,7 +46,7 @@
       }
     </style>
 
-    <a href="/closed">
+    <a href="/closed/[[key]]">
       <div class="itemContainer">
         <div class="item">
           <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
@@ -83,22 +83,18 @@
 
 
       _uidChanged: function () {
-        console.log(this.key);
-        console.log(this.uid);
         this._getData();
       },
 
       _getData: function () {
-        if (this.uid !== undefined) {
+        if (this.uid == undefined || this.key == undefined) return;
           this._getOrder();
           this._getProducts();
-        }
       },
 
       _getOrder: function () {
         var that = this;
         firebase.database().ref('archive/order_items_per_user/' + that.uid + '/' + that.key).on('value', function (snapshot) {
-          console.log(snapshot.val());
           if(snapshot.val() !== null){
           that.storeName = snapshot.val().store;
           var closeDate = new Date(snapshot.val().close_time);

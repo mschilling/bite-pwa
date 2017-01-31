@@ -220,6 +220,7 @@
           this._checkOrder();
           this._checkLocked();
           this._checkTimes();
+          this._checkStatus();
         }
       },
 
@@ -341,6 +342,10 @@
             that.startTime = openTime;
            }
           });
+      },
+
+      _checkStatus: function () {
+
       }
 
 

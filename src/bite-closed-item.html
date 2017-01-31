@@ -93,11 +93,11 @@
         <div class="infoContainer">
           <div class="image">🍟</div>
           <div class="namePrice">
-            <div class="name">Patat Normaal</div>
-            <div class="price">€150</div>
+            <div class="name">[[name]]</div>
+            <div class="price">€[[price]]</div>
           </div>
           <div class="actions" style$="display: visible">
-            <div class="total">1</div>
+            <div class="total">[[amount]]</div>
           </div>
         </div>
       </div>
@@ -106,7 +106,54 @@
   <script>
     Polymer({
       is: 'bite-closed-item',
-      properties: {}
+      properties: {
+        product: {
+          type: String,
+          observer: '_productChanged'
+        },
+        key: {
+          type: String,
+          observer: '_keyChanged'
+        },
+        uid: {
+          type: String,
+          observer: '_userChanged'
+        },
+        amount: String,
+        price: String,
+        name: String
+      },
+
+      _userChanged: function () {
+        this._getData();
+      },
+
+      _keyChanged: function () {
+        this._getData();
+      },
+
+      _productChanged: function () {
+        this._getData();
+      },
+
+      _getData: function () {
+        if (this.uid == undefined || this.key == undefined || this.product == undefined) return;
+        this._getProductInfo();
+      },
+
+      _getProductInfo: function () {
+        var that = this;
+        firebase.database().ref('archive/order_items_per_user/' + that.uid + '/' +that.key + '/products/' +that.product).on('value', function(snapshot){
+          if(snapshot.val() !== null) {
+            that.amount = snapshot.val().amount;
+            that.name = snapshot.val().name;
+            that.price = snapshot.val().price;
+          }
+        });
+
+        that.price = (that.price/100).toFixed(2);
+      }
+
       });
 
 

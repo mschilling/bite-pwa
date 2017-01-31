@@ -168,7 +168,7 @@
         </app-toolbar>
         <app-toolbar id="closedToolbar" style="display: none;">
           <paper-icon-button icon="arrow-back" on-tap="_navBack" style="color:white"></paper-icon-button>
-          <div class="mainTitle" main-title id="closedName" style="color:white">PRIMATARIA</div>
+          <div class="mainTitle" main-title id="closedName" style="color:white">[[closedStoreName]]</div>
         </app-toolbar>
       </app-header>
 
@@ -197,7 +197,7 @@
           <!-- Profile  screen for insight in closed and opened Bites -->
           <bite-profile user={{user}} page="{{page}}" route="{{subRoute}}" name="profile"></bite-profile>
           <!-- Profile  screen for insight in closed bite -->
-          <bite-closed user={{user}} page="{{page}}" route="{{subRoute}}" name="closed"></bite-closed>
+          <bite-closed on-store-name="_changeStoreHeaderClosed" user={{user}} page="{{page}}" route="{{subRoute}}" name="closed"></bite-closed>
         </iron-pages>
       </div>
     </app-header-layout>
@@ -251,6 +251,9 @@
         },
         locked: {
           type: Boolean
+        },
+        closedStoreName: {
+          type: String
         }
 
       },
@@ -506,6 +509,9 @@
 
       _changeStoreHeader: function (e) {
         this.storeName = e.detail.storeName;
+      },
+      _changeStoreHeaderClosed: function (e) {
+        this.closedStoreName = e.detail.storeName;
       }
     });
 

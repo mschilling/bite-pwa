@@ -93,7 +93,7 @@
           <div class="image">🍟</div>
           <div class="namePrice">
             <div class="name">[[name]]</div>
-            <div class="price">[[price]]</div>
+            <div class="price">€[[price]]</div>
           </div>
           <div class="actions" style$="display: visible">
             <div class="remove" on-tap="_removeProduct">
@@ -173,7 +173,10 @@
           if (snapshot.val() == null) return;
           that.name = snapshot.val().name;
           that.price = snapshot.val().price;
+          that.price = (that.price/100).toFixed(2);
+
         });
+
       },
 
       _getUserOrder: function () {

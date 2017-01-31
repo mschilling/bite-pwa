@@ -168,7 +168,7 @@
     <div id="drawer" class="bottom-drawer">
       <div class="header">
         <div class="hItems">[[totalAmount]] ITEM(S)</div>
-        <div class="hAmount">[[totalPrice]]
+        <div class="hAmount">€[[totalPrice]]
           <div class="hActions">
             <paper-icon-button id="drawerBtn" on-tap="_showDrawer" class="hAction" icon="expand-less"></paper-icon-button>
           </div>
@@ -344,8 +344,12 @@
               that.totalAmount += child.val().amount;
               firebase.database().ref('products/' + that.storeid + '/products/' + child.key).on('value', function (snapshotData) {
                 that.totalPrice += snapshotData.val().price * child.val().amount;
+//                that.totalPrice = (that.totalPrice/100).toFixed(2);
+                console.log(that.totalPrice);
               });
             }
+
+
           });
         });
 
@@ -397,7 +401,8 @@
           }
         });
 
-      }
+      },
+
 
 
 
