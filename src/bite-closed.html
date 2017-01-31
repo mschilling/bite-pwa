@@ -198,7 +198,7 @@
           that.productAmount = 0;
           that.total = 0;
             snapshot.forEach(function (childSnapshot){
-              that.productAmount += 1;
+              that.productAmount += childSnapshot.val().amount;
               that.total += childSnapshot.val().amount * childSnapshot.val().price;
             });
           that.total = (that.total/100).toFixed(2);
