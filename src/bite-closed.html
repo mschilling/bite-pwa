@@ -212,7 +212,9 @@
       _setStoreName: function () {
         var that = this;
         firebase.database().ref('archive/order_items_per_user/'+that.user.uid+'/'+that.key).on('value', function(snapshot){
-          that.storeName = snapshot.val().store;
+          if(snapshot.val() !== null){
+            that.storeName = snapshot.val().store;
+          }
         });
       },
 

@@ -83,36 +83,38 @@
     ></app-route>
 
     <div class="container">
+      <div class="joinContainer">
+        <div class="cardContainer">
+          <div class="tallCard">
+            <bite-tallcard name="GESTART DOOR [[displayName]]" background="url([[photoURL]])"
+                           desc="Gestart om [[startTime]] sluit om [[closeTime]]"
+                           location="Gramsbergen"></bite-tallcard>
+          </div>
+        </div>
+        <div id="categories" class="categories">
+          <div class="categorieList">
+            <bite-categories on-chip-active="_chipActive" name="PATAT"></bite-categories>
+            <bite-categories on-chip-active="_chipActive" name="SNACKS"></bite-categories>
+            <bite-categories on-chip-active="_chipActive" name="MILKSHAKES"></bite-categories>
+            <bite-categories on-chip-active="_chipActive" name="SAUZEN"></bite-categories>
+            <bite-categories on-chip-active="_chipActive" name="POPULAIR"></bite-categories>
+            <bite-categories on-chip-active="_chipActive" name="ALLE ITEMS"></bite-categories>
+            <bite-categories on-chip-active="_chipActive" name="PATAT"></bite-categories>
+          </div>
+        </div>
 
-      <div class="cardContainer">
-        <div class="tallCard">
-          <bite-tallcard name="GESTART DOOR [[displayName]]" background="url([[photoURL]])"
-                         desc="Gestart om [[startTime]] sluit om [[closeTime]]"
-                         location="Gramsbergen"></bite-tallcard>
+
+        <div class="menuList" id="cardlistContainer">
+          <bite-cardlist id="cardList" key="[[key]]" user="[[user]]" storeid="[[storeid]]" products=[[products]]
+                         style="width: 90%;"></bite-cardlist>
+        </div>
+
+
+        <div id="slideContainer">
+          <!--<bite-slide id="biteSlide" on-disable="_disableTouch" on-enable="_enableTouch" key="[[key]]" user="[[user.uid]]"-->
+          <!--storeid="[[storeid]]"></bite-slide>-->
         </div>
       </div>
-      <div id="categories" class="categories">
-        <div class="categorieList">
-          <bite-categories on-chip-active="_chipActive" name="PATAT"></bite-categories>
-          <bite-categories on-chip-active="_chipActive" name="SNACKS"></bite-categories>
-          <bite-categories on-chip-active="_chipActive" name="MILKSHAKES"></bite-categories>
-          <bite-categories on-chip-active="_chipActive" name="SAUZEN"></bite-categories>
-          <bite-categories on-chip-active="_chipActive" name="POPULAIR"></bite-categories>
-          <bite-categories on-chip-active="_chipActive" name="ALLE ITEMS"></bite-categories>
-          <bite-categories on-chip-active="_chipActive" name="PATAT"></bite-categories>
-        </div>
-      </div>
-
-
-      <div class="menuList" id="cardlistContainer">
-        <bite-cardlist id="cardList" key="[[key]]" user="[[user]]" storeid="[[storeid]]" products=[[products]]
-                       style="width: 90%;"></bite-cardlist>
-      </div>
-
-    </div>
-    <div id="slideContainer">
-      <!--<bite-slide id="biteSlide" on-disable="_disableTouch" on-enable="_enableTouch" key="[[key]]" user="[[user.uid]]"-->
-                <!--storeid="[[storeid]]"></bite-slide>-->
     </div>
   </template>
 
@@ -214,13 +216,13 @@
 
       _getData: function () {
         if (this.uid !== undefined) {
+          this._checkStatus();
           this._getUser();
           this._getStore();
           this._getProducts();
           this._checkOrder();
           this._checkLocked();
           this._checkTimes();
-          this._checkStatus();
         }
       },
 
@@ -319,15 +321,15 @@
 
       _checkTimes: function () {
         var that = this;
-        var timeRef = firebase.database().ref('orders/' +that.key);
-        timeRef.on('value', function(snapshot){
-          if(snapshot.val().close_time !== null && snapshot.val().open_time !== null) {
+        var timeRef = firebase.database().ref('orders/' + that.key);
+        timeRef.on('value', function (snapshot) {
+          if (snapshot.val().close_time !== null && snapshot.val().open_time !== null) {
             //closed change bite style
             var closeDate = new Date(snapshot.val().close_time);
             var closeHours = closeDate.getHours();
             var closeMinutes = closeDate.getMinutes();
-            if(closeMinutes.toString().length == 1) {
-              var closeMinutes = "0"+closeDate.getMinutes();
+            if (closeMinutes.toString().length == 1) {
+              var closeMinutes = "0" + closeDate.getMinutes();
             }
             var closeTime = closeHours + ":" + closeMinutes;
             that.closeTime = closeTime;
@@ -335,17 +337,37 @@
             var openDate = new Date(snapshot.val().open_time);
             var openHours = openDate.getHours();
             var openMinutes = openDate.getMinutes();
-            if(openMinutes.toString().length == 1) {
-              var openMinutes = "0"+openDate.getMinutes();
+            if (openMinutes.toString().length == 1) {
+              var openMinutes = "0" + openDate.getMinutes();
             }
             var openTime = openHours + ":" + openMinutes;
             that.startTime = openTime;
-           }
-          });
+          }
+        });
       },
 
       _checkStatus: function () {
+        var that = this;
+        firebase.database().ref('orders/' + that.key).on('value', function (snapshot) {
+          if (snapshot.val().status == 'closed') {
+            that._noTouch();
+            console.log("disabled touch");
+          } else if (snapshot.val().status == 'open') {
+            that._allTouch();
+            console.log("enabled touch");
 
+          }
+        });
+      },
+
+      _noTouch: function () {
+        var container = Polymer.dom(this.root).querySelector('.joinContainer');
+        container.setAttribute('style', 'pointer-events: none;');
+      },
+
+      _allTouch: function () {
+        var container = Polymer.dom(this.root).querySelector('.joinContainer');
+        container.setAttribute('style', 'pointer-events: auto;');
       }
 
 
