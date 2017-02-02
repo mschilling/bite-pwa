@@ -153,7 +153,6 @@
         <app-toolbar id="joinToolbar" style="display: none;">
           <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
           <div class="mainTitle" main-title id="storeName">[[storeName]]</div>
-          <paper-icon-button icon="search"></paper-icon-button>
         </app-toolbar>
         <app-toolbar id="openToolbar" style="display: none;">
           <paper-icon-button icon="arrow-back" on-tap="_navBack"></paper-icon-button>
@@ -511,7 +510,6 @@
           .catch(function (err) {
             console.log('Unable to get permission to notify.', err)
           });
-
       },
 
       _changeStoreHeader: function (e) {

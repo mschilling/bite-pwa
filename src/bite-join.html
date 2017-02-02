@@ -1,4 +1,3 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
@@ -71,7 +70,14 @@
     .sticky {
 
     }
-
+    .imgEmoji {
+      float: left;
+      width: 24px;
+      height: 24px;
+      margin-left: 5px;
+      margin-top: 10px;
+      margin-bottom: 8px;
+    }
   </style>
 
   <template>
@@ -88,23 +94,13 @@
           <div class="tallCard">
             <bite-tallcard name="GESTART DOOR [[displayName]]" background="url([[photoURL]])"
                            desc="Gestart om [[startTime]] sluit om [[closeTime]]"
-                           location="Gramsbergen"></bite-tallcard>
-          </div>
-        </div>
-        <div id="categories" class="categories">
-          <div class="categorieList">
-            <bite-categories on-chip-active="_chipActive" name="DIT"></bite-categories>
-            <bite-categories on-chip-active="_chipActive" name="WORDT"></bite-categories>
-            <bite-categories on-chip-active="_chipActive" name="EEN"></bite-categories>
-            <bite-categories on-chip-active="_chipActive" name="CATEGORY"></bite-categories>
-            <bite-categories on-chip-active="_chipActive" name="FILTER"></bite-categories>
-            <bite-categories on-chip-active="_chipActive" name="OOIT"></bite-categories>
+                           location="Gramsbergen" emoji="[[emoji]]"></bite-tallcard>
           </div>
         </div>
 
 
         <div class="menuList" id="cardlistContainer">
-          <bite-cardlist id="cardList" key="[[key]]" user="[[user]]" storeid="[[storeid]]" products=[[products]]
+          <bite-cardlist id="cardList" key="[[key]]" user="[[user]]" storeid="[[storeid]]" products="[[products]]"
                          style="width: 90%;"></bite-cardlist>
         </div>
 
@@ -160,7 +156,9 @@
           value: false
         },
         closeTime: String,
-        startTime: String
+        startTime: String,
+        storeId: String,
+        emoji: Array
       },
 
       ready: function () {
@@ -174,21 +172,6 @@
         var menulist = Polymer.dom(this.root).querySelector('.menuList');
         var self = this;
 
-        var elementPositionTop = this.$.categories.getBoundingClientRect().top;
-
-
-        $(window).scroll(function () {
-          if ($(window).scrollTop() > elementPositionTop - 64) {
-            categories.setAttribute("style", "position: fixed;top: 0;z-index: 2999;margin-top: 64px;background-color:#FFFFFF;text-align: center;left: 0px;right: 0px;box-shadow:0px 3px 5px rgba(100, 100, 100, 0.49);");
-            menulist.setAttribute("style", "margin-top: 80px;");
-
-
-          } else {
-            categories.removeAttribute("style");
-            menulist.removeAttribute("style");
-
-          }
-        });
       },
 
       _routeDataChanged: function () {
@@ -222,6 +205,7 @@
           this._checkOrder();
           this._checkLocked();
           this._checkTimes();
+          this._getStoreCategory();
         }
       },
 
@@ -350,11 +334,8 @@
         firebase.database().ref('orders/' + that.key).on('value', function (snapshot) {
           if (snapshot.val().status == 'closed') {
             that._noTouch();
-            console.log("disabled touch");
           } else if (snapshot.val().status == 'open') {
             that._allTouch();
-            console.log("enabled touch");
-
           }
         });
       },
@@ -367,7 +348,53 @@
       _allTouch: function () {
         var container = Polymer.dom(this.root).querySelector('.joinContainer');
         container.setAttribute('style', 'pointer-events: auto;');
-      }
+      },
+
+      _getStoreCategory: function () {
+        var that = this;
+        var categoryRef = firebase.database().ref('stores/' + that.storeid + '/category/');
+        that.emoji = [];
+        categoryRef.on('value', function (snapshot) {
+          var image;
+          snapshot.forEach(function (childSnapshot) {
+            switch (childSnapshot.val().type) {
+              case "0":
+                image = "images/emoji/ic_dessert.png";
+                break;
+              case "1":
+                image = "images/emoji/ic_drinks.png";
+                break;
+              case "2":
+                image = "images/emoji/ic_fish.png";
+                break;
+              case "3":
+                image = "images/emoji/ic_fries.png";
+                break;
+              case "4":
+                image = "images/emoji/ic_hamburger.png";
+                break;
+              case "5":
+                image = "images/emoji/ic_kebab.png";
+                break;
+              case "6":
+                image = "images/emoji/ic_meat.png";
+                break;
+              case "7":
+                image = "images/emoji/ic_pizza.png";
+                break;
+              case "8":
+                image = "images/emoji/ic_sauce.png";
+                break;
+              case "9":
+                image = "images/emoji/ic_snacks.png";
+                break;
+            }
+            that.push('emoji', image);
+          });
+        });
+
+
+      },
 
 
     });

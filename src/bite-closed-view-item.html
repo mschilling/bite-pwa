@@ -39,6 +39,16 @@
 
       .emoji {
         float: right;
+
+      }
+
+      .emojiImg {
+        width: 24px;
+        height: 24px;
+        margin: 0 auto;
+        margin-top: 10px;
+        margin-left: 5px;
+        margin-bottom: 8px;
       }
 
       a {
@@ -50,15 +60,22 @@
       <div class="itemContainer">
         <div class="item">
           <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
+          <template is="dom-repeat" items="{{emojiList}}" as="item">
+            <div class="emoji">
+              <div class="emojiImg"
+                   style$="background-image: url([[item]]); background-repeat: no-repeat; background-position: center center; background-size: cover;">
+
+              </div>
+            </div>
+          </template>
           <div class="title" style="text-transform: uppercase;">[[storeName]]</div>
-          <div class="emoji">🍔🍔🍔</div>
           <div class="desc">
             <div class="price">€[[total]]</div>
             <div class="date">[[date]]</div>
           </div>
         </div>
+      </div>
     </a>
-    </div>
 
 
   </template>
@@ -78,7 +95,10 @@
 
         storeName: String,
         date: String,
-        total: Number
+        total: Number,
+        emojiList: {
+          type: Array
+        }
       },
 
 
@@ -88,71 +108,118 @@
 
       _getData: function () {
         if (this.uid == undefined || this.key == undefined) return;
-          this._getOrder();
-          this._getProducts();
+        this._getOrder();
+        this._getProducts();
+        this._getStoreCategory();
       },
 
       _getOrder: function () {
         var that = this;
         firebase.database().ref('archive/order_items_per_user/' + that.uid + '/' + that.key).on('value', function (snapshot) {
-          if(snapshot.val() !== null){
-          that.storeName = snapshot.val().store;
-          var closeDate = new Date(snapshot.val().close_time);
-          var day = closeDate.getDate();
-          var month = closeDate.getMonth();
-          var finalMonth;
-          switch (month){
-            case 0:
-              finalMonth = "Jan.";
-              break;
-            case 1:
-              finalMonth = "Feb.";
-              break;
-            case 2:
-              finalMonth = "Mrt.";
-              break;
-            case 3:
-              finalMonth = "Apr.";
-              break;
-            case 4:
-              finalMonth = "Mei";
-              break;
-            case 5:
-              finalMonth = "Jun.";
-              break;
-            case 6:
-              finalMonth = "Jul.";
-              break;
-            case 7:
-              finalMonth = "Aug.";
-              break;
-            case 8:
-              finalMonth = "Sept.";
-              break;
-            case 9:
-              finalMonth = "Okt.";
-              break;
-            case 10:
-              finalMonth = "Nov.";
-              break;
-            case 11:
-              finalMonth = "Dec.";
-              break;
-          }
-          that.date = day + ' ' + finalMonth;
+          if (snapshot.val() !== null) {
+            that.storeName = snapshot.val().store;
+            var closeDate = new Date(snapshot.val().close_time);
+            var day = closeDate.getDate();
+            var month = closeDate.getMonth();
+            var finalMonth;
+            switch (month) {
+              case 0:
+                finalMonth = "Jan.";
+                break;
+              case 1:
+                finalMonth = "Feb.";
+                break;
+              case 2:
+                finalMonth = "Mrt.";
+                break;
+              case 3:
+                finalMonth = "Apr.";
+                break;
+              case 4:
+                finalMonth = "Mei";
+                break;
+              case 5:
+                finalMonth = "Jun.";
+                break;
+              case 6:
+                finalMonth = "Jul.";
+                break;
+              case 7:
+                finalMonth = "Aug.";
+                break;
+              case 8:
+                finalMonth = "Sept.";
+                break;
+              case 9:
+                finalMonth = "Okt.";
+                break;
+              case 10:
+                finalMonth = "Nov.";
+                break;
+              case 11:
+                finalMonth = "Dec.";
+                break;
+            }
+            that.date = day + ' ' + finalMonth;
           }
         });
       },
 
       _getProducts: function () {
         var that = this;
-        firebase.database().ref('archive/order_items_per_user/' + that.uid + '/' + that.key + '/products').on('value', function(snapshot){
+        firebase.database().ref('archive/order_items_per_user/' + that.uid + '/' + that.key + '/products').on('value', function (snapshot) {
           that.total = 0;
-          snapshot.forEach(function(childSnapshot){
+          snapshot.forEach(function (childSnapshot) {
             that.total += childSnapshot.val().amount * childSnapshot.val().price;
           });
         });
-        that.total = (that.total/100).toFixed(2);
+        that.total = (that.total / 100).toFixed(2);
+      },
+
+      _getStoreCategory: function () {
+        var that = this;
+        var categoryRef = firebase.database().ref('archive/order_items_per_user/' + that.uid + '/' + that.key + '/category');
+        that.emojiList = [];
+        categoryRef.on('value', function (snapshot) {
+          var image;
+          snapshot.forEach(function (childSnapshot) {
+
+            switch (childSnapshot.val().type) {
+              case "0":
+                image = "images/emoji/ic_dessert.png";
+                break;
+              case "1":
+                image = "images/emoji/ic_drinks.png";
+                break;
+              case "2":
+                image = "images/emoji/ic_fish.png";
+                break;
+              case "3":
+                image = "images/emoji/ic_fries.png";
+                break;
+              case "4":
+                image = "images/emoji/ic_hamburger.png";
+                break;
+              case "5":
+                image = "images/emoji/ic_kebab.png";
+                break;
+              case "6":
+                image = "images/emoji/ic_meat.png";
+                break;
+              case "7":
+                image = "images/emoji/ic_pizza.png";
+                break;
+              case "8":
+                image = "images/emoji/ic_sauce.png";
+                break;
+              case "9":
+                image = "images/emoji/ic_snacks.png";
+                break;
+            }
+            that.push('emojiList', image);
+
+          });
+        });
       }
 
     });

@@ -23,7 +23,11 @@
           padding: 0;
         }
       }
-
+      .card-actions {
+        width: 85% !important;
+        margin: 0 auto;
+        text-align: center;
+      }
       .img {
         float: left;
         border-radius: 50%;
@@ -54,28 +58,18 @@
         font-family: Compasse;
       }
 
-      .emoji {
-        text-align: center;
-        vertical-align: middle;
-        margin-top: 8px;
+      .imgEmoji {
+        float: left;
+        width: 24px;
+        height: 24px;
+        margin: 0 auto;
+        margin-top: 10px;
+        margin-left: 5px;
         margin-bottom: 8px;
-        font-size: 24px;
       }
-
-      .stats {
-        display: flex;
-        display: -webkit-flex;
-        flex-wrap: wrap;
-        -webkit-flex-wrap: wrap;
-        justify-content: center;
-        -webkit-justify-content: center;
+      .emojiContainer {
+        display: inline-block;
       }
-
-      .stat {
-        margin-top: 8px;
-        font-size: 9px;
-      }
-
 
     </style>
     <paper-card>
@@ -88,11 +82,12 @@
           <div class="desc">[[desc]]</div>
         </div>
       </div>
-      <div class="card-actions" style="width: 85%; margin: 0 auto;">
-        <div class="emoji">🌯🌯🌯🌯🌯</div>
-      </div>
-      <div class="card-actions" style="width: 85%; margin: 0 auto;">
-
+      <div class="card-actions" style="" >
+        <div class="emojiContainer">
+        <template is="dom-repeat" items="{{emoji}}" as="item">
+          <div class="imgEmoji" style$="background-image: url([[item]]); background-repeat: no-repeat; background-position: center center; background-size: cover;"></div>
+        </template>
+        </div>
       </div>
     </paper-card>
 
@@ -110,7 +105,10 @@
         name: String,
         background: String,
         desc: String,
-        location: String
+        location: String,
+        emoji: {
+          type: Array
+        }
       }
 
     });
