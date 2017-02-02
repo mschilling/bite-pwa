@@ -189,6 +189,12 @@
                 <template is="dom-if" if="[[canClose]]">
                  <paper-item on-tap="_deleteBite">Verwijderen</paper-item>
                 </template>
+                <template is="dom-if" if="[[canArchive]]">
+                  <paper-item on-tap="_deleteBite">Verwijderen</paper-item>
+                </template>
+                <template is="dom-if" if="[[canArchive]]">
+                  <paper-item on-tap="_archiveBite">Archiveren</paper-item>
+                </template>
               </paper-menu>
             </paper-menu-button>
           </div>
@@ -243,6 +249,10 @@
         admin: Boolean,
         canClose: Boolean,
         canDelete: Boolean,
+        canArchive: {
+          type: Boolean,
+          value: false
+        },
         uid: {
           type: String
         },
@@ -370,7 +380,11 @@
         var deleteRef = firebase.database().ref('orders');
         deleteRef.child(that.key).child('action').set('remove');
       },
-
+      _archiveBite: function () {
+        var that = this;
+        var archiveRef = firebase.database().ref('orders');
+        archiveRef.child(that.key).child('action').set('archive');
+      },
       _closeBite: function () {
         var that = this;
         var closeRef = firebase.database().ref('orders');
@@ -471,6 +485,7 @@
         closedRef.on('value', function(snapshot){
           if(snapshot.val().status == 'closed'){
             //closed change bite style
+            that.canArchive = true;
             var date = new Date(snapshot.val().close_time);
             var hours = date.getHours();
             var minutes = date.getMinutes();
@@ -483,9 +498,9 @@
             closedTitle.setAttribute('style', 'color: #9B9B9B;');
           }else {
             //nothing
+            that.canArchive = false;
             closedText.setAttribute('style', 'display: none;');
             closedTitle.setAttribute('style', 'color: #EC9630;');
-
           }
         })
       },
