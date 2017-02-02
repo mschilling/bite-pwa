@@ -166,11 +166,11 @@
 
   <div id="container" class="container">
     <div id="drawer" class="bottom-drawer">
-      <div class="header">
+      <div class="header" on-tap="_showDrawer">
         <div class="hItems">[[totalAmount]] ITEM(S)</div>
         <div class="hAmount">€[[finalPrice]]
           <div class="hActions">
-            <paper-icon-button id="drawerBtn" on-tap="_showDrawer" class="hAction" icon="expand-less"></paper-icon-button>
+            <paper-icon-button id="drawerBtn" on-tap="_iconShowDrawer" class="hAction" icon="expand-less"></paper-icon-button>
           </div>
         </div>
       </div>
@@ -289,6 +289,10 @@
       },
 
       ready: function () {
+      },
+      _iconShowDrawer: function () {
+        event.stopPropagation();
+        this._showDrawer();
       },
 
       _showDrawer: function () {
