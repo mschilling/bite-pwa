@@ -166,7 +166,7 @@
 
   <div id="container" class="container">
     <div id="drawer" class="bottom-drawer">
-      <div class="header" on-tap="_showDrawer">
+      <div class="header" on-tap="_showDrawer" style="pointer-events: auto">
         <div class="hItems">[[totalAmount]] ITEM(S)</div>
         <div class="hAmount">€[[finalPrice]]
           <div class="hActions">
@@ -380,6 +380,7 @@
         var drawer = Polymer.dom(this.root).querySelector('.bottom-drawer');
         var actions = Polymer.dom(this.root).querySelector('.hAction');
         var content = Polymer.dom(this.root).querySelector('.content');
+        var header = Polymer.dom(this.root).querySelector('.header');
         firebase.database().ref('user_order_locked/' + that.key + '/' + that.uid + '/').on('value', function (snapshot){
           if (snapshot.val() == true) {
             that.$.orderBtn.setAttribute('style', 'background:grey;');
@@ -387,6 +388,7 @@
             that.btnStatus = true;
             that.$.itemList.setAttribute('style', 'pointer-events: none;');
             that.$.drawerBtn.setAttribute('style', 'pointer-events: none;');
+            header.setAttribute('style', 'pointer-events: none;');
             drawer.setAttribute('style', 'height: 90vh;');
             content.setAttribute('style', 'display: visible');
             actions.setAttribute('icon', 'expand-more');
@@ -397,6 +399,7 @@
             that.$.orderBtn.setAttribute('style', 'background:#EC9630;');
             that.$.itemList.setAttribute('style', 'pointer-events: auto;');
             that.$.drawerBtn.setAttribute('style', 'pointer-events: auto;');
+            header.setAttribute('style', 'pointer-events: auto;');
             that.fire('enable');
           }
         });
