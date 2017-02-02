@@ -230,11 +230,11 @@
       },
 
       _keyChanged: function () {
+        this._resetView();
         this._getProductList();
         this._getTotalPrice();
         this._setStoreName();
         this._checkAdmin();
-        this._resetView();
       },
 
       _getProductList: function () {
@@ -322,7 +322,7 @@
         adminTotalBtn.setAttribute('style', 'background-color: white; color: #EC9630;');
         singleOrderBtn.setAttribute('style', 'background-color: #EC9630; color: white;');
         singleView.setAttribute('style', 'display: visible');
-        totalView.setAttribute('style', 'display: none');
+        totalView.setAttribute('style', 'display: none; pointer-events: none;');
         this.view = 'single';
       },
 
