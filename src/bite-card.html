@@ -451,7 +451,6 @@
 
       _checkLocked: function(){
         var that = this;
-
         firebase.database().ref('user_order_locked/' + that.key + '/' + that.user.uid + '/').once('value').then(function(snapshot){
           if (snapshot.val() == true && that.locked == true) {
             window.history.pushState({}, null, '/join/'+that.key);
@@ -460,6 +459,9 @@
             that.$.newBiteDialog.open();
             event.preventDefault();
           } else if (that.locked == false && snapshot.val() == null) {
+            window.history.pushState({}, null, '/join/'+that.key);
+            window.dispatchEvent(new CustomEvent('location-changed'));
+          } else if (that.locked == undefined && snapshot.val() == null){
             window.history.pushState({}, null, '/join/'+that.key);
             window.dispatchEvent(new CustomEvent('location-changed'));
           }

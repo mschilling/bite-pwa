@@ -327,10 +327,9 @@
             if(snapshot.val() == true && snapshot.key == that.user.uid){
               that.locked = true;
             } else if(snapshot.val() == null && that.user.uid == null){
-                that.locked = false;
-            } else if(snapshot.val() == true && that.user.uid !== snapshot.key){
               that.locked = false;
             }
+
           });
           firebase.database().ref('user_order_locked/' + that.key[i]).on('child_removed', function(snapshot){
             if(that.user.uid == snapshot.key){
