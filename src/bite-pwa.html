@@ -364,6 +364,7 @@
 
         firebase.auth().signInWithRedirect(provider);
         firebase.auth().getRedirectResult().then(function (result) {
+          console.log('getRedirectResult result', result);
           if (result.credential) {
             //Get Google Access Token
             var token = result.credential.accessToken;
