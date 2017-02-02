@@ -2,21 +2,25 @@
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="bite-closed-item.html">
+<link rel="import" href="bite-admin-item.html">
 
 <dom-module id="bite-closed">
   <template>
     <style>
-      :host{
+      :host {
         display: block;
       }
+
       .container {
         max-width: 800px;
         margin: 0 auto;
         color: #EC9630;
       }
+
       .chips {
         float: left;
       }
+
       .content {
         margin-top: 5vh;
         margin: 0 auto;
@@ -27,6 +31,7 @@
         overflow-x: hidden;
 
       }
+
       .chip {
         font-family: Compasse;
         display: inline-block;
@@ -42,30 +47,34 @@
         margin-left: 8px;
         margin-right: 8px;
       }
+
       .items {
         margin: 0 auto;
         margin-top: 80px;
       }
 
-      .wStickers{
+      .wStickers {
         display: block;
         float: left;
         width: 100%;
       }
+
       .wStickers, .wTotal {
         margin-bottom: 16px;
       }
+
       .wTotal {
         display: block;
         height: 5vh;
       }
 
-      .hItems, .hAmount{
+      .hItems, .hAmount {
         font-family: Compasse;
         font-size: 16px;
         font-weight: 800;
         color: black;
       }
+
       .hItems {
         float: left;
         margin-top: 20px;
@@ -88,6 +97,7 @@
         font-size: 16px;
         margin-top: 16px;
       }
+
       hr {
         display: block;
         height: 1px;
@@ -106,35 +116,55 @@
 
 
     <div class="container">
-
       <div class="content">
         <div class="chips">
-          <div class="chip">
+          <div class="chip" id="singleBtn" style="background-color: #EC9630; color: white;" on-tap="_singleClick">
             <p>JIJ</p>
           </div>
-          <div class="chip">
+          <div class="chip" id="adminBtn" style="display: none;" on-tap="_totalClick">
             <p>TOTAAL</p>
           </div>
         </div>
+        <!-- Views -->
+        <div class="singleView">
+          <div class="items" id="itemList">
+            <template id="list" is="dom-repeat" items="{{products}}" as="item">
+              <bite-closed-item key="[[key]]" product="[[item]]" uid="[[user.uid]]"></bite-closed-item>
+            </template>
+          </div>
 
-        <div class="items" id="itemList">
-          <template id="list" is="dom-repeat" items="{{products}}" as="item">
-          <bite-closed-item key="[[key]]" product="[[item]]" uid="[[user.uid]]"></bite-closed-item>
-          </template>
+          <hr>
+          <div class="wTotal">
+            <div class="hItems">[[productAmount]] ITEMS</div>
+            <div class="hAmount">€[[total]]</div>
+          </div>
+          <hr>
+          <div class="wStickers">
+            <div class="stickers">STICKERS</div>
+            <div class="emoji">🍔🍟🍕</div>
+          </div>
         </div>
 
-        <hr>
-        <div class="wTotal">
-          <div class="hItems">[[productAmount]] ITEMS</div>
-          <div class="hAmount">€[[total]]</div>
+        <div class="totalView" style="display: none">
+
+          <div class="items" id="totalList">
+            <template id="adminList" is="dom-repeat" items="{{adminList}}" as="item">
+              <bite-admin-item product="[[item]]" key="[[key]]"></bite-admin-item>
+            </template>
+          </div>
+
+          <hr>
+          <div class="wTotal">
+            <div class="hItems">[[orderAmount]] ORDERS, [[productTotalAmount]] ARTIKELEN</div>
+            <div class="hAmount">€[[productTotalPrice]]</div>
+          </div>
         </div>
-        <hr>
-        <div class="wStickers">
-          <div class="stickers">STICKERS</div>
-          <div class="emoji">🍔🍟🍕</div>
-        </div>
+
 
       </div>
+
+
+    </div>
     </div>
 
   </template>
@@ -170,38 +200,63 @@
         storeName: {
           type: String,
           observer: '_storeNameChanged'
+        },
+        admin: {
+          type: Boolean,
+          observer: '_adminChanged'
+        },
+        view: {
+          type: String,
+          value: 'single'
+        },
+
+        adminList: {
+          type: Array
+        },
+
+        orderAmount: {
+          type: Number
+        },
+
+        productTotalAmount: {
+          type: Number
+        },
+        productTotalPrice: {
+          type: Number
         }
       },
-        _routeDataChanged: function () {
-          this.key = this.routeData.key;
-        },
+      _routeDataChanged: function () {
+        this.key = this.routeData.key;
+      },
 
-        _keyChanged: function () {
-          this._getProductList();
-          this._getTotalPrice();
-          this._setStoreName();
-        },
+      _keyChanged: function () {
+        this._getProductList();
+        this._getTotalPrice();
+        this._setStoreName();
+        this._checkAdmin();
+        this._resetView();
+      },
 
-        _getProductList: function () {
-          var that = this;
-          firebase.database().ref('archive/order_items_per_user/' +that.user.uid+ '/' +that.key+ '/products').on('value', function(snapshot){
-            that.products = [];
-            snapshot.forEach(function (childSnapshot){
-                that.push('products', childSnapshot.key);
-            });
+      _getProductList: function () {
+        var that = this;
+        firebase.database().ref('archive/order_items_per_user/' + that.user.uid + '/' + that.key + '/products').on('value', function (snapshot) {
+          that.products = [];
+          snapshot.forEach(function (childSnapshot) {
+            that.push('products', childSnapshot.key);
           });
-        },
+        });
+      },
 
       _getTotalPrice: function () {
         var that = this;
-        firebase.database().ref('archive/order_items_per_user/' +that.user.uid+ '/' +that.key+ '/products').on('value', function(snapshot){
+        firebase.database().ref('archive/order_items_per_user/' + that.user.uid + '/' + that.key + '/products').on('value', function (snapshot) {
           that.productAmount = 0;
           that.total = 0;
-            snapshot.forEach(function (childSnapshot){
-              that.productAmount += childSnapshot.val().amount;
-              that.total += childSnapshot.val().amount * childSnapshot.val().price;
-            });
-          that.total = (that.total/100).toFixed(2);
+          snapshot.forEach(function (childSnapshot) {
+            that.productAmount += childSnapshot.val().amount;
+            that.total += childSnapshot.val().amount * childSnapshot.val().price;
+          });
+          that.total = (that.total / 100).toFixed(2);
         });
       },
 
@@ -211,8 +266,8 @@
 
       _setStoreName: function () {
         var that = this;
-        firebase.database().ref('archive/order_items_per_user/'+that.user.uid+'/'+that.key).on('value', function(snapshot){
-          if(snapshot.val() !== null){
+        firebase.database().ref('archive/order_items_per_user/' + that.user.uid + '/' + that.key).on('value', function (snapshot) {
+          if (snapshot.val() !== null) {
             that.storeName = snapshot.val().store;
           }
         });
@@ -220,6 +275,100 @@
 
       _storeNameChanged: function () {
         this.fire('store-name', {storeName: this.storeName});
+      },
+
+      _checkAdmin: function () {
+        var that = this;
+        var userRef = firebase.database().ref('archive/orders/' + that.key);
+        userRef.on('value', function (snapshot) {
+          if (snapshot.val() !== null && snapshot.val().opened_by == that.user.uid) {
+            that.admin = true;
+            that._getAdminList();
+          } else if (snapshot.val() !== null && snapshot.val().opened_by !== that.user.uid) {
+            that.admin = false;
+          }
+        });
+      },
+
+      _adminChanged: function () {
+        var adminTotalBtn = Polymer.dom(this.root).querySelector('#adminBtn');
+        if (this.admin == true) {
+          adminTotalBtn.setAttribute('style', 'display: auto;');
+        } else if (this.admin == false) {
+          adminTotalBtn.setAttribute('style', 'display: none;');
+        }
+      },
+
+      _totalClick: function () {
+        var adminTotalBtn = Polymer.dom(this.root).querySelector('#adminBtn');
+        var singleOrderBtn = Polymer.dom(this.root).querySelector('#singleBtn');
+        var singleView = Polymer.dom(this.root).querySelector('.singleView');
+        var totalView = Polymer.dom(this.root).querySelector('.totalView');
+        if (this.view == 'single') {
+          adminTotalBtn.setAttribute('style', 'background-color: #EC9630; color: white;');
+          singleOrderBtn.setAttribute('style', 'background-color: white; color: #EC9630;');
+          singleView.setAttribute('style', 'display: none');
+          totalView.setAttribute('style', 'display: visible');
+          this.view = 'total';
+        }
+
+      },
+
+      _resetView: function () {
+        var adminTotalBtn = Polymer.dom(this.root).querySelector('#adminBtn');
+        var singleOrderBtn = Polymer.dom(this.root).querySelector('#singleBtn');
+        var singleView = Polymer.dom(this.root).querySelector('.singleView');
+        var totalView = Polymer.dom(this.root).querySelector('.totalView');
+        adminTotalBtn.setAttribute('style', 'background-color: white; color: #EC9630;');
+        singleOrderBtn.setAttribute('style', 'background-color: #EC9630; color: white;');
+        singleView.setAttribute('style', 'display: visible');
+        totalView.setAttribute('style', 'display: none');
+        this.view = 'single';
+      },
+
+      _singleClick: function () {
+        var adminTotalBtn = Polymer.dom(this.root).querySelector('#adminBtn');
+        var singleOrderBtn = Polymer.dom(this.root).querySelector('#singleBtn');
+        var singleView = Polymer.dom(this.root).querySelector('.singleView');
+        var totalView = Polymer.dom(this.root).querySelector('.totalView');
+        if (this.view == 'total' && this.admin == true) {
+          adminTotalBtn.setAttribute('style', 'background-color: white; color: #EC9630;');
+          singleOrderBtn.setAttribute('style', 'background-color: #EC9630; color: white;');
+          singleView.setAttribute('style', 'display: visible');
+          totalView.setAttribute('style', 'display: none');
+          this.view = 'single';
+        }
+
+      },
+
+      _getAdminList: function () {
+        var that = this;
+        firebase.database().ref('archive/order_items_per_order/' + that.key + '/').on('value', function (snapshot) {
+          that.adminList = [];
+          that.orderAmount = 0;
+          that.productTotalAmount = 0;
+          that.productTotalPrice = 0;
+          snapshot.forEach(function (childSnapshot) {
+            that.orderAmount = that.orderAmount + 1;
+            firebase.database().ref('archive/order_items_per_order/' + that.key + '/' + childSnapshot.key)
+              .on('value', function (snapshot) {
+              snapshot.forEach(function (keySnapshot) {
+                that.productTotalAmount += keySnapshot.val().amount;
+                that.productTotalPrice += keySnapshot.val().amount * keySnapshot.val().price;
+                if (keySnapshot.key !== null) {
+                  if (that.adminList.includes(keySnapshot.key) == true) {
+                    //Get rid of double product keys
+                  } else {
+                    //Push keys that are not double
+                    that.push('adminList', keySnapshot.key);
+                  }
+                }
+              });
+            });
+          });
+          that.productTotalPrice = (that.productTotalPrice/100).toFixed(2);
+
+        });
       }
 
     });
