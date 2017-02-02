@@ -24,8 +24,8 @@
       .image {
         float: left;
         color: #EC9630;
-        margin-top: 12px;
-        font-size: 32px;
+        margin-top: 20px;
+        font-size: 24px;
       }
 
       .namePrice {
@@ -56,6 +56,7 @@
         display: block;
         z-index: 10;
       }
+
       .total {
         float: left;
         font-family: Compasse;
@@ -90,20 +91,20 @@
     Polymer({
       is: 'bite-admin-item',
       properties: {
-          key: {
-            type: String,
-            observer: '_keyChanged'
-          },
-          product: {
-            type: String,
-            observer: '_productChanged'
-          },
-          amount: {
-            type: Number
-          },
-          name: String,
-          price: String,
-          totalPrice: String
+        key: {
+          type: String,
+          observer: '_keyChanged'
+        },
+        product: {
+          type: String,
+          observer: '_productChanged'
+        },
+        amount: {
+          type: Number
+        },
+        name: String,
+        price: String,
+        totalPrice: String
       },
 
       _productChanged: function () {
@@ -115,26 +116,36 @@
       },
 
       _getData: function () {
-        if(this.key == undefined || this.product == undefined)return;
+        if (this.key == undefined || this.product == undefined)return;
         this._getProduct();
+        this._getUsers();
       },
 
       _getProduct: function () {
         var that = this;
-        firebase.database().ref('archive/order_items_per_order/' +that.key + '/').on('value', function(snapshot){
+        firebase.database().ref('archive/order_items_per_order/' + that.key + '/').on('value', function (snapshot) {
           that.amount = 0;
-          snapshot.forEach(function(childSnapshot){
-            firebase.database().ref('archive/order_items_per_order/' +that.key + '/' +childSnapshot.key+ '/' +that.product)
-              .on('value', function(productSnapshot){
-                if(productSnapshot.val() !== null){
+          snapshot.forEach(function (childSnapshot) {
+            firebase.database().ref('archive/order_items_per_order/' + that.key + '/' + childSnapshot.key + '/' + that.product)
+              .on('value', function (productSnapshot) {
+                if (productSnapshot.val() !== null) {
                   that.amount += productSnapshot.val().amount;
                   that.name = productSnapshot.val().name;
                   that.price = productSnapshot.val().price;
                 }
-            });
+              });
 
             that.totalPrice = that.price * that.amount;
-            that.totalPrice = (that.totalPrice/100).toFixed(2);
+            that.totalPrice = (that.totalPrice / 100).toFixed(2);
+          });
+        });
+      },
+
+      _getUsers: function () {
+        var that = this;
+        firebase.database().ref('archive/order_items_per_order/' + that.key + '/').on('value', function (snapshot) {
+          snapshot.forEach(function (childSnapshot) {
+           
           });
         });
       }

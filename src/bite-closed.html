@@ -121,7 +121,7 @@
           <div class="chip" id="singleBtn" style="background-color: #EC9630; color: white;" on-tap="_singleClick">
             <p>JIJ</p>
           </div>
-          <div class="chip" id="adminBtn" style="display: none;" on-tap="_totalClick">
+          <div class="chip" id="adminBtn" style="" on-tap="_totalClick">
             <p>TOTAAL</p>
           </div>
         </div>
@@ -211,7 +211,8 @@
         },
 
         adminList: {
-          type: Array
+          type: Array,
+          observer: '_adminListChanged'
         },
 
         orderAmount: {
@@ -234,7 +235,8 @@
         this._getProductList();
         this._getTotalPrice();
         this._setStoreName();
-        this._checkAdmin();
+//        this._checkAdmin();
+        this._getAdminList();
       },
 
       _getProductList: function () {
@@ -264,6 +266,11 @@
         this.$.list.render();
       },
 
+      _adminListChanged: function () {
+        console.log("list changed");
+        this.$.adminList.render();
+      },
+
       _setStoreName: function () {
         var that = this;
         firebase.database().ref('archive/order_items_per_user/' + that.user.uid + '/' + that.key).on('value', function (snapshot) {
@@ -277,27 +284,28 @@
         this.fire('store-name', {storeName: this.storeName});
       },
 
-      _checkAdmin: function () {
-        var that = this;
-        var userRef = firebase.database().ref('archive/orders/' + that.key);
-        userRef.on('value', function (snapshot) {
-          if (snapshot.val() !== null && snapshot.val().opened_by == that.user.uid) {
-            that.admin = true;
-            that._getAdminList();
-          } else if (snapshot.val() !== null && snapshot.val().opened_by !== that.user.uid) {
-            that.admin = false;
-          }
-        });
-      },
+      // **** ADMIN FUNCTIONALITIES **** //
+//      _checkAdmin: function () {
+//        var that = this;
+//        var userRef = firebase.database().ref('archive/orders/' + that.key);
+//        userRef.on('value', function (snapshot) {
+//          if (snapshot.val() !== null && snapshot.val().opened_by == that.user.uid) {
+//            that.admin = true;
+//            that._getAdminList();
+//          } else if (snapshot.val() !== null && snapshot.val().opened_by !== that.user.uid) {
+//            that.admin = false;
+//          }
+//        });
+//      },
 
-      _adminChanged: function () {
-        var adminTotalBtn = Polymer.dom(this.root).querySelector('#adminBtn');
-        if (this.admin == true) {
-          adminTotalBtn.setAttribute('style', 'display: auto;');
-        } else if (this.admin == false) {
-          adminTotalBtn.setAttribute('style', 'display: none;');
-        }
-      },
+//      _adminChanged: function () {
+//        var adminTotalBtn = Polymer.dom(this.root).querySelector('#adminBtn');
+//        if (this.admin == true) {
+//          adminTotalBtn.setAttribute('style', 'display: auto;');
+//        } else if (this.admin == false) {
+//          adminTotalBtn.setAttribute('style', 'display: none;');
+//        }
+//      },
 
       _totalClick: function () {
         var adminTotalBtn = Polymer.dom(this.root).querySelector('#adminBtn');
@@ -331,7 +339,7 @@
         var singleOrderBtn = Polymer.dom(this.root).querySelector('#singleBtn');
         var singleView = Polymer.dom(this.root).querySelector('.singleView');
         var totalView = Polymer.dom(this.root).querySelector('.totalView');
-        if (this.view == 'total' && this.admin == true) {
+        if (this.view == 'total') { //&& this.admin == true
           adminTotalBtn.setAttribute('style', 'background-color: white; color: #EC9630;');
           singleOrderBtn.setAttribute('style', 'background-color: #EC9630; color: white;');
           singleView.setAttribute('style', 'display: visible');
