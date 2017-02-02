@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="bite-tallcard.html">
 <link rel="import" href="bite-categories.html">
 <link rel="import" href="bite-cardlist.html">
@@ -81,7 +82,7 @@
   </style>
 
   <template>
-
+    <paper-toast id="toast1" text="[[storeName]] geopend door [[displayName]]"></paper-toast>
     <app-route
       route="[[route]]"
       pattern="/:key"
@@ -91,7 +92,7 @@
     <div class="container">
       <div class="joinContainer">
         <div class="cardContainer">
-          <div class="tallCard">
+          <div class="tallCard" on-tap="_tallCardClick">
             <bite-tallcard name="GESTART DOOR [[displayName]]" background="url([[photoURL]])"
                            desc="Gestart om [[startTime]] sluit om [[closeTime]]"
                            location="Gramsbergen" emoji="[[emoji]]"></bite-tallcard>
@@ -396,6 +397,9 @@
 
       },
 
+      _tallCardClick: function () {
+        this.$.toast1.open();
+      }
 
     });
   </script>

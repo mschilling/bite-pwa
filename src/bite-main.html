@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="bite-card.html">
 
 
@@ -163,7 +164,7 @@
         color: lightgrey;
       }
     </style>
-
+    <paper-toast id="toast0" text="Ranglijsten worden op dit moment niet ondersteund."></paper-toast>
     <img src="../images/bite.png" alt="bite" class="logoImg" style="z-index: -1;">
     <a href="/open">
     <paper-fab class="orderFab" icon="add" on-tap="_addBite" style="display: none;"></paper-fab>
@@ -171,7 +172,7 @@
 
     <div class="container">
       <div class="cardContainer">
-        <paper-card class="cardRank">
+        <paper-card class="cardRank" on-tap="_rankClick">
           <paper-ripple centers fit recenters></paper-ripple>
           <div class="card-content">
             <div class="cardImg"></div>
@@ -339,6 +340,10 @@
 
         }
 
+      },
+
+      _rankClick: function () {
+        this.$.toast0.open();
       }
 
     });
