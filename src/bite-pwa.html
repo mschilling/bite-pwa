@@ -322,8 +322,10 @@
             if (user) {
               var fireUser = firebase.auth().currentUser;
               that.user = fireUser;
+              console.log('user is logged on', fireUser)
 
               that._refreshUserNotificationSettings(that.user.uid);
+              console.log('after _refreshUserNotificationSettings');
 
               if (that.page == 'main') {
                 that._doesUserExist(that.user.uid);
