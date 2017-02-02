@@ -362,7 +362,8 @@
           'login_hint': 'user@emove4mobile.com'
         });
 
-        firebase.auth().signInWithPopup(provider).then(function (result) {
+        firebase.auth().signInWithRedirect(provider);
+        firebase.auth().getRedirectResult().then(function (result) {
           if (result.credential) {
             //Get Google Access Token
             var token = result.credential.accessToken;
