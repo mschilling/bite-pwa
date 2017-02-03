@@ -23,9 +23,11 @@
 
       .image {
         float: left;
-        margin-top: 12px;
-        color: #292E35;
-        font-size: 32px;
+        width: 24px;
+        height: 24px;
+        margin-left: 5px;
+        margin-top: 17px;
+        margin-bottom: 8px;
       }
 
       .namePrice {
@@ -91,7 +93,7 @@
       <div class="item">
         <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
         <div class="infoContainer">
-          <div class="image">🍟</div>
+          <div class="image" style$="background-image: url([[backgroundImage]]); background-repeat: no-repeat; background-position: center center; background-size: 100% 100%;"></div>
           <div class="namePrice">
             <div class="name">[[name]]</div>
             <div class="price">€[[price]]</div>
@@ -121,7 +123,11 @@
         },
         amount: String,
         price: String,
-        name: String
+        name: String,
+        backgroundImage: {
+          type: String,
+          value: 'images/emoji/ic_snacks.png'
+        }
       },
 
       _userChanged: function () {
