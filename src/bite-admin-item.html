@@ -24,8 +24,9 @@
       .image {
         float: left;
         color: #EC9630;
-        margin-top: 20px;
+        margin-top: 18px;
         font-size: 24px;
+        font-family: Compasse;
       }
 
       .namePrice {
@@ -145,7 +146,7 @@
         var that = this;
         firebase.database().ref('archive/order_items_per_order/' + that.key + '/').on('value', function (snapshot) {
           snapshot.forEach(function (childSnapshot) {
-           
+
           });
         });
       }
