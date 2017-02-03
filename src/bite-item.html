@@ -22,9 +22,11 @@
 
       .image {
         float: left;
-        margin-top: 12px;
-        color: #292E35;
-        font-size: 32px;
+        width: 24px;
+        height: 24px;
+        margin-left: 5px;
+        margin-top: 10px;
+        margin-bottom: 8px;
       }
 
       .namePrice {
@@ -90,7 +92,7 @@
       <div class="item" on-tap="_itemClick">
         <paper-ripple centers fit style="color:lightgrey;"></paper-ripple>
         <div class="infoContainer">
-          <div class="image">🍟</div>
+          <div class="image" style$="background-image: url([[backgroundImage]]); background-repeat: no-repeat; background-position: center center; background-size: 100% 100%;"></div>
           <div class="namePrice">
             <div class="name">[[name]]</div>
             <div class="price">€[[price]]</div>
@@ -118,6 +120,13 @@
         storeid: {
           type: String,
           observer: '_storeIdChanged'
+        },
+        sauce: {
+          type: Boolean,
+          observer: '_sauceChanged'
+        },
+        backgroundImage: {
+          type: String
         },
         name: String,
         key: {
@@ -174,7 +183,7 @@
           that.name = snapshot.val().name;
           that.price = snapshot.val().price;
           that.price = (that.price/100).toFixed(2);
-
+          that.sauce = snapshot.val().isSauce;
         });
 
       },
@@ -217,6 +226,15 @@
           });
         } else {
           firebase.database().ref('user_order/' + that.key + "/" + that.uid + "/" + that.product).remove();
+        }
+      },
+
+      _sauceChanged: function () {
+        console.log(this.sauce);
+        if(this.sauce == true) {
+          this.backgroundImage = 'images/emoji/ic_sauce.png';
+        } else {
+          this.backgroundImage = 'images/emoji/ic_snacks.png';
         }
       }
     });
