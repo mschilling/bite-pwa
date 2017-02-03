@@ -56,7 +56,7 @@
 
     <paper-card>
       <div class="card-content">
-        <template is="dom-repeat" items="{{keys}}" as="item">
+        <template id="list" is="dom-repeat" items="{{keys}}" as="item">
             <bite-closed-view-item key="[[item]]" uid="[[user.uid]]"></bite-closed-view-item>
          </template>
       </div>
@@ -73,7 +73,8 @@
           observer: '_userChanged'
         },
         keys: {
-          type: Array
+          type: Array,
+          observer: '_keysChanged'
         }
 
       },
@@ -91,7 +92,11 @@
             });
             }
           });
-        }
+        },
+
+      _keysChanged: function () {
+        this.$.list.render();
+      }
 
     });
   </script>
