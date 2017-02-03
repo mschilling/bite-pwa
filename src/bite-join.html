@@ -14,7 +14,10 @@
       margin: 0 auto;
       display: block;
     }
-
+    paper-toast {
+      width: 300px;
+      margin-left: calc(50vw - 150px);
+    }s
     .container {
       max-width: 800px;
       margin: 0 auto;
@@ -82,7 +85,7 @@
   </style>
 
   <template>
-    <paper-toast id="toast1" text="[[storeName]] geopend door [[displayName]]" horizontal-align="left" vertical-align="bottom"></paper-toast>
+    <paper-toast id="toast1" text="[[storeName]] geopend door [[displayName]]" horizontal-align="left" vertical-offset="60" vertical-align="bottom"></paper-toast>
     <app-route
       route="[[route]]"
       pattern="/:key"
